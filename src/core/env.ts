@@ -42,7 +42,13 @@ export function scanEnvDrift(
   ]);
 
   for (const file of files) {
-    if (file.path.startsWith('.env') || file.path.includes('node_modules')) continue;
+    if (
+      file.path.startsWith('.env') ||
+      file.path.includes('node_modules') ||
+      /\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)
+    ) {
+      continue;
+    }
 
     for (const pattern of envPatterns) {
       let match: RegExpExecArray | null;

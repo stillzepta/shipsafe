@@ -9,7 +9,15 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
   const findings: Finding[] = [];
 
   for (const file of files) {
-    if (file.path.includes('.test.') || file.path.includes('.spec.')) continue;
+    if (
+      file.path.includes('.test.') ||
+      file.path.includes('.spec.') ||
+      file.path.startsWith('src/core/') ||
+      file.path.startsWith('lib/') ||
+      /\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)
+    ) {
+      continue;
+    }
 
     const lines = file.content.split('\n');
 

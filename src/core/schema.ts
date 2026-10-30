@@ -27,6 +27,9 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
   ];
 
   for (const file of files) {
+    if (/\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)) {
+      continue;
+    }
     const isMigration = migrationPatterns.some(p => p.test(file.path));
     if (!isMigration && !file.content.toLowerCase().includes('alter table')) {
       continue;

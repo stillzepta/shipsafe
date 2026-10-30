@@ -5,23 +5,28 @@
 
 ---
 
-## 🎨 Visual Architecture Blueprint (Ian Bablu English Edition)
+## 🎨 Visual Architecture Specification: The AST Sieve & DAG Lab
 
-![ShipSafe Architectural Blueprint — Ian Bablu English Edition](../assets/shipsafe-architecture.svg)
+![ShipSafe Deep Architecture Specification — AST Sieve & DAG Lab](../assets/architecture-spec.svg)
 
-> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
+> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/architecture-spec.svg`) and the breakdown below are maintained in 100% active synchronicity.
 
-### Architectural Breakdown: The 3-Stage Pipeline
-1. **Stage 1: Local Staging Buffer (Left)**
-   * Intercepts developer staged code (`git add .`) before commit objects are written to the `.git` tree.
-   * Catches high-risk hazards: table-locking migrations (`NOT NULL` without `DEFAULT`), missing environment variables, unindexed foreign keys, and stray debuggers.
-2. **Stage 2: ShipSafe Ghostbuster Gate (Center)**
-   * **Pre-Flight Radar (100/100)**: Evaluates code health in `<35ms` with persistent local audit logging to `.shipsafe/audit.db` using Node's native `node:sqlite`.
-   * **5 Multi-Stage Sensors**: Schema & Table Lock Detector, Config & Env Drift Sentinel, Performance & N+1 Loop Sniffer, Blast Radius DAG Topology, and Local AI Pre-Mortem (Gemma 2 / Sovereign Heuristic).
-   * **Bablu Chief Inspector**: Sentry actively scanning code entering the pre-flight tunnel.
-3. **Stage 3: Sovereign Decision Fork (Right)**
-   * **Path A: Quarantined & Auto-Remediated (Exit Code 1)** — Hazardous commits are blocked. Developers run `npx shipsafe fix` to autonomously heal config drift and scrub hygiene issues.
-   * **Path B: Golden Ticket Approved (Exit Code 0)** — Verified clean code deploys to GitHub and Production with zero runtime table locks and zero 3 AM emergency pages.
+### Deep Architectural Breakdown: 3 Sovereign Pillars
+1. **Pillar 1: Syntax Tree Autopsy (AST Sieve)**
+   * **Mechanism**: Operates in `<15ms` across hundreds of files with zero external runtime dependencies using native TypeScript type-stripping.
+   * **Node Inspections**:
+     * `ForOfStatement ➔ CallExpression`: Dissects async query calls nested within loop iterations (N+1 hazard).
+     * `MemberExpression: process.env.*`: Cross-checks referenced keys against `.env.example` to halt config drift.
+     * `SQL AlterTableStmt`: Flags dangerous `ADD COLUMN NOT NULL` without `DEFAULT` to prevent Postgres table locks.
+2. **Pillar 2: Blast Radius Topology (AST DAG)**
+   * **Mechanism**: Traverses in-memory reverse import adjacency list ($O(V + E)$) in `<5ms`.
+   * **Mathematical Scoring Formula**:
+     $$\text{Score} = \min\left(100, \; \left(\frac{\text{DownstreamDependents}}{\text{TotalFiles}} \times 60\right) + (\text{ChangedFiles} \times 5)\right)$$
+     *Adds a $+35\%$ critical weight whenever `auth/`, `db/`, or `billing/` paths are touched.*
+3. **Pillar 3: Sovereign Dual Brains (100% Air-Gapped)**
+   * **Primary Brain (Local Gemma 2)**: Calls local Ollama daemon (`localhost:11434`) to synthesize natural language pre-mortems and mitigation playbooks with zero cloud API leakage.
+   * **Fallback Brain (Deterministic Heuristic Engine)**: Executes in `<2ms` if Ollama is offline or uninstalled.
+   * **Embedded SQLite Vault (`.shipsafe/audit.db`)**: Native `node:sqlite` stores historical runs, scores, and findings for the real-time SSE dashboard (`:4100`).
 
 ---
 

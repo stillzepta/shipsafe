@@ -4,18 +4,17 @@ Quick-reference operational runbook, command cheatsheet, port map, test verifica
 
 ---
 
-## 🎨 Visual Operational Blueprint (Ian Bablu English Edition)
+## 🎨 Visual Operator's Runbook (Ian Bablu English Edition)
 
-![ShipSafe Operational Flow — Ian Bablu Style](../assets/shipsafe-architecture.svg)
+![ShipSafe Operational Runbook & Magic Terminal](../assets/essential-spec.svg)
 
-### Operational Pipeline Mapping:
-| Visual Stage | Trigger Command | Operational Action & Gate |
+### Operational Command & Terminal Mapping:
+| Runbook Spell | Execution Command | Operational Action & Latency |
 | :--- | :--- | :--- |
-| **Stage 1: Staging Buffer** | `git add .` | Developer stages code; ShipSafe intercepts changes before `.git` write. |
-| **Stage 2: Ghostbuster Gate** | `node bin/shipsafe scan` | Runs all 5 sensors in `<35ms`; evaluates radar score (100/100); records to SQLite audit log. |
-| **Stage 3 Path A: Ghost Trap** | `node bin/shipsafe fix` | Blocks hazards (`exit 1`); auto-syncs `.env.example` and removes debuggers. |
-| **Stage 3 Path B: Golden Ticket** | `node bin/shipsafe commit "..."` | Approves clean code (`exit 0`); creates certified atomic commit for GitHub & Production. |
-| **Live Gatehouse Monitor** | `node bin/shipsafe serve` | Launches local dashboard on `http://127.0.0.1:4100` with real-time SSE streams. |
+| **1. The Scrying Orb** | `node bin/shipsafe scan [--all]` | Inspects staged changes in `<35ms`; renders Pre-Flight Radar gauge ($100/100$) and ANSI findings. |
+| **2. The Auto-Exorcist** | `node bin/shipsafe fix` | Autonomously synchronizes `.env.example` and removes stray `debugger;` statements. |
+| **3. The Golden Seal** | `node bin/shipsafe commit "..."` | Atomic certified commit; verifies zero hazards exist before git tree write. |
+| **4. The Crystal Portal** | `node bin/shipsafe serve` | Launches local dashboard on `http://127.0.0.1:4100` with live SSE and native SQLite ledger. |
 
 ---
 
