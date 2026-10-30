@@ -102,7 +102,7 @@ export function runBenchmark() {
   console.log(`• Traditional CI / Lint Detection Rate: \x1b[31m${standardCiCaught}/10 (0%)\x1b[0m`);
   console.log(`• ShipSafe Detection Rate:             \x1b[32m${shipsafeCaught}/10 (100%)\x1b[0m\n`);
 
-  return { shipsafeCaught, total: testCases.length };
+  return { shipsafeCaught, standardCiCaught, total: testCases.length, results };
 }
 
 // Execute directly if run via node

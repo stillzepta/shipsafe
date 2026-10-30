@@ -39,7 +39,24 @@ const els = {
   btnAutoFixAll: document.getElementById('btnAutoFixAll'),
   historyTableBody: document.getElementById('historyTableBody'),
   rulesForm: document.getElementById('rulesForm'),
-  toast: document.getElementById('toast')
+  toast: document.getElementById('toast'),
+  // Blast Radius & Pre-Mortem elements
+  blastRiskBadge: document.getElementById('blastRiskBadge'),
+  blastMeterFill: document.getElementById('blastMeterFill'),
+  blastScoreText: document.getElementById('blastScoreText'),
+  blastDependentsText: document.getElementById('blastDependentsText'),
+  blastModulesList: document.getElementById('blastModulesList'),
+  aiSourceLabel: document.getElementById('aiSourceLabel'),
+  premortemActionBadge: document.getElementById('premortemActionBadge'),
+  premortemSummaryText: document.getElementById('premortemSummaryText'),
+  opsWarningsBox: document.getElementById('opsWarningsBox'),
+  opsWarningsList: document.getElementById('opsWarningsList'),
+  // Benchmark elements
+  btnTriggerBenchmark: document.getElementById('btnTriggerBenchmark'),
+  btnRunBenchmarkTop: document.getElementById('btnRunBenchmarkTop'),
+  benchCiStat: document.getElementById('benchCiStat'),
+  benchShipSafeStat: document.getElementById('benchShipSafeStat'),
+  benchmarkTableBody: document.getElementById('benchmarkTableBody')
 };
 
 // Show Toast
@@ -205,6 +222,98 @@ function renderCheckResult(res) {
 
   // 3. Render Findings
   renderFindings(res.findings);
+
+  // 4. Render Blast Radius & AI Pre-Mortem
+  if (res.blast || res.preMortem) {
+    renderBlastAndPreMortem(res.blast, res.preMortem);
+  }
+}
+
+// Render Blast Radius & AI Pre-Mortem
+function renderBlastAndPreMortem(blast, preMortem) {
+  if (!els.blastScoreText) return;
+
+  if (blast) {
+    els.blastScoreText.innerHTML = `<strong>${blast.score}%</strong> Blast Radius`;
+    els.blastMeterFill.style.width = `${Math.min(100, Math.max(5, blast.score))}%`;
+
+    els.blastRiskBadge.textContent = `${blast.riskLevel} IMPACT`;
+    els.blastRiskBadge.className = `status-badge ${
+      blast.riskLevel === 'LOW' ? 'status-pass' : blast.riskLevel === 'MEDIUM' ? 'status-warn' : 'status-blocked'
+    }`;
+
+    els.blastDependentsText.textContent = `${blast.downstreamCount} downstream dependent module(s)`;
+
+    els.blastModulesList.innerHTML = '';
+    if (blast.affectedModules && blast.affectedModules.length > 0) {
+      blast.affectedModules.forEach(mod => {
+        const span = document.createElement('span');
+        span.className = 'blast-mod-pill';
+        span.textContent = mod;
+        els.blastModulesList.appendChild(span);
+      });
+    } else {
+      els.blastModulesList.innerHTML = `<span class="text-dim" style="font-size:0.75rem;">No downstream dependents affected</span>`;
+    }
+  }
+
+  if (preMortem) {
+    els.premortemSummaryText.textContent = `"${preMortem.summary}"`;
+    els.aiSourceLabel.textContent = `Generated via ${preMortem.source || 'Local Gemma 2'}`;
+
+    const rec = preMortem.recommendedAction || 'PASS';
+    els.premortemActionBadge.textContent = rec.includes('BLOCK') ? 'BLOCKED' : rec.includes('WARN') ? 'WARN' : 'PASS';
+    els.premortemActionBadge.style.background = rec.includes('BLOCK') ? '#ef4444' : rec.includes('WARN') ? '#f59e0b' : '#10b981';
+
+    if (preMortem.releaseNotes && preMortem.releaseNotes.opsWarnings && preMortem.releaseNotes.opsWarnings.length > 0) {
+      els.opsWarningsBox.style.display = 'block';
+      els.opsWarningsList.innerHTML = preMortem.releaseNotes.opsWarnings.map(w => `<li>${w}</li>`).join('');
+    } else {
+      els.opsWarningsBox.style.display = 'none';
+    }
+  }
+}
+
+// Outage Benchmark Runner
+async function runBenchmarkUI() {
+  if (els.btnTriggerBenchmark) {
+    els.btnTriggerBenchmark.disabled = true;
+    els.btnTriggerBenchmark.innerHTML = `<span class="btn-icon">⏳</span> Running Benchmark...`;
+  }
+
+  try {
+    const res = await fetch('/api/benchmark');
+    const data = await res.json();
+    renderBenchmarkUI(data);
+    showToast('Benchmark completed: 10/10 Outage Scenarios Evaluated!', 'success');
+  } catch (err) {
+    showToast(`Benchmark error: ${err.message}`, 'error');
+  } finally {
+    if (els.btnTriggerBenchmark) {
+      els.btnTriggerBenchmark.disabled = false;
+      els.btnTriggerBenchmark.innerHTML = `<span class="btn-icon">▶</span> Run 10-Scenario Benchmark`;
+    }
+  }
+}
+
+function renderBenchmarkUI(data) {
+  if (!els.benchmarkTableBody) return;
+
+  if (els.benchCiStat) els.benchCiStat.textContent = `${data.standardCiCaught || 0} / ${data.total} Caught (0%)`;
+  if (els.benchShipSafeStat) els.benchShipSafeStat.textContent = `${data.shipsafeCaught} / ${data.total} Caught (100%)`;
+
+  els.benchmarkTableBody.innerHTML = '';
+  (data.results || []).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>${r.id.split('_')[0]}</strong></td>
+      <td><strong>${r.name}</strong></td>
+      <td><span class="badge-tag" style="background:#1e293b; color:#94a3b8;">${r.category}</span></td>
+      <td><span class="badge-tag text-danger" style="background:rgba(239, 68, 68, 0.15); color:#ef4444;">❌ ${r.standardCi}</span></td>
+      <td><span class="badge-tag text-success" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">${r.shipsafe}</span></td>
+    `;
+    els.benchmarkTableBody.appendChild(tr);
+  });
 }
 
 // Render Category Health Cards
@@ -513,6 +622,15 @@ function setupSSE() {
 // Initial Boot
 window.addEventListener('DOMContentLoaded', async () => {
   els.btnRunCheck.onclick = runCheck;
+  if (els.btnTriggerBenchmark) {
+    els.btnTriggerBenchmark.onclick = runBenchmarkUI;
+  }
+  if (els.btnRunBenchmarkTop) {
+    els.btnRunBenchmarkTop.onclick = () => {
+      switchTab('benchmark');
+      runBenchmarkUI();
+    };
+  }
   await loadStatus();
   await runCheck();
   await loadRulesConfig();

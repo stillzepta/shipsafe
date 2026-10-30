@@ -836,3 +836,197 @@ body {
     overflow-y: auto;
   }
 }
+
+/* ==========================================================================
+   ShipSafe Futuristic Dynamic UI: Blast Radius & Outage Benchmark
+   ========================================================================== */
+
+.blast-premortem-banner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.blast-header, .premortem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.blast-title-group, .premortem-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.blast-icon, .premortem-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.blast-meter-wrapper {
+  margin-bottom: 1rem;
+}
+
+.blast-meter-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.blast-meter-fill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.blast-meter-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.blast-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.blast-mod-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.premortem-quote {
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.6);
+  border-left: 3px solid #38bdf8;
+  padding: 0.75rem 1rem;
+  border-radius: 0 6px 6px 0;
+  margin: 0 0 0.75rem 0;
+  font-style: italic;
+}
+
+.ops-warnings-box {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #fca5a5;
+}
+
+.ops-warnings-box ul {
+  margin: 0.35rem 0 0 1.25rem;
+  padding: 0;
+}
+
+/* Benchmark Showcase */
+.benchmark-card {
+  padding: 1.5rem;
+}
+
+.benchmark-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.benchmark-summary-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.bench-stat-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.bench-stat-card.traditional-ci {
+  border-left: 4px solid #ef4444;
+}
+
+.bench-stat-card.shipsafe-gate {
+  border-left: 4px solid #10b981;
+}
+
+.bench-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+}
+
+.bench-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.bench-sub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.benchmark-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.8);
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.benchmark-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.benchmark-table tr:hover {
+  background: rgba(30, 41, 59, 0.4);
+}
+
+@media (max-width: 900px) {
+  .blast-premortem-banner {
+    grid-template-columns: 1fr;
+  }
+  .benchmark-summary-strip {
+    grid-template-columns: 1fr;
+  }
+}

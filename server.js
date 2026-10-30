@@ -21,6 +21,7 @@ import {
 } from './lib/git.js';
 import { getRecentRuns, getRunById, getStats } from './lib/db.js';
 import { executeFix } from './lib/fixers.js';
+import { runBenchmark } from './benchmarks/suite.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -178,6 +179,12 @@ export function startServer(options = {}) {
         const filePath = parsedUrl.searchParams.get('file') || null;
         const diff = getStagedDiff(cwd, filePath);
         return sendJson(res, 200, { file: filePath, diff });
+      }
+
+      // 3B. Outage Benchmark Runner
+      if (pathname === '/api/benchmark' && (method === 'GET' || method === 'POST')) {
+        const benchResult = runBenchmark();
+        return sendJson(res, 200, benchResult);
       }
 
       // 4. Run Auto-Fixer
