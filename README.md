@@ -24,29 +24,29 @@
 
 ---
 
-## 🎃 Explain Like I'm 5: Xiaohei and the Haunted Code Monsters
+## 🎃 Explain Like I'm 5: Bablu and the Haunted Code Monsters
 
-> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Xiaohei protects them.*
+> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Bablu protects them.*
 
-![Xiaohei and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
+![Bablu and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
 
 ### The 4-Act Storyboard
 1. **Act 1: The Toy Castle**  
    Every software developer writes code like building a giant LEGO castle. It looks colorful and exciting, but sneaky invisible ghosts hide inside the toy blocks: spooky database table locks, missing secret API keys, and zombie infinite loops. Regular linters only look at the paint on the outside; they are completely blind to the monsters inside.
 2. **Act 2: The 3 AM Nightmare (Without ShipSafe)**  
    The developer ships their castle to the cloud. At midnight on Halloween, the ghosts wake up! The database locks up tight, incoming customer traffic halts, shopping carts freeze, and the entire app crashes. Total damage: **$120,000 lost in 45 minutes** while the CEO cries.
-3. **Act 3: Enter Xiaohei the Ghostbuster (ShipSafe)**  
-   Before code ever leaves your laptop, **Xiaohei** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Xiaohei inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
+3. **Act 3: Enter Bablu the Ghostbuster (ShipSafe)**  
+   Before code ever leaves your laptop, **Bablu** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Bablu inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
 4. **Act 4: The Golden Ticket (Safe to Ship)**  
-   Xiaohei doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
+   Bablu doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
 
 ---
 
-## 🎨 System Architecture Blueprint (Ian Xiaohei English Edition)
+## 🎨 System Architecture Blueprint (Ian Bablu English Edition)
 
-![ShipSafe Architectural Blueprint — Ian Xiaohei Style](assets/shipsafe-architecture.svg)
+![ShipSafe Architectural Blueprint — Ian Bablu Style](assets/shipsafe-architecture.svg)
 
-> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Xiaohei architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
+> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
 
 ### 🗺️ Visual Walkthrough: How ShipSafe Protects Your Production Pipeline
 
@@ -57,7 +57,7 @@ The architectural blueprint above details the end-to-end journey of code moving 
    * Potential disasters—such as missing `.env.production` keys, live Stripe secrets (`sk_live_...`), unindexed foreign keys, dangerous table-locking migrations, or stray `debugger;` breakpoints—are caught locally within **35 milliseconds**.
 
 2. **The Pre-Flight Gatehouse & Radar (Center)**
-   * Supervised by **Xiaohei** (the diligent guardian equipped with an optical scanner, ghost-antenna headset, and laser beam), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
+   * Supervised by **Bablu** (the diligent guardian equipped with an optical scanner, ghost-antenna headset, and laser beam), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
      * 🎃 **Gate 1: Schema & Table Lock Detector (`src/core/schema.ts`)**: Catches `ALTER TABLE ... ADD NOT NULL` migrations lacking `DEFAULT` values that freeze live tables.
      * 👻 **Gate 2: Config & Env Drift Sentinel (`src/core/env.ts`)**: Scans `process.env` references and detects phantom drift against `.env.example`.
      * 🧟 **Gate 3: Performance & N+1 Loop Sniffer (`src/core/perf.ts`)**: Identifies async DB queries in loops and synchronous file I/O that freeze the Node.js event loop.

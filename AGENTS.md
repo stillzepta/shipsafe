@@ -1,10 +1,10 @@
 # Agent Guidelines & Mandatory Policies for ShipSafe
 
-## 1. Mandatory Ian Xiaohei Illustration Maintenance
-Whenever pushing new code, refactoring features, or modifying repository architecture, you **must** update the Ian Xiaohei architectural illustration (`assets/shipsafe-architecture.svg`) and the corresponding explanatory breakdown in `README.md`.
+## 1. Mandatory Ian Bablu Illustration Maintenance
+Whenever pushing new code, refactoring features, or modifying repository architecture, you **must** update the Ian Bablu architectural illustration (`assets/shipsafe-architecture.svg`) and the corresponding explanatory breakdown in `README.md`.
 The illustration must precisely reflect:
 - Incoming developer commits and staged files
-- ShipSafe pre-flight quality gatekeeper with Xiaohei actively inspecting code
+- ShipSafe pre-flight quality gatekeeper with Bablu actively inspecting code
 - The multi-stage checks (Secrets, Hygiene, Git Guard, Syntax, Dependencies)
 - Auto-remediation quarantine path for rejected items (red) vs verified clean code path to GitHub/Production (blue)
 - The embedded SQLite audit log and real-time dashboard

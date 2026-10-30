@@ -7,9 +7,9 @@
       .ink-thin { fill: none; stroke: #111827; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
       .dashed { stroke-dasharray: 6 6; }
       
-      /* Xiaohei Solid Black Silhouette */
-      .xiaohei { fill: #111827; stroke: #111827; stroke-width: 1.5; }
-      .xiaohei-eye { fill: #ffffff; }
+      /* Bablu Solid Black Silhouette */
+      .bablu { fill: #111827; stroke: #111827; stroke-width: 1.5; }
+      .bablu-eye { fill: #ffffff; }
       
       /* Functional Color Accents */
       .accent-red { stroke: #ef4444; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -52,7 +52,7 @@
     <text x="10" y="17" class="font-sans" font-size="11.5" font-weight="bold" fill="#ea580c">🎃 HALLOWEEN HACK BLR '26</text>
 
     <text x="0" y="55" class="font-sans txt-title">ShipSafe // The Pre-Flight Ghostbuster for Production Traps</text>
-    <text x="0" y="78" class="font-sans txt-sub">How Xiaohei Catches Spooky Table Locks, Phantom Secrets &amp; Zombie Loops Before Code Haunts Production</text>
+    <text x="0" y="78" class="font-sans txt-sub">How Bablu Catches Spooky Table Locks, Phantom Secrets &amp; Zombie Loops Before Code Haunts Production</text>
     
     <!-- Legend Pill (Right Aligned, safely inside canvas) -->
     <g transform="translate(1080, 15)">
@@ -120,17 +120,17 @@
       <text x="8" y="142" class="font-sans" font-size="8.5" fill="#9a3412">Missing in .env.example</text>
     </g>
 
-    <!-- Xiaohei #1 (The Midnight Developer) -->
+    <!-- Bablu #1 (The Midnight Developer) -->
     <g transform="translate(-40, 170)">
       <line x1="-15" y1="90" x2="35" y2="90" class="ink"/>
       <rect x="-5" y="65" width="28" height="22" rx="3" fill="#ffffff" class="ink"/>
-      <ellipse cx="45" cy="55" rx="16" ry="24" class="xiaohei"/>
-      <circle cx="45" cy="20" r="14" class="xiaohei"/>
+      <ellipse cx="45" cy="55" rx="16" ry="24" class="bablu"/>
+      <circle cx="45" cy="20" r="14" class="bablu"/>
       <!-- Little Witch Hat -->
       <polygon points="32,12 45,-12 58,12" fill="#111827"/>
       <ellipse cx="45" cy="12" rx="18" ry="4" fill="#ea580c"/>
-      <circle cx="41" cy="18" r="2.2" class="xiaohei-eye"/>
-      <circle cx="49" cy="18" r="2.2" class="xiaohei-eye"/>
+      <circle cx="41" cy="18" r="2.2" class="bablu-eye"/>
+      <circle cx="49" cy="18" r="2.2" class="bablu-eye"/>
       <path d="M 45,45 Q 70,55 85,48" class="ink-bold"/>
       <line x1="37" y1="78" x2="31" y2="120" class="ink-bold"/>
       <line x1="53" y1="78" x2="59" y2="120" class="ink-bold"/>
@@ -226,7 +226,7 @@
       </g>
     </g>
 
-    <!-- Central Sentry: Xiaohei Ghostbuster on Gatehouse Roof -->
+    <!-- Central Sentry: Bablu Ghostbuster on Gatehouse Roof -->
     <g transform="translate(195, -50)">
       <line x1="20" y1="50" x2="20" y2="130" class="ink-thin"/>
       <line x1="40" y1="50" x2="40" y2="130" class="ink-thin"/>
@@ -234,22 +234,22 @@
       <line x1="20" y1="95" x2="40" y2="95" class="ink-thin"/>
       <line x1="20" y1="115" x2="40" y2="115" class="ink-thin"/>
 
-      <!-- Xiaohei Chief Ghostbuster Inspector -->
-      <ellipse cx="75" cy="48" rx="17" ry="25" class="xiaohei"/>
-      <circle cx="75" cy="14" r="15" class="xiaohei"/>
+      <!-- Bablu Chief Ghostbuster Inspector -->
+      <ellipse cx="75" cy="48" rx="17" ry="25" class="bablu"/>
+      <circle cx="75" cy="14" r="15" class="bablu"/>
       <!-- Ghost Antenna -->
       <path d="M 60,10 A 15,15 0 0,1 90,10" class="accent-orange"/>
       <rect x="56" y="8" width="5" height="11" rx="2" fill="#ea580c"/>
       <line x1="75" y1="-1" x2="75" y2="-20" class="ink-bold" stroke="#ea580c"/>
       <circle cx="75" cy="-22" r="4.5" fill="#ea580c"/>
-      <circle cx="71" cy="12" r="2.3" class="xiaohei-eye"/>
-      <circle cx="79" cy="12" r="2.3" class="xiaohei-eye"/>
+      <circle cx="71" cy="12" r="2.3" class="bablu-eye"/>
+      <circle cx="79" cy="12" r="2.3" class="bablu-eye"/>
       <path d="M 68,72 L 68,100 L 75,100" class="ink-bold"/>
       <path d="M 82,72 L 82,100 L 89,100" class="ink-bold"/>
       <path d="M 66,38 Q 35,28 25,55" class="ink-bold"/>
       <circle cx="20" cy="65" r="18" class="ink-bold" stroke="#ea580c"/>
       <path d="M 20,83 L -8,128 L 48,128 Z" fill="#ffedd5" opacity="0.6"/>
-      <text x="-48" y="10" class="font-sans" font-size="11" font-weight="bold" fill="#ea580c">Xiaohei Inspector</text>
+      <text x="-48" y="10" class="font-sans" font-size="11" font-weight="bold" fill="#ea580c">Bablu Inspector</text>
     </g>
 
     <!-- Server Live Indicator -->
@@ -290,13 +290,13 @@
       <text x="2" y="125" class="font-sans" font-size="10" fill="#6b7280">Production crash prevented before commit leaves laptop</text>
     </g>
 
-    <!-- Xiaohei Assistant #2 (Auto-Fixer with Vacuum) -->
+    <!-- Bablu Assistant #2 (Auto-Fixer with Vacuum) -->
     <!-- Positioned at x=390 => 960+390 = 1350px. Extends to ~1420px. 180px safe margin to 1600px! -->
     <g transform="translate(390, 70)">
-      <ellipse cx="25" cy="50" rx="14" ry="22" class="xiaohei"/>
-      <circle cx="25" cy="18" r="13" class="xiaohei"/>
-      <circle cx="21" cy="16" r="2" class="xiaohei-eye"/>
-      <circle cx="29" cy="16" r="2" class="xiaohei-eye"/>
+      <ellipse cx="25" cy="50" rx="14" ry="22" class="bablu"/>
+      <circle cx="25" cy="18" r="13" class="bablu"/>
+      <circle cx="21" cy="16" r="2" class="bablu-eye"/>
+      <circle cx="29" cy="16" r="2" class="bablu-eye"/>
       <!-- Vacuum Pipe sucking ghosts -->
       <line x1="25" y1="45" x2="-14" y2="75" class="accent-orange" stroke-width="3"/>
       <circle cx="-18" cy="78" r="8" fill="#ea580c"/>
@@ -339,13 +339,13 @@
       </g>
     </g>
 
-    <!-- Xiaohei Assistant #3 (Signaling Green Lantern) -->
+    <!-- Bablu Assistant #3 (Signaling Green Lantern) -->
     <!-- Positioned at x=390 => 960+390 = 1350px. Extends to ~1420px. 180px safe margin to 1600px! -->
     <g transform="translate(390, 55)">
-      <ellipse cx="25" cy="50" rx="14" ry="22" class="xiaohei"/>
-      <circle cx="25" cy="18" r="13" class="xiaohei"/>
-      <circle cx="21" cy="16" r="2" class="xiaohei-eye"/>
-      <circle cx="29" cy="16" r="2" class="xiaohei-eye"/>
+      <ellipse cx="25" cy="50" rx="14" ry="22" class="bablu"/>
+      <circle cx="25" cy="18" r="13" class="bablu"/>
+      <circle cx="21" cy="16" r="2" class="bablu-eye"/>
+      <circle cx="29" cy="16" r="2" class="bablu-eye"/>
       <!-- Holding Green Light Lantern -->
       <line x1="25" y1="40" x2="48" y2="18" class="ink-bold"/>
       <circle cx="48" cy="16" r="8" fill="#10b981"/>
@@ -358,7 +358,7 @@
   <!-- ==================== FOOTER SPECIFICATION NOTE ==================== -->
   <g transform="translate(80, 845)">
     <text x="0" y="0" class="font-hand txt-code" font-size="11.5" fill="#4b5563">
-      [STYLE: Ian Xiaohei 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Xiaohei IP © TRioN]
+      [STYLE: Ian Bablu 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Bablu IP © TRioN]
     </text>
     <text x="0" y="20" class="font-sans" font-size="11.5" fill="#9ca3af">
       Architecture: Local Git Hook Buffer → AST Multi-Stage Hazard Sentry → Gemma 2 Pre-Mortem → Quarantine or Verified Release.
