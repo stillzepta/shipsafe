@@ -1,0 +1,33 @@
+{
+  "name": "shipsafe",
+  "version": "1.0.0",
+  "description": "Local Pre-Flight Health Sentry & Quality Gatekeeper for Developers",
+  "main": "server.js",
+  "type": "module",
+  "bin": {
+    "shipsafe": "./bin/shipsafe"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node bin/shipsafe serve",
+    "check": "node bin/shipsafe check",
+    "check:all": "node bin/shipsafe check --all",
+    "fix": "node bin/shipsafe fix",
+    "install-hooks": "node bin/shipsafe install-hooks",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "git-hooks",
+    "pre-commit",
+    "pre-push",
+    "code-health",
+    "security-scanner",
+    "developer-tooling",
+    "quality-gate"
+  ],
+  "author": "ShipSafe Engineering",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

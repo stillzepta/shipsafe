@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShipSafe — Local Pre-Flight Quality Gate</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <div class="logo">
+          <div class="logo-icon">🛡️</div>
+          <div>
+            <div class="logo-title">ShipSafe <span class="badge-tag">LOCAL GATE</span></div>
+            <div class="logo-sub">Pre-Flight Health Sentry</div>
+          </div>
+        </div>
+
+        <div class="repo-pill">
+          <span class="git-icon">🌿</span>
+          <span class="branch-label">Branch:</span>
+          <strong id="branchName">loading...</strong>
+        </div>
+
+        <div class="live-pill" id="liveWatcherBadge">
+          <span class="live-dot"></span>
+          <span class="live-text">WATCHING REPO</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <button id="btnHooks" class="btn btn-secondary">
+          <span class="btn-icon">⚡</span> <span id="hookBtnText">Install Git Hooks</span>
+        </button>
+        <button id="btnRunCheck" class="btn btn-primary">
+          <span class="btn-icon">▶</span> Run Pre-Flight Check
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-container">
+      
+      <!-- Top Overview Hero: Score Gauge & Health Radar -->
+      <section class="hero-overview">
+        <!-- Health Gauge Card -->
+        <div class="card gauge-card">
+          <div class="gauge-header">
+            <h3>CODE HEALTH RADAR</h3>
+            <span id="gateStatusBadge" class="status-badge status-neutral">EVALUATING</span>
+          </div>
+
+          <div class="gauge-body">
+            <div class="gauge-svg-container">
+              <svg viewBox="0 0 160 160" class="gauge-svg">
+                <circle class="gauge-bg" cx="80" cy="80" r="68"></circle>
+                <circle id="gaugeProgress" class="gauge-fill" cx="80" cy="80" r="68"></circle>
+              </svg>
+              <div class="gauge-text-overlay">
+                <span id="gaugeScore" class="score-number">--</span>
+                <span class="score-denom">/ 100</span>
+                <span id="gaugeVerdict" class="score-label">PRE-FLIGHT</span>
+              </div>
+            </div>
+
+            <div class="gauge-meta">
+              <div class="meta-item">
+                <span class="meta-label">Inspected Files</span>
+                <strong id="metaFilesChecked">0</strong>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Critical Errors</span>
+                <strong id="metaErrors" class="text-danger">0</strong>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Warnings</span>
+                <strong id="metaWarnings" class="text-warning">0</strong>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Latency</span>
+                <strong id="metaDuration">0ms</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="gauge-footer">
+            <span id="summaryText">Initializing health checks...</span>
+          </div>
+        </div>
+
+        <!-- Category Readiness Matrix -->
+        <div class="card categories-card">
+          <div class="card-header">
+            <h3>CATEGORY HEALTH MATRIX</h3>
+            <span class="subtext">Zero-tolerance gates before GitHub/Prod</span>
+          </div>
+
+          <div class="category-grid" id="categoryGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-header">
+        <button class="tab-btn active" data-tab="findings">
+          🚨 Findings & Auto-Fix (<span id="findingsCount">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="diff">
+          📝 Staged Changes & Diff (<span id="stagedCount">0</span>)
+        </button>
+        <button class="tab-btn" data-tab="history">
+          📜 Audit Log & Trajectory
+        </button>
+        <button class="tab-btn" data-tab="rules">
+          ⚙️ Gate Rules & Policies
+        </button>
+      </div>
+
+      <!-- Tab 1: Findings -->
+      <section id="tab-findings" class="tab-content active">
+        <div class="findings-toolbar">
+          <div class="filter-group">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="ERROR">Errors Only</button>
+            <button class="filter-btn" data-filter="WARN">Warnings Only</button>
+            <button class="filter-btn" data-filter="autofix">⚡ Auto-Fixable</button>
+          </div>
+          <div class="toolbar-actions">
+            <button id="btnAutoFixAll" class="btn btn-sm btn-success" style="display:none;">
+              ⚡ Auto-Fix All Available
+            </button>
+          </div>
+        </div>
+
+        <div id="findingsList" class="findings-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- Tab 2: Staged Diff -->
+      <section id="tab-diff" class="tab-content">
+        <div class="diff-container">
+          <div class="diff-sidebar">
+            <div class="sidebar-header">STAGED FILES</div>
+            <ul id="stagedFilesList" class="file-list">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+          <div class="diff-viewer">
+            <div class="diff-viewer-header">
+              <span id="diffActiveFileName" class="active-file">All Staged Diffs</span>
+              <button id="btnUnstageActive" class="btn btn-xs btn-outline-danger" style="display:none;">Unstage File</button>
+            </div>
+            <pre id="diffCodeBlock" class="diff-pre"><code>Select a file to inspect git diff...</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: History -->
+      <section id="tab-history" class="tab-content">
+        <div class="card table-card">
+          <div class="card-header">
+            <h3>HISTORICAL AUDIT LOG (SQLite Database)</h3>
+            <span class="subtext">Tracks local pre-flight gate executions over time</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Timestamp</th>
+                  <th>Branch</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                  <th>Errors</th>
+                  <th>Warnings</th>
+                  <th>Duration</th>
+                  <th>Summary</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 4: Rules -->
+      <section id="tab-rules" class="tab-content">
+        <div class="card rules-card">
+          <div class="card-header">
+            <h3>QUALITY GATE CONFIGURATION</h3>
+            <span class="subtext">Configured via .shipsafe/config.json</span>
+          </div>
+          <div class="rules-form" id="rulesForm">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Toast Notification -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
