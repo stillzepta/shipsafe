@@ -2,6 +2,7 @@
   "name": "shipsafe",
   "version": "1.0.0",
   "description": "Pre-Flight Blast Radius & Production Health Gatekeeper for Developers",
+  "homepage": "https://stillzepta.github.io/shipsafe/",
   "main": "server.js",
   "type": "module",
   "bin": {

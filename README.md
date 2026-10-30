@@ -14,6 +14,13 @@
 [![Runtime: Node.js 22+ (LTS)](https://img.shields.io/badge/Runtime-Node.js_22+_(LTS)-green.svg?style=flat-square)](https://nodejs.org/)
 [![Model: Gemma 2](https://img.shields.io/badge/Open--Weight-Gemma_2-4285F4.svg?style=flat-square)](https://ai.google.dev/gemma)
 [![Execution: Sub-35ms](https://img.shields.io/badge/Speed-%3C35ms_Execution-orange.svg?style=flat-square)](#-the-3-command-developer-quickstart)
+[![Live Demo: GitHub Pages](https://img.shields.io/badge/Live_Demo-stillzepta.github.io%2Fshipsafe-success.svg?style=flat-square&logo=github)](https://stillzepta.github.io/shipsafe/)
+[![Local UI: http://127.0.0.1:4100](https://img.shields.io/badge/Local_UI-127.0.0.1%3A4100-blue.svg?style=flat-square)](http://127.0.0.1:4100)
+
+> 🚀 **Quick Access & Live Links:**  
+> • 🌐 **One-Click Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/) *(Explore live gauge, radar & 10/10 outage benchmark without installing)*  
+> • 💻 **Local Interactive Dashboard:** [http://127.0.0.1:4100](http://127.0.0.1:4100) *(Live Server-Sent Events watching your local Git repository)*  
+> • ⚡ **Terminal Pitch Demo:** `node bin/shipsafe scan demo/sample_app.ts` *(Sub-20ms instant production trap detection)*
 
 ---
 
