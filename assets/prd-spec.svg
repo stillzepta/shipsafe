@@ -1,0 +1,302 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="auto">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .ink { fill: none; stroke: #111827; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+      .ink-bold { fill: none; stroke: #111827; stroke-width: 4.8; stroke-linecap: round; stroke-linejoin: round; }
+      .ink-thin { fill: none; stroke: #111827; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .dashed { stroke-dasharray: 7 7; }
+      
+      /* Bablu Solid Black Silhouette */
+      .bablu { fill: #111827; stroke: #111827; stroke-width: 2; }
+      .bablu-eye { fill: #ffffff; }
+      
+      /* Spooky Functional Color Accents */
+      .accent-red { stroke: #ef4444; fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+      .fill-red { fill: #ef4444; }
+      .bg-red-tint { fill: #fee2e2; stroke: #ef4444; stroke-width: 2.2; }
+      
+      .accent-orange { stroke: #ea580c; fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+      .fill-orange { fill: #ea580c; }
+      .bg-orange-tint { fill: #ffedd5; stroke: #ea580c; stroke-width: 2.2; }
+      
+      .accent-blue { stroke: #2563eb; fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+      .fill-blue { fill: #2563eb; }
+      .bg-blue-tint { fill: #dbeafe; stroke: #2563eb; stroke-width: 2.2; }
+      
+      .fill-green { fill: #10b981; }
+      .accent-green { stroke: #10b981; fill: none; stroke-width: 3.2; }
+      .bg-green-tint { fill: #d1fae5; stroke: #10b981; stroke-width: 2.2; }
+
+      .accent-purple { stroke: #7c3aed; fill: none; stroke-width: 3.2; stroke-linecap: round; }
+      .fill-purple { fill: #7c3aed; }
+      .bg-purple-tint { fill: #ede9fe; stroke: #7c3aed; stroke-width: 2.2; }
+
+      /* Typography (Enlarged for High-DPI and Mobile Readability) */
+      .font-hand { font-family: 'Courier New', 'JetBrains Mono', monospace; font-weight: 700; }
+      .font-sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; }
+      .txt-title { font-size: 32px; fill: #111827; letter-spacing: -0.6px; font-weight: 900; }
+      .txt-sub { font-size: 16.5px; fill: #4b5563; font-weight: 600; }
+      .txt-tag { font-size: 13.5px; font-weight: 800; }
+      .txt-code { font-size: 13px; fill: #374151; font-family: monospace; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- 1. Pure White Background (16:9 widescreen canvas) -->
+  <rect width="1600" height="900" class="bg"/>
+
+  <!-- ==================== HEADER (PRODUCT REQUIREMENTS SPEC) ==================== -->
+  <g transform="translate(70, 26)">
+    <rect x="0" y="0" width="235" height="27" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="1.8"/>
+    <text x="10" y="19" class="font-sans" font-size="13" font-weight="800" fill="#ea580c">🎃 PRD // PRODUCT MATRIX</text>
+
+    <text x="0" y="58" class="font-sans txt-title">ShipSafe // The Outage Graveyard vs The Zero-Downtime Highway</text>
+    <text x="0" y="82" class="font-sans txt-sub">Why status-quo CI fails 10/10 outages, how the 4 Guardians protect production, and the 3-Persona ROI</text>
+    
+    <!-- Legend -->
+    <g transform="translate(1000, 2)">
+      <rect x="0" y="0" width="480" height="48" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="28" cy="24" r="7" fill="#ef4444"/>
+      <text x="44" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">Outage Graveyard</text>
+      <circle cx="215" cy="24" r="7" fill="#ea580c"/>
+      <text x="231" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">4 Gatekeepers</text>
+      <circle cx="365" cy="24" r="7" fill="#10b981"/>
+      <text x="381" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">3 Personas ROI</text>
+    </g>
+  </g>
+
+  <!-- Ground Line -->
+  <path d="M 50,815 L 1550,815" class="ink-thin dashed" stroke="#e2e8f0"/>
+
+  <!-- ==================== 3 PRD PILLARS ==================== -->
+
+  <!-- PILLAR 1: THE 3 AM OUTAGE GRAVEYARD (LEFT) -->
+  <g transform="translate(70, 160)">
+    <rect x="0" y="0" width="450" height="630" rx="14" fill="#ffffff" class="ink-bold" stroke="#ef4444"/>
+    <rect x="0" y="0" width="450" height="44" rx="14" fill="#fee2e2"/>
+    <text x="20" y="28" class="font-sans txt-tag fill-red">🪦 1. THE 3 AM OUTAGE GRAVEYARD (TRADITIONAL CI)</text>
+
+    <!-- Spooky Graveyard Scene -->
+    <g transform="translate(25, 65)">
+      <!-- Tombstone 1: Table Lock -->
+      <g transform="translate(15, 30)">
+        <path d="M 0,30 A 45,45 0 0,1 90,30 L 90,110 L 0,110 Z" fill="#f8fafc" stroke="#64748b" stroke-width="2.2"/>
+        <text x="28" y="45" class="font-sans" font-size="14" font-weight="900" fill="#991b1b">R.I.P.</text>
+        <text x="14" y="65" class="font-hand" font-size="10.5" fill="#475569">Postgres Pool</text>
+        <text x="8" y="80" class="font-sans" font-size="9.5" fill="#ef4444">Table Lock Drop</text>
+        <text x="14" y="98" class="font-hand" font-size="10" fill="#64748b">Oct 2026</text>
+      </g>
+
+      <!-- Tombstone 2: Missing Env -->
+      <g transform="translate(145, 10)">
+        <path d="M 0,35 A 55,55 0 0,1 110,35 L 110,130 L 0,130 Z" fill="#f8fafc" stroke="#64748b" stroke-width="2.2"/>
+        <text x="38" y="48" class="font-sans" font-size="14" font-weight="900" fill="#991b1b">R.I.P.</text>
+        <text x="14" y="70" class="font-hand" font-size="11" fill="#475569">Friday Deploy</text>
+        <text x="16" y="88" class="font-sans" font-size="10" font-weight="bold" fill="#ea580c">Missing .env</text>
+        <text x="14" y="106" class="font-sans" font-size="9" fill="#64748b">Crash on Restart</text>
+        <text x="28" y="122" class="font-hand" font-size="10" fill="#64748b">3:17 AM</text>
+      </g>
+
+      <!-- Tombstone 3: N+1 Loop -->
+      <g transform="translate(295, 35)">
+        <path d="M 0,30 A 45,45 0 0,1 90,30 L 90,105 L 0,105 Z" fill="#f8fafc" stroke="#64748b" stroke-width="2.2"/>
+        <text x="28" y="45" class="font-sans" font-size="14" font-weight="900" fill="#991b1b">R.I.P.</text>
+        <text x="16" y="65" class="font-hand" font-size="10.5" fill="#475569">Server CPU</text>
+        <text x="12" y="80" class="font-sans" font-size="9.5" fill="#7c3aed">N+1 Queries</text>
+        <text x="16" y="96" class="font-hand" font-size="10" fill="#64748b">100% Load</text>
+      </g>
+
+      <!-- Sleepy Skeleton Linter -->
+      <g transform="translate(45, 160)">
+        <!-- Burning Server Tower -->
+        <rect x="235" y="0" width="70" height="90" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+        <path d="M 270,10 L 260,35 L 285,55 L 275,85" class="accent-red" stroke-width="2.5"/>
+        <text x="242" y="45" class="font-sans" font-size="20">🔥</text>
+
+        <!-- Skeleton holding sign -->
+        <circle cx="50" cy="20" r="14" fill="#ffffff" stroke="#111827" stroke-width="2"/>
+        <circle cx="45" cy="18" r="2.5" fill="#111827"/>
+        <circle cx="55" cy="18" r="2.5" fill="#111827"/>
+        <line x1="50" y1="34" x2="50" y2="70" class="ink"/>
+        <line x1="50" y1="45" x2="90" y2="35" class="ink"/>
+        <line x1="50" y1="70" x2="35" y2="105" class="ink"/>
+        <line x1="50" y1="70" x2="65" y2="105" class="ink"/>
+        <!-- Signboard -->
+        <rect x="90" y="15" width="130" height="38" rx="4" fill="#f8fafc" stroke="#111827" stroke-width="1.8"/>
+        <text x="96" y="32" class="font-sans" font-size="10.5" font-weight="bold" fill="#111827">"Syntax is 100% valid!"</text>
+        <text x="96" y="46" class="font-sans" font-size="9.5" fill="#64748b">(ESLint + Prettier)</text>
+      </g>
+    </g>
+
+    <!-- The Problem Breakdown Card -->
+    <g transform="translate(25, 470)">
+      <rect x="0" y="0" width="400" height="135" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="2"/>
+      <text x="15" y="25" class="font-sans" font-size="14.5" font-weight="900" fill="#991b1b">The Multi-Billion Dollar Blindspot:</text>
+      <text x="15" y="48" class="font-sans" font-size="12.5" font-weight="600" fill="#7f1d1d">• Traditional CI only asks: "Does it compile?"</text>
+      <text x="15" y="70" class="font-sans" font-size="12.5" font-weight="600" fill="#7f1d1d">• It NEVER detects runtime locks, secrets, or loops</text>
+      <text x="15" y="92" class="font-sans" font-size="12.5" font-weight="600" fill="#7f1d1d">• Causes 10/10 catastrophic production outages</text>
+      <text x="15" y="118" class="font-hand" font-size="13" font-weight="bold" fill="#ef4444">Average Outage Cost: $120,000 in 45 min</text>
+    </g>
+  </g>
+
+  <!-- PILLAR 2: THE 4 PRE-SHIP GUARDIANS (CENTER) -->
+  <g transform="translate(555, 160)">
+    <rect x="0" y="0" width="475" height="630" rx="14" fill="#ffffff" class="ink-bold" stroke="#ea580c"/>
+    <rect x="0" y="0" width="475" height="44" rx="14" fill="#ffedd5"/>
+    <text x="20" y="28" class="font-sans txt-tag fill-orange">🛡️ 2. THE 4 PRE-SHIP GUARDIANS (PRD CORE SPEC)</text>
+
+    <!-- Bablu Chief Commander on Gatehouse -->
+    <g transform="translate(180, 55)">
+      <ellipse cx="45" cy="55" rx="18" ry="28" class="bablu"/>
+      <circle cx="45" cy="18" r="16" class="bablu"/>
+      <!-- Orange Headset & Antenna -->
+      <polygon points="30,10 45,-14 60,10" fill="#111827"/>
+      <ellipse cx="45" cy="10" rx="20" ry="5" fill="#ea580c"/>
+      <circle cx="40" cy="16" r="2.5" class="bablu-eye"/>
+      <circle cx="50" cy="16" r="2.5" class="bablu-eye"/>
+      <!-- Holding Shield against ghosts -->
+      <circle cx="95" cy="35" r="22" fill="#fff7ed" stroke="#ea580c" stroke-width="3"/>
+      <text x="86" y="42" class="font-sans" font-size="18">🛡️</text>
+      <line x1="45" y1="45" x2="75" y2="38" class="ink-bold"/>
+      <line x1="38" y1="80" x2="32" y2="115" class="ink-bold"/>
+      <line x1="52" y1="80" x2="58" y2="115" class="ink-bold"/>
+      <text x="130" y="32" class="font-sans" font-size="13.5" font-weight="900" fill="#ea580c">Bablu Commander</text>
+      <text x="130" y="48" class="font-sans" font-size="11.5" font-weight="700" fill="#4b5563">Radar: 100 / 100 Gate</text>
+    </g>
+
+    <!-- The 4 Core Gatekeeper Checkpoints (PRD Spec Table) -->
+    <g transform="translate(20, 180)">
+      <!-- Gate 1: Schema Hazard Sentinel -->
+      <g transform="translate(0, 0)">
+        <rect x="0" y="0" width="435" height="58" rx="8" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
+        <rect x="10" y="10" width="38" height="38" rx="6" fill="#fee2e2"/>
+        <text x="17" y="36" class="font-sans" font-size="18">🎃</text>
+        <text x="56" y="24" class="font-sans" font-size="14" font-weight="900" fill="#111827">1. Schema Hazard Sentinel</text>
+        <text x="56" y="42" class="font-sans" font-size="12" font-weight="600" fill="#991b1b">Exclusive table locks, unindexed foreign keys</text>
+        <rect x="345" y="14" width="80" height="26" rx="4" fill="#fee2e2"/>
+        <text x="353" y="31" class="font-sans" font-size="11" font-weight="800" fill="#ef4444">CRITICAL</text>
+      </g>
+
+      <!-- Gate 2: Config Drift Sentinel -->
+      <g transform="translate(0, 68)">
+        <rect x="0" y="0" width="435" height="58" rx="8" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+        <rect x="10" y="10" width="38" height="38" rx="6" fill="#ffedd5"/>
+        <text x="17" y="36" class="font-sans" font-size="18">👻</text>
+        <text x="56" y="24" class="font-sans" font-size="14" font-weight="900" fill="#111827">2. Config Drift Sentinel</text>
+        <text x="56" y="42" class="font-sans" font-size="12" font-weight="600" fill="#9a3412">process.env vs .env.example (1-click auto-sync)</text>
+        <rect x="360" y="14" width="65" height="26" rx="4" fill="#ffedd5"/>
+        <text x="372" y="31" class="font-sans" font-size="11" font-weight="800" fill="#ea580c">ERROR</text>
+      </g>
+
+      <!-- Gate 3: Performance Sniffer -->
+      <g transform="translate(0, 136)">
+        <rect x="0" y="0" width="435" height="58" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+        <rect x="10" y="10" width="38" height="38" rx="6" fill="#ede9fe"/>
+        <text x="17" y="36" class="font-sans" font-size="18">🧟</text>
+        <text x="56" y="24" class="font-sans" font-size="14" font-weight="900" fill="#111827">3. Performance Hazard Sniffer</text>
+        <text x="56" y="42" class="font-sans" font-size="12" font-weight="600" fill="#6b21a8">N+1 queries in loops &amp; blocking sync file I/O</text>
+        <rect x="345" y="14" width="80" height="26" rx="4" fill="#ede9fe"/>
+        <text x="353" y="31" class="font-sans" font-size="11" font-weight="800" fill="#7c3aed">CRITICAL</text>
+      </g>
+
+      <!-- Gate 4: Blast Radius DAG -->
+      <g transform="translate(0, 204)">
+        <rect x="0" y="0" width="435" height="58" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+        <rect x="10" y="10" width="38" height="38" rx="6" fill="#dbeafe"/>
+        <text x="17" y="36" class="font-sans" font-size="18">💥</text>
+        <text x="56" y="24" class="font-sans" font-size="14" font-weight="900" fill="#111827">4. Blast Radius DAG Engine</text>
+        <text x="56" y="42" class="font-sans" font-size="12" font-weight="600" fill="#1e40af">Maps ripple across 50+ microservices</text>
+        <rect x="345" y="14" width="80" height="26" rx="4" fill="#dbeafe"/>
+        <text x="355" y="31" class="font-sans" font-size="11" font-weight="800" fill="#2563eb">0 - 100%</text>
+      </g>
+    </g>
+
+    <!-- Operational Speed SLA -->
+    <g transform="translate(20, 470)">
+      <rect x="0" y="0" width="435" height="135" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.8"/>
+      <text x="15" y="25" class="font-sans" font-size="14.5" font-weight="900" fill="#111827">Non-Functional PRD Guarantees:</text>
+      <text x="15" y="48" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Sub-50ms execution speed (runs on every git commit)</text>
+      <text x="15" y="70" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• 100% air-gapped sovereign inference (zero data leakage)</text>
+      <text x="15" y="92" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Zero npm external bloat (native node:sqlite &amp; node:test)</text>
+      <text x="15" y="118" class="font-hand" font-size="12.5" font-weight="bold" fill="#ea580c">Pre-Flight Pass Rate: 100/100 certified release</text>
+    </g>
+  </g>
+
+  <!-- PILLAR 3: THE 3-PERSONA ROI (RIGHT) -->
+  <g transform="translate(1060, 160)">
+    <rect x="0" y="0" width="470" height="630" rx="14" fill="#ffffff" class="ink-bold" stroke="#10b981"/>
+    <rect x="0" y="0" width="470" height="44" rx="14" fill="#d1fae5"/>
+    <text x="20" y="28" class="font-sans txt-tag fill-green">✨ 3. THE 3-PERSONA ROI &amp; PEACE OF MIND</text>
+
+    <!-- Persona 1: CEO & VP Engineering -->
+    <g transform="translate(25, 60)">
+      <rect x="0" y="0" width="420" height="85" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+      <circle cx="35" cy="42" r="20" fill="#d1fae5"/>
+      <text x="24" y="49" class="font-sans" font-size="20">👑</text>
+      <text x="65" y="28" class="font-sans" font-size="14.5" font-weight="900" fill="#065f46">CEO &amp; VP of Engineering</text>
+      <text x="65" y="48" class="font-sans" font-size="12" font-weight="700" fill="#047857">"Deployment Insurance for the entire enterprise"</text>
+      <text x="65" y="68" class="font-sans" font-size="11.5" fill="#4b5563">Catching 1 outage pays for an entire year of engineering tools.</text>
+    </g>
+
+    <!-- Persona 2: Senior Tech Lead -->
+    <g transform="translate(25, 155)">
+      <rect x="0" y="0" width="420" height="85" rx="10" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+      <circle cx="35" cy="42" r="20" fill="#dbeafe"/>
+      <text x="24" y="49" class="font-sans" font-size="20">🔭</text>
+      <text x="65" y="28" class="font-sans" font-size="14.5" font-weight="900" fill="#1e40af">Senior Tech Lead &amp; Architect</text>
+      <text x="65" y="48" class="font-sans" font-size="12" font-weight="700" fill="#1d4ed8">"2-hour morning PR reviews cut down to 15 seconds"</text>
+      <text x="65" y="68" class="font-sans" font-size="11.5" fill="#4b5563">Automated Blast Radius &amp; AI Pre-Mortems in PR comments.</text>
+    </g>
+
+    <!-- Persona 3: The Busy Developer -->
+    <g transform="translate(25, 250)">
+      <rect x="0" y="0" width="420" height="85" rx="10" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+      <circle cx="35" cy="42" r="20" fill="#ffedd5"/>
+      <text x="24" y="49" class="font-sans" font-size="20">⚡</text>
+      <text x="65" y="28" class="font-sans" font-size="14.5" font-weight="900" fill="#9a3412">The Busy Developer</text>
+      <text x="65" y="48" class="font-sans" font-size="12" font-weight="700" fill="#c2410c">"No more Friday night Slack emergency pings"</text>
+      <text x="65" y="68" class="font-sans" font-size="11.5" fill="#4b5563">Catches bugs in 20ms; `shipsafe fix` auto-repairs chores.</text>
+    </g>
+
+    <!-- Destination Cloud & Production Highway -->
+    <g transform="translate(25, 345)">
+      <rect x="0" y="0" width="420" height="110" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2.2"/>
+      <!-- Cloud -->
+      <path d="M 25,35 A 18,18 0 0,1 60,25 A 28,28 0 0,1 110,22 A 20,20 0 0,1 135,40 A 14,14 0 0,1 122,58 L 25,58 Z" fill="#ecfdf5" stroke="#10b981" stroke-width="2.2"/>
+      <text x="42" y="46" class="font-sans" font-size="13" font-weight="800" fill="#047857">Production</text>
+
+      <!-- Bablu Shipped -->
+      <g transform="translate(155, 10)">
+        <ellipse cx="25" cy="45" rx="14" ry="22" class="bablu"/>
+        <circle cx="25" cy="16" r="13" class="bablu"/>
+        <circle cx="21" cy="14" r="2" class="bablu-eye"/>
+        <circle cx="29" cy="14" r="2" class="bablu-eye"/>
+        <line x1="25" y1="38" x2="48" y2="15" class="ink-bold"/>
+        <circle cx="48" cy="15" r="8" fill="#10b981"/>
+        <text x="50" y="26" class="font-sans" font-size="13" font-weight="900" fill="#10b981">Shipped: 100% Peace of Mind</text>
+        <text x="50" y="44" class="font-sans" font-size="11" fill="#4b5563">Zero table locks · Zero 3 AM pages</text>
+        <text x="50" y="62" class="font-sans" font-size="11.5" font-weight="bold" fill="#047857">Approved for 24/7 Global Traffic</text>
+      </g>
+    </g>
+
+    <!-- Summary Guarantee -->
+    <g transform="translate(25, 470)">
+      <rect x="0" y="0" width="420" height="135" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.8"/>
+      <text x="15" y="25" class="font-sans" font-size="14.5" font-weight="900" fill="#111827">Business Value Summary:</text>
+      <text x="15" y="48" class="font-sans" font-size="12" font-weight="600" fill="#4b5563">• 10/10 empirical outage catch rate verified in benchmarks</text>
+      <text x="15" y="70" class="font-sans" font-size="12" font-weight="600" fill="#4b5563">• Eliminates developer cognitive fatigue during high-tempo pushes</text>
+      <text x="15" y="92" class="font-sans" font-size="12" font-weight="600" fill="#4b5563">• Transforms git pre-commit into automated deployment insurance</text>
+      <text x="15" y="118" class="font-hand" font-size="12.5" font-weight="bold" fill="#10b981">ROI: Catching 1 incident saves &gt;$120,000</text>
+    </g>
+  </g>
+
+  <!-- ==================== FOOTER ==================== -->
+  <g transform="translate(70, 845)">
+    <text x="0" y="0" class="font-hand txt-code" font-size="13" fill="#374151">
+      [STYLE: Ian Bablu 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Bablu IP © TRioN]
+    </text>
+    <text x="0" y="24" class="font-sans" font-size="13" font-weight="600" fill="#64748b">
+      Product Requirements Document Specification: Outage Graveyard vs The 4 Pre-Ship Guardians &amp; The 3-Persona Enterprise ROI.
+    </text>
+  </g>
+</svg>

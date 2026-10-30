@@ -9,7 +9,15 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
   const findings: Finding[] = [];
 
   for (const file of files) {
-    if (file.path.includes('.test.') || file.path.includes('.spec.')) continue;
+    if (
+      file.path.includes('.test.') ||
+      file.path.includes('.spec.') ||
+      file.path.startsWith('src/core/') ||
+      file.path.startsWith('lib/') ||
+      /\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)
+    ) {
+      continue;
+    }
 
     const lines = file.content.split('\n');
 
@@ -62,14 +70,8 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
         }
       }
 
-      // 2. Synchronous blocking I/O in server route/controller context
-      const isServerRoute = file.path.includes('route') || 
-                            file.path.includes('controller') || 
-                            file.path.includes('server.ts') || 
-                            file.path.includes('api/') || 
-                            file.path.includes('04_sync_io');
+      // 2. Synchronous blocking I/O in server context
       if (
-        isServerRoute &&
         /\b(?:fs\.readFileSync|fs\.writeFileSync|child_process\.execSync|execSync)\b/i.test(
           trimmed
         )

@@ -14,32 +14,64 @@
 [![Runtime: Node.js 22+ (LTS)](https://img.shields.io/badge/Runtime-Node.js_22+_(LTS)-green.svg?style=flat-square)](https://nodejs.org/)
 [![Model: Gemma 2](https://img.shields.io/badge/Open--Weight-Gemma_2-4285F4.svg?style=flat-square)](https://ai.google.dev/gemma)
 [![Execution: Sub-35ms](https://img.shields.io/badge/Speed-%3C35ms_Execution-orange.svg?style=flat-square)](#-the-3-command-developer-quickstart)
+[![Live Demo: GitHub Pages](https://img.shields.io/badge/Live_Demo-stillzepta.github.io%2Fshipsafe-success.svg?style=flat-square&logo=github)](https://stillzepta.github.io/shipsafe/)
+[![Local UI: http://127.0.0.1:4100](https://img.shields.io/badge/Local_UI-127.0.0.1%3A4100-blue.svg?style=flat-square)](http://127.0.0.1:4100)
+
+> 🚀 **Quick Access & Live Links:**  
+> • 🌐 **One-Click Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/) *(Explore live gauge, radar & 10/10 outage benchmark without installing)*  
+> • 💻 **Local Interactive Dashboard:** [http://127.0.0.1:4100](http://127.0.0.1:4100) *(Live Server-Sent Events watching your local Git repository)*  
+> • ⚡ **Terminal Pitch Demo:** `node bin/shipsafe scan demo/sample_app.ts` *(Sub-20ms instant production trap detection)*
+
+```text
+  ╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗
+  ║  ⚡ INSTANT TERMINAL DEMO: node bin/shipsafe scan demo/sample_app.ts                              ║
+  ╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+  ⚓ ShipSafe v1.0.0 — Pre-Flight Blast Radius & Quality Gatekeeper
+  ────────────────────────────────────────────────────────────────────────
+
+  💥 Blast Radius Risk: [█░░░░░░░░░░░░░░░░░░░] 5% (LOW)
+  Impacts 0 downstream module(s) across 1 changed file(s).
+  
+  🚨 Health Check Findings (1):
+
+   CRITICAL  N+1 query or network request detected inside loop (perf/n-plus-one-loop)
+    Location: demo/sample_app.ts:14
+    Code:     const preferences = await db.query.find({ where: { userId: user.id } });
+    Fix:      Batch this query using WHERE IN (...) or DataLoader pattern outside the loop.
+
+  🧠 Pre-Mortem Intelligence (via local sovereign synthesizer):
+  "Pre-Mortem Alert: Identified 1 release risk(s) across 1 file(s) with 5% estimated blast radius."
+  Action Required: BLOCK MERGE: Critical hazards detected. Resolve N+1 queries before promotion.
+
+  ✔ Completed in 18ms across 1 file(s) • Gate Verdict: BLOCKED [Exit Code 1]
+```
 
 ---
 
-## 🎃 Explain Like I'm 5: Xiaohei and the Haunted Code Monsters
+## 🎃 Explain Like I'm 5: Bablu and the Haunted Code Monsters
 
-> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Xiaohei protects them.*
+> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Bablu protects them.*
 
-![Xiaohei and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
+![Bablu and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
 
 ### The 4-Act Storyboard
 1. **Act 1: The Toy Castle**  
    Every software developer writes code like building a giant LEGO castle. It looks colorful and exciting, but sneaky invisible ghosts hide inside the toy blocks: spooky database table locks, missing secret API keys, and zombie infinite loops. Regular linters only look at the paint on the outside; they are completely blind to the monsters inside.
 2. **Act 2: The 3 AM Nightmare (Without ShipSafe)**  
    The developer ships their castle to the cloud. At midnight on Halloween, the ghosts wake up! The database locks up tight, incoming customer traffic halts, shopping carts freeze, and the entire app crashes. Total damage: **$120,000 lost in 45 minutes** while the CEO cries.
-3. **Act 3: Enter Xiaohei the Ghostbuster (ShipSafe)**  
-   Before code ever leaves your laptop, **Xiaohei** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Xiaohei inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
+3. **Act 3: Enter Bablu the Ghostbuster (ShipSafe)**  
+   Before code ever leaves your laptop, **Bablu** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Bablu inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
 4. **Act 4: The Golden Ticket (Safe to Ship)**  
-   Xiaohei doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
+   Bablu doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
 
 ---
 
-## 🎨 System Architecture Blueprint (Ian Xiaohei English Edition)
+## 🎨 System Architecture Blueprint (Ian Bablu English Edition)
 
-![ShipSafe Architectural Blueprint — Ian Xiaohei Style](assets/shipsafe-architecture.svg)
+![ShipSafe Architectural Blueprint — Ian Bablu Style](assets/shipsafe-architecture.svg)
 
-> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Xiaohei architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
+> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
 
 ### 🗺️ Visual Walkthrough: How ShipSafe Protects Your Production Pipeline
 
@@ -50,7 +82,7 @@ The architectural blueprint above details the end-to-end journey of code moving 
    * Potential disasters—such as missing `.env.production` keys, live Stripe secrets (`sk_live_...`), unindexed foreign keys, dangerous table-locking migrations, or stray `debugger;` breakpoints—are caught locally within **35 milliseconds**.
 
 2. **The Pre-Flight Gatehouse & Radar (Center)**
-   * Supervised by **Xiaohei** (the diligent guardian equipped with an optical scanner, ghost-antenna headset, and laser beam), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
+   * Supervised by **Bablu** (the diligent guardian equipped with an optical scanner, ghost-antenna headset, and laser beam), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
      * 🎃 **Gate 1: Schema & Table Lock Detector (`src/core/schema.ts`)**: Catches `ALTER TABLE ... ADD NOT NULL` migrations lacking `DEFAULT` values that freeze live tables.
      * 👻 **Gate 2: Config & Env Drift Sentinel (`src/core/env.ts`)**: Scans `process.env` references and detects phantom drift against `.env.example`.
      * 🧟 **Gate 3: Performance & N+1 Loop Sniffer (`src/core/perf.ts`)**: Identifies async DB queries in loops and synchronous file I/O that freeze the Node.js event loop.
@@ -229,17 +261,58 @@ jobs:
       - run: node bin/shipsafe scan
 ```
 
-When a PR is opened, ShipSafe posts an automated review comment displaying the **Blast Radius Gauge**, **Identified Health Hazards**, and **Operational Release Notes**.
+### 💬 Automated Pull Request Pre-Mortem Review Comment
+
+When a developer opens a Pull Request on GitHub, ShipSafe's CI action analyzes the changed files in under 30 milliseconds and posts an interactive quality gate review comment directly onto the PR:
+
+> ### 🛡️ ShipSafe Quality Gatekeeper Report — PR `#42`
+> 
+> **Gate Status:** 🛑 **MERGE BLOCKED (Exit Code 1)**  
+> **Health Score:** `68 / 100` • **Evaluation Time:** `24ms`  
+> **Downstream Blast Radius:** `[████░░░░░░░░░░░░░░░░] 20% (MODERATE)`  
+> *Affects 2 downstream modules: `routes/billing.ts`, `services/stripe.ts`*
+> 
+> ---
+> 
+> #### 🚨 Caught Production Hazards (2)
+> | Severity | Category | File & Line | Hazard Description | Recommended Remediation |
+> | :---: | :---: | :--- | :--- | :--- |
+> | 🔴 **CRITICAL** | `perf/n-plus-one-loop` | [`routes/billing.ts:42`](#) | Async database query inside loop | Batch queries outside loop with `WHERE IN (...)` |
+> | 🟡 **WARNING** | `env/missing-in-example` | [`services/stripe.ts:8`](#) | `STRIPE_WEBHOOK_SECRET` missing from `.env.example` | Run `npx shipsafe fix` to auto-sync config |
+> 
+> ---
+> 
+> #### 🧠 Gemma 2 AI Pre-Mortem Synthesis
+> *"High risk of event-loop latency spikes under concurrent billing load due to sequential DB calls inside order iteration. Additionally, missing webhook secret will trigger silent 500 errors on deployment."*  
+> **Verdict:** Block merge until N+1 loop is batched and environment file is synchronized.
+> 
+> ⚡ **Quick Auto-Remediate:** Run `npx shipsafe fix` locally to auto-clean before re-pushing.
+
+---
+
+## 🏆 Hackathon Judging Rubric & Alignment Matrix
+
+| Evaluation Criterion | Hackathon Weight | How ShipSafe Wins | Core Source Files & Evidence |
+| :--- | :---: | :--- | :--- |
+| **Technical Depth & Innovation** | **30%** | In-memory reverse dependency DAG for blast radius analysis, multi-stage AST pattern sniffer for table locks and event loop blocking, embedded `node:sqlite` audit log, zero external dependencies. | [`src/core/blast.ts`](src/core/blast.ts)<br>[`src/core/perf.ts`](src/core/perf.ts)<br>[`src/core/schema.ts`](src/core/schema.ts)<br>[`src/core/env.ts`](src/core/env.ts) |
+| **Google Gemma 2 / AI Track** | **25%** | Two Brains sovereign architecture: air-gapped local inference via Google Gemma 2 (`gemma2:2b`/`gemma2:9b`) via Ollama with 1.8ms deterministic rule fallback. Zero code leakage, $0.00 cloud costs. | [`src/ai/engine.ts`](src/ai/engine.ts)<br>[`README.md#brain`](#-why-open-innovation-matters-100-air-gapped-sovereignty) |
+| **Real-World Impact & ROI** | **20%** | Solves the $120,000 Friday-night outage blind spot. Empirical proof: catches **10/10 (100%)** historical outage traps that pass ESLint, TypeScript, and Jest with green checkmarks. | [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md)<br>[`docs/PRD.md`](docs/PRD.md) |
+| **Design, Polish & Visual UX** | **15%** | Hand-drawn Ian Bablu visual engineering design system (16:9 SVGs), interactive Code Health Radar UI with live Server-Sent Events, 1-click Auto-Fix engine. | [`assets/`](assets/)<br>[`app.js`](app.js)<br>[`index.html`](index.html) |
+| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (18/18 tests in 64ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 
 ---
 
 ## 📚 Technical Documentation Suite
 
-ShipSafe adheres to the highest documentation standards:
-* 📄 **[Product Requirements Document (PRD.md)](docs/PRD.md)** — First-principles problem breakdown, persona ROI analysis, and threat model.
-* 🏗️ **[System Architecture (ARCHITECTURE.md)](docs/ARCHITECTURE.md)** — AST parsing pipelines, in-memory dependency DAG topology, and sequence flows.
-* ⚡ **[Operational Runbook & Cheatsheet (ESSENTIAL.md)](docs/ESSENTIAL.md)** — Port maps, CLI commands, git hook operations, and troubleshooting.
-* 📊 **[Empirical Benchmark Report (BENCHMARK_RESULTS.md)](benchmarks/BENCHMARK_RESULTS.md)** — Scientific evaluation against 10 historical outages.
+ShipSafe provides a comprehensive, gold-standard technical documentation suite illustrated in the hand-drawn Ian Bablu visual engineering style:
+
+| Document & Direct Link | Visual Spec Blueprint | Core Focus & Metaphor | Target Audience |
+| :--- | :---: | :--- | :--- |
+| 🏗️ **[System Architecture](docs/ARCHITECTURE.md)**<br>`docs/ARCHITECTURE.md` | [![Architecture](assets/architecture-spec.svg)](docs/ARCHITECTURE.md) | **The 3-Pillared Gatekeeper Engine**:<br>AST Sieve Autopsy, Dependency DAG Spiderweb (0–100%), and Sovereign Dual Brains (Gemma 2 + Heuristic). | Principal Architects, Staff SREs, Systems Engineers |
+| 📄 **[Product Requirements Document](docs/PRD.md)**<br>`docs/PRD.md` | [![PRD](assets/prd-spec.svg)](docs/PRD.md) | **The Outage Graveyard vs. The 4 Guardians**:<br>First-principles problem definition, $120k outage post-mortems, and Persona ROI calculus. | Engineering VPs, Product Managers, Enterprise Buyers |
+| ⚡ **[Operational Runbook](docs/ESSENTIAL.md)**<br>`docs/ESSENTIAL.md` | [![Essential Runbook](assets/essential-spec.svg)](docs/ESSENTIAL.md) | **The Operator's Magic Terminal & Runbook**:<br>Port topology (4100/11434), the 4 CLI spells (`scan`, `fix`, `commit`, `serve`), and troubleshooting. | DevOps Responders, On-Call Engineers, Developers |
+| 📊 **[Empirical Outage Benchmark](benchmarks/BENCHMARK_RESULTS.md)**<br>`benchmarks/BENCHMARK_RESULTS.md` | [Outage Scorecard](benchmarks/BENCHMARK_RESULTS.md) | **10/10 Caught vs. 0/10 Traditional CI**:<br>Scientific evaluation against 10 published enterprise outages (GitLab, Stripe, Shopify). | Technical Judges, Quality Assurance Leads |
+| 🎤 **[Live 3-Minute Pitch Script](docs/PITCH_SCRIPT.md)**<br>`docs/PITCH_SCRIPT.md` | [Pitch Guide](docs/PITCH_SCRIPT.md) | **The 180-Second Stage Delivery**:<br>Timed split script for Arnav Patel & Krishna Verma with slide cues and judge Q&A defense. | Hackathon Presenters, Judges & Evaluators |
 
 ---
 
@@ -279,6 +352,12 @@ npm test
 Built with pride for **Devf8rge Finals (Halloween Hack BLR)** by **Team TRioN**:
 * **Arnav Patel ([@XiaoArnav](https://github.com/XiaoArnav))** — Project Lead & Frontend Architecture
 * **Krishna Verma ([@stillzepta](https://github.com/stillzepta))** — Backend & AI Systems Engineering
+
+### 🎤 Presentation & Pitch Resources
+* 🎙️ **Live 3-Minute Split Stage Pitch Script:** [`docs/PITCH_SCRIPT.md`](docs/PITCH_SCRIPT.md) *(Word-for-word timed 180-second stage delivery + Q&A defense)*
+* 📑 **Official Pitch Deck Slides:** `TRioN_Devf8rge.pptx` *(6-slide visual deck prepared for the Devf8rge Finals stage)*
+* 🌐 **Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/)
+* 💻 **Local Interactive Radar:** [http://127.0.0.1:4100](http://127.0.0.1:4100)
 
 ---
 
