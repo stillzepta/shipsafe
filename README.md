@@ -4,6 +4,7 @@
 > *Built for [Devf8rge Finals (Halloween Hack BLR)](https://dev.to/events/challenges/hf26) • Newton School of Technology × Major League Hacking (MLH) × Hacktoberfest 2026*  
 > *Powered by Google's Gemma 2 Open-Weight Models & In-Memory Dependency Graph Analysis*
 
+[![ShipSafe CI](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
 [![Tests: 18/18 Passed](https://img.shields.io/badge/Tests-18%2F18_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
