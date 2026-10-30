@@ -17,7 +17,25 @@
 
 ---
 
-## 🎨 System Architecture Illustration (Ian Xiaohei English Edition)
+## 🎃 Explain Like I'm 5: Xiaohei and the Haunted Code Monsters
+
+> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Xiaohei protects them.*
+
+![Xiaohei and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
+
+### The 4-Act Storyboard
+1. **Act 1: The Toy Castle**  
+   Every software developer writes code like building a giant LEGO castle. It looks colorful and exciting, but sneaky invisible ghosts hide inside the toy blocks: spooky database table locks, missing secret API keys, and zombie infinite loops. Regular linters only look at the paint on the outside; they are completely blind to the monsters inside.
+2. **Act 2: The 3 AM Nightmare (Without ShipSafe)**  
+   The developer ships their castle to the cloud. At midnight on Halloween, the ghosts wake up! The database locks up tight, incoming customer traffic halts, shopping carts freeze, and the entire app crashes. Total damage: **$120,000 lost in 45 minutes** while the CEO cries.
+3. **Act 3: Enter Xiaohei the Ghostbuster (ShipSafe)**  
+   Before code ever leaves your laptop, **Xiaohei** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Xiaohei inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
+4. **Act 4: The Golden Ticket (Safe to Ship)**  
+   Xiaohei doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
+
+---
+
+## 🎨 System Architecture Blueprint (Ian Xiaohei English Edition)
 
 ![ShipSafe Architectural Blueprint — Ian Xiaohei Style](assets/shipsafe-architecture.svg)
 
@@ -32,22 +50,22 @@ The architectural blueprint above details the end-to-end journey of code moving 
    * Potential disasters—such as missing `.env.production` keys, live Stripe secrets (`sk_live_...`), unindexed foreign keys, dangerous table-locking migrations, or stray `debugger;` breakpoints—are caught locally within **35 milliseconds**.
 
 2. **The Pre-Flight Gatehouse & Radar (Center)**
-   * Supervised by **Xiaohei** (the diligent guardian equipped with optical inspection tools and an engineering headset), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
-     * 🛡️ **Gate 1: Secrets & Credentials**: High-entropy regex scanner detecting AWS, Stripe, GitHub PATs, JWTs, and database URIs with zero-false-positive filtering for test mocks.
-     * 🧹 **Gate 2: Code Hygiene**: Sniffs out `debugger;`, stray `console.log()` dumps, `@ts-ignore` bypasses, and `TODO [BLOCKER]` markers.
-     * 🌿 **Gate 3: Git Guard & Policy**: Enforces protected branch immutability (`main`, `master`), blocks files exceeding 1MB, and halts `.env` leaks.
-     * 🔍 **Gate 4: Syntax & ESM Integrity**: Real-time non-executing AST compilation (`node --check`, `JSON.parse`, YAML tab prohibition).
-     * 📦 **Gate 5: Dependency Auditor**: Enforces `package.json` and lockfile synchronization (`package-lock.json`, `pnpm-lock.yaml`) and flags wildcard versioning.
-   * **Real-Time Stream**: The background daemon continuously broadcasts Git staging state changes via Server-Sent Events (SSE) to the interactive dashboard on [`http://localhost:4100`](http://localhost:4100).
+   * Supervised by **Xiaohei** (the diligent guardian equipped with an optical scanner, ghost-antenna headset, and laser beam), the pre-flight engine runs the code diff through **5 multi-stage quality gates**:
+     * 🎃 **Gate 1: Schema & Table Lock Detector (`src/core/schema.ts`)**: Catches `ALTER TABLE ... ADD NOT NULL` migrations lacking `DEFAULT` values that freeze live tables.
+     * 👻 **Gate 2: Config & Env Drift Sentinel (`src/core/env.ts`)**: Scans `process.env` references and detects phantom drift against `.env.example`.
+     * 🧟 **Gate 3: Performance & N+1 Loop Sniffer (`src/core/perf.ts`)**: Identifies async DB queries in loops and synchronous file I/O that freeze the Node.js event loop.
+     * 💥 **Gate 4: Blast Radius 0–100% DAG Engine (`src/core/blast.ts`)**: Constructs an in-memory reverse dependency DAG to calculate downstream blast radius and flags critical infrastructure reach (`auth`, `billing`, `db`).
+     * 🧠 **Gate 5: Local AI Pre-Mortem Sentinel (`src/ai/engine.ts`)**: Generates natural-language risk assessments locally via Google Gemma 2 / Qwen 2.5 with a sub-2ms deterministic fallback.
+   * **Real-Time Stream**: The background daemon continuously broadcasts Git staging state changes via Server-Sent Events (SSE) to the interactive dashboard on [`http://127.0.0.1:4100`](http://127.0.0.1:4100).
    * **Embedded Persistence**: Every scan run, risk score, and execution duration is recorded locally into `.shipsafe/audit.db` using Node's native synchronous SQLite engine (`node:sqlite`).
 
 3. **The Divert & Auto-Fix Quarantine (Top Right — Red & Orange Accents)**
-   * When critical hazards (e.g. exclusive table locks or N+1 query loops) are detected, ShipSafe **immediately blocks the Git operation with Exit Code 1**.
+   * When critical hazards are detected, ShipSafe **immediately blocks the Git operation with Exit Code 1**.
    * Hazardous files are quarantined from GitHub.
    * Developers run `npm run fix` (or click **"⚡ Auto-Fix"** in the UI) to automatically unstage sensitive files, remove `debugger;` statements, and sync missing variables to `.env.example`.
 
-4. **The Verified Release Stream (Bottom Right — Blue & Green Accents)**
-   * Commits scoring 85–100 with zero critical errors receive **Exit Code 0** approval.
+4. **The Verified Release Stream (Bottom Right — Green & Blue Accents)**
+   * Commits scoring 85–100 with zero critical errors receive **Exit Code 0** approval and the **Golden Ticket**.
    * The clean code safely proceeds to GitHub and production CI/CD pipelines, guaranteeing zero preventable deployment failures.
 
 ---
@@ -107,17 +125,17 @@ We evaluated **ShipSafe** against **10 historical production outage traps** deri
 
 ## 🛡️ The 4 Core Pre-Ship Health Gatekeepers
 
-### 1. 🗄️ Database Schema Hazard Sentinel (`src/core/schema.ts`)
+### 1. 🎃 Database Schema Hazard Sentinel (`src/core/schema.ts`)
 * **Table Lock Defense:** Detects `ALTER TABLE ... ADD COLUMN ... NOT NULL` without `DEFAULT` values. Recommends the non-blocking expand-contract migration pattern.
 * **Rolling Deployment Defense:** Flags destructive column drops and renames that cause 500 errors on older application pods during zero-downtime rolling releases.
 * **Unindexed Foreign Keys:** Catches missing foreign key indexes that cause cascading sequential table scans.
 
-### 2. 🌐 Config & Environment Drift Sentinel (`src/core/env.ts`)
+### 2. 👻 Config & Environment Drift Sentinel (`src/core/env.ts`)
 * Scans all code changes for newly introduced `process.env.VAR` or `import.meta.env.VAR` references.
 * Cross-references against `.env.example`, `.env.sample`, and deployment configuration templates.
 * Flags missing variables and powers **1-click automated synchronization** (`shipsafe fix`).
 
-### 3. ⚡ Performance & N+1 Query Sniffer (`src/core/perf.ts`)
+### 3. 🧟 Performance & N+1 Query Sniffer (`src/core/perf.ts`)
 * State-machine analyzer that tracks database queries (`db.query`, `prisma.find`, `knex`) or network requests (`fetch`, `axios`) nested inside `.map()`, `for...of`, `forEach`, or `while` loops.
 * Identifies synchronous I/O operations (`fs.readFileSync`, `execSync`) in server execution paths that freeze the single-threaded Node.js event loop.
 * Flags unbounded `SELECT *` statements missing explicit `LIMIT` or pagination constraints.
@@ -147,9 +165,9 @@ Most commercial "AI PR Reviewers" upload proprietary source code diffs to closed
 ShipSafe runs natively on standard Node 22+ (Active LTS) with **zero external npm dependencies** (leveraging native TypeScript type-stripping and embedded `node:sqlite`):
 
 ```bash
-# 1. Run local pre-flight scan on staged changes
+# 1. Run local pre-flight scan on staged changes or specific files
 npm run scan
-# or: node bin/shipsafe scan
+# or test the pitch demo: node bin/shipsafe scan demo/sample_app.ts
 
 # 2. Automatically fix developer chores (.env.example sync, strip debuggers)
 npm run fix
@@ -182,7 +200,7 @@ npm test
 
 ## 🖥️ Interactive Web Dashboard & Real-Time Radar
 
-Launch the local interactive UI by running `npm start` and navigating to **[`http://localhost:4100`](http://localhost:4100)**:
+Launch the local interactive UI by running `npm start` and navigating to **[`http://127.0.0.1:4100`](http://127.0.0.1:4100)**:
 
 * **SVG Code Health Radar:** Circular animated gauge calculating readiness scores (0–100) with sub-50ms feedback.
 * **Dynamic Blast Radius Meter:** Live visual bar displaying the downstream impact percentage and listing affected endpoints.
@@ -230,7 +248,7 @@ ShipSafe adheres to the highest documentation standards:
 Run the comprehensive unit test suite:
 
 ```bash
-node --test tests/*.test.ts test/*.test.js
+npm test
 ```
 
 ```text
@@ -251,7 +269,7 @@ node --test tests/*.test.ts test/*.test.js
 ℹ tests 18
 ℹ pass 18
 ℹ fail 0
-ℹ duration_ms 66ms
+ℹ duration_ms 68ms
 ```
 
 ---

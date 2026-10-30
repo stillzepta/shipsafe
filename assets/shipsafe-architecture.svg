@@ -16,22 +16,27 @@
       .fill-red { fill: #ef4444; }
       .bg-red-tint { fill: #fee2e2; stroke: #ef4444; stroke-width: 2; }
       
-      .accent-orange { stroke: #f97316; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-      .fill-orange { fill: #f97316; }
-      .bg-orange-tint { fill: #ffedd5; stroke: #f97316; stroke-width: 2; }
+      .accent-orange { stroke: #ea580c; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+      .fill-orange { fill: #ea580c; }
+      .bg-orange-tint { fill: #ffedd5; stroke: #ea580c; stroke-width: 2; }
       
-      .accent-blue { stroke: #3b82f6; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-      .fill-blue { fill: #3b82f6; }
-      .bg-blue-tint { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; }
+      .accent-blue { stroke: #2563eb; fill: none; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+      .fill-blue { fill: #2563eb; }
+      .bg-blue-tint { fill: #dbeafe; stroke: #2563eb; stroke-width: 2; }
       
       .fill-green { fill: #10b981; }
       .accent-green { stroke: #10b981; fill: none; stroke-width: 2.6; }
+      .bg-green-tint { fill: #d1fae5; stroke: #10b981; stroke-width: 2; }
+
+      .accent-purple { stroke: #7c3aed; fill: none; stroke-width: 2.6; stroke-linecap: round; }
+      .fill-purple { fill: #7c3aed; }
+      .bg-purple-tint { fill: #ede9fe; stroke: #7c3aed; stroke-width: 2; }
 
       /* Typography */
       .font-hand { font-family: 'Courier New', 'JetBrains Mono', monospace; font-weight: 700; }
       .font-sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 600; }
-      .txt-title { font-size: 26px; fill: #111827; letter-spacing: -0.5px; }
-      .txt-sub { font-size: 14px; fill: #6b7280; }
+      .txt-title { font-size: 27px; fill: #111827; letter-spacing: -0.5px; font-weight: 800; }
+      .txt-sub { font-size: 14px; fill: #6b7280; font-weight: 500; }
       .txt-tag { font-size: 13px; font-weight: bold; }
       .txt-code { font-size: 13px; fill: #374151; font-family: monospace; }
     </style>
@@ -41,293 +46,336 @@
   <rect width="1600" height="900" class="bg"/>
 
   <!-- ==================== HEADER & TITLE ==================== -->
-  <g transform="translate(100, 60)">
-    <text x="0" y="32" class="font-sans txt-title">ShipSafe Pre-Flight Quality Gate Architecture</text>
-    <text x="0" y="58" class="font-sans txt-sub">Hand-Drawn System Blueprint (Ian Xiaohei English Edition) — Local Prevention Engine</text>
+  <g transform="translate(90, 48)">
+    <!-- Halloween Hack Badge -->
+    <rect x="0" y="0" width="220" height="26" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="1.6"/>
+    <text x="10" y="17" class="font-sans" font-size="12" font-weight="bold" fill="#ea580c">🎃 HALLOWEEN HACK BLR '26</text>
+
+    <text x="0" y="58" class="font-sans txt-title">ShipSafe // The Pre-Flight Ghostbuster for Production Traps</text>
+    <text x="0" y="82" class="font-sans txt-sub">How Xiaohei Catches Spooky Table Locks, Phantom Secrets &amp; Zombie Loops Before Code Haunts Production</text>
     
     <!-- Legend Pill -->
-    <g transform="translate(1050, 10)">
-      <rect x="0" y="0" width="350" height="46" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.8"/>
-      <circle cx="28" cy="23" r="6" fill="#ef4444"/>
-      <text x="42" y="27" class="font-sans" font-size="12" fill="#374151">Blocked / Hazard</text>
-      <circle cx="160" cy="23" r="6" fill="#f97316"/>
-      <text x="174" y="27" class="font-sans" font-size="12" fill="#374151">Auto-Remediate</text>
-      <circle cx="285" cy="23" r="6" fill="#3b82f6"/>
-      <text x="299" y="27" class="font-sans" font-size="12" fill="#374151">Approved</text>
+    <g transform="translate(1080, 20)">
+      <rect x="0" y="0" width="370" height="48" rx="8" fill="#ffffff" stroke="#e5e7eb" stroke-width="1.8"/>
+      <circle cx="28" cy="24" r="6" fill="#ef4444"/>
+      <text x="42" y="28" class="font-sans" font-size="12" fill="#374151">Ghost Trap (Hazard)</text>
+      <circle cx="170" cy="24" r="6" fill="#ea580c"/>
+      <text x="184" y="28" class="font-sans" font-size="12" fill="#374151">Auto-Remediate</text>
+      <circle cx="295" cy="24" r="6" fill="#10b981"/>
+      <text x="309" y="28" class="font-sans" font-size="12" fill="#374151">Golden Ticket</text>
     </g>
   </g>
 
   <!-- Ground Line -->
-  <path d="M 80,780 L 1520,780" class="ink-thin dashed" stroke="#d1d5db"/>
+  <path d="M 80,800 L 1520,800" class="ink-thin dashed" stroke="#e5e7eb"/>
 
   <!-- ==================== STAGE 1: INCOMING CODE STREAM (LEFT) ==================== -->
-  <g transform="translate(120, 260)">
+  <g transform="translate(100, 240)">
     <!-- Stage Label -->
-    <rect x="0" y="-40" width="170" height="26" rx="4" class="bg-blue-tint"/>
-    <text x="12" y="-23" class="font-sans txt-tag fill-blue">1. LOCAL STAGING</text>
+    <rect x="0" y="-40" width="210" height="28" rx="5" class="bg-blue-tint"/>
+    <text x="12" y="-21" class="font-sans txt-tag fill-blue">1. LOCAL STAGING BUFFER</text>
+    <text x="12" y="-4" class="font-sans" font-size="11" fill="#6b7280">Developer runs "git add ."</text>
     
     <!-- Conveyor Belt -->
-    <path d="M 10,240 L 290,240" class="ink-bold"/>
-    <circle cx="30" cy="255" r="14" class="ink"/>
-    <circle cx="150" cy="255" r="14" class="ink"/>
-    <circle cx="270" cy="255" r="14" class="ink"/>
+    <path d="M 10,260 L 300,260" class="ink-bold"/>
+    <circle cx="35" cy="275" r="15" class="ink"/>
+    <circle cx="155" cy="275" r="15" class="ink"/>
+    <circle cx="275" cy="275" r="15" class="ink"/>
     
-    <!-- Staged Files Moving on Conveyor -->
-    <!-- File 1: clean code -->
-    <g transform="translate(20, 60)">
-      <rect x="0" y="0" width="85" height="110" rx="6" fill="#ffffff" class="ink"/>
-      <line x1="16" y1="25" x2="65" y2="25" class="ink-thin"/>
-      <line x1="16" y1="42" x2="55" y2="42" class="ink-thin"/>
-      <line x1="16" y1="59" x2="70" y2="59" class="ink-thin"/>
-      <text x="16" y="92" class="font-hand txt-code">auth.js</text>
+    <!-- Staged Files Moving on Conveyor with Spooky Code Monsters Hidden Inside -->
+    
+    <!-- File 1: Haunted Migration with Table Lock Monster -->
+    <g transform="translate(20, 50)">
+      <rect x="0" y="0" width="100" height="135" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2.4"/>
+      <line x1="16" y1="25" x2="84" y2="25" class="ink-thin" stroke="#ef4444"/>
+      <text x="14" y="44" class="font-hand" font-size="11" fill="#991b1b">migration.sql</text>
+      <rect x="10" y="52" width="80" height="24" rx="3" fill="#ef4444"/>
+      <text x="14" y="68" class="font-hand" font-size="9" fill="#ffffff">NOT NULL LOCK</text>
+      
+      <!-- The Table Lock Gargoyle Monster (Cute Spooky Character) -->
+      <g transform="translate(25, 84)">
+        <!-- Gargoyle Body -->
+        <ellipse cx="25" cy="18" rx="14" ry="12" fill="#ef4444"/>
+        <!-- Horns -->
+        <polygon points="14,10 18,2 20,10" fill="#991b1b"/>
+        <polygon points="36,10 32,2 30,10" fill="#991b1b"/>
+        <!-- Eyes -->
+        <circle cx="20" cy="16" r="2.5" fill="#ffffff"/>
+        <circle cx="30" cy="16" r="2.5" fill="#ffffff"/>
+        <!-- Angry teeth -->
+        <path d="M 20,24 L 23,21 L 26,24 L 29,21 L 32,24" class="ink-thin" stroke="#ffffff"/>
+      </g>
+      <text x="8" y="125" class="font-sans" font-size="10" font-weight="bold" fill="#ef4444">Table Lock Monster</text>
     </g>
 
-    <!-- File 2: Dangerous Secret Leak! -->
-    <g transform="translate(130, 40)">
-      <rect x="0" y="0" width="95" height="130" rx="6" fill="#fee2e2" stroke="#ef4444" stroke-width="2.4"/>
-      <line x1="16" y1="25" x2="75" y2="25" class="ink-thin" stroke="#ef4444"/>
-      <rect x="14" y="44" width="68" height="24" rx="4" fill="#ef4444"/>
-      <text x="18" y="60" class="font-hand" font-size="10" fill="#ffffff">AKIA...KEY</text>
-      <text x="16" y="92" class="font-hand txt-code">.env.prod</text>
-      <text x="16" y="112" class="font-sans" font-size="11" fill="#ef4444">LEAK DETECTED</text>
-      <!-- Red warning halo -->
-      <path d="M 47, -25 L 47, -5" class="accent-red"/>
-      <path d="M 27, -18 L 37, -3" class="accent-red"/>
-      <path d="M 67, -18 L 57, -3" class="accent-red"/>
-      <text x="8" y="-32" class="font-sans txt-tag fill-red">STAGED SECRET!</text>
+    <!-- File 2: Missing Env Var Phantom Secret -->
+    <g transform="translate(140, 25)">
+      <rect x="0" y="0" width="105" height="155" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="2.4"/>
+      <line x1="16" y1="25" x2="85" y2="25" class="ink-thin" stroke="#ea580c"/>
+      <text x="14" y="44" class="font-hand" font-size="11" fill="#9a3412">checkout.ts</text>
+      
+      <!-- Ghost Floating inside code -->
+      <g transform="translate(25, 52)">
+        <!-- Ghost Body -->
+        <path d="M 12,35 C 12,15 45,15 45,35 C 45,42 40,40 37,45 C 34,40 30,42 27,45 C 24,40 20,42 17,45 C 14,40 12,42 12,35 Z" fill="#ffffff" stroke="#ea580c" stroke-width="2"/>
+        <!-- Ghost Eyes -->
+        <circle cx="23" cy="27" r="2.5" fill="#ea580c"/>
+        <circle cx="34" cy="27" r="2.5" fill="#ea580c"/>
+        <!-- Ghost O-mouth -->
+        <ellipse cx="28" cy="33" rx="2.5" ry="3.5" fill="#ea580c"/>
+        <text x="6" y="58" class="font-hand" font-size="9" fill="#ea580c">STRIPE_KEY?</text>
+      </g>
+      <text x="10" y="128" class="font-sans" font-size="10" font-weight="bold" fill="#ea580c">Phantom Secret</text>
+      <text x="10" y="142" class="font-sans" font-size="9" fill="#9a3412">Missing from .env.example</text>
     </g>
 
-    <!-- Xiaohei #1 (Developer at terminal) -->
-    <g transform="translate(-40, 150)">
-      <!-- Body -->
-      <ellipse cx="40" cy="55" rx="16" ry="24" class="xiaohei"/>
-      <!-- Head -->
-      <circle cx="40" cy="20" r="14" class="xiaohei"/>
+    <!-- Xiaohei #1 (The Midnight Developer) -->
+    <g transform="translate(-45, 170)">
+      <!-- Developer desk -->
+      <line x1="-15" y1="90" x2="35" y2="90" class="ink"/>
+      <rect x="-5" y="65" width="28" height="22" rx="3" fill="#ffffff" class="ink"/>
+      <!-- Xiaohei Silhouette -->
+      <ellipse cx="45" cy="55" rx="16" ry="24" class="xiaohei"/>
+      <circle cx="45" cy="20" r="14" class="xiaohei"/>
+      <!-- Little Witch / Wizard Hat for Halloween -->
+      <polygon points="32,12 45,-12 58,12" fill="#111827"/>
+      <ellipse cx="45" cy="12" rx="18" ry="4" fill="#ea580c"/>
       <!-- Eyes -->
-      <circle cx="36" cy="18" r="2.2" class="xiaohei-eye"/>
-      <circle cx="44" cy="18" r="2.2" class="xiaohei-eye"/>
-      <!-- Legs -->
-      <line x1="32" y1="78" x2="26" y2="120" class="ink-bold"/>
-      <line x1="48" y1="78" x2="54" y2="120" class="ink-bold"/>
-      <!-- Arms pushing commit -->
-      <path d="M 40,45 Q 65,55 80,48" class="ink-bold"/>
-      <text x="-15" y="145" class="font-sans" font-size="13" fill="#111827">git commit -m "..."</text>
+      <circle cx="41" cy="18" r="2.2" class="xiaohei-eye"/>
+      <circle cx="49" cy="18" r="2.2" class="xiaohei-eye"/>
+      <!-- Arms pushing code -->
+      <path d="M 45,45 Q 70,55 85,48" class="ink-bold"/>
+      <line x1="37" y1="78" x2="31" y2="120" class="ink-bold"/>
+      <line x1="53" y1="78" x2="59" y2="120" class="ink-bold"/>
+      <text x="-25" y="145" class="font-sans" font-size="12" font-weight="bold" fill="#111827">Midnight Dev</text>
+      <text x="-25" y="160" class="font-hand" font-size="11" fill="#6b7280">git commit -m "feat!"</text>
     </g>
 
-    <text x="35" y="295" class="font-sans" font-size="13" fill="#6b7280">Local Staged Buffer</text>
+    <text x="35" y="315" class="font-sans" font-size="13" fill="#6b7280">Staged code enters pre-flight tunnel</text>
   </g>
 
   <!-- Flow Arrow from Staging to Sentry -->
-  <g transform="translate(430, 420)">
-    <path d="M 0,0 L 70,0" class="ink-bold dashed"/>
-    <polygon points="70,-6 84,0 70,6" fill="#111827"/>
-    <text x="10" y="-12" class="font-sans" font-size="12" fill="#6b7280">&lt; 10ms trigger</text>
+  <g transform="translate(425, 430)">
+    <path d="M 0,0 L 75,0" class="ink-bold dashed" stroke="#ea580c"/>
+    <polygon points="75,-6 89,0 75,6" fill="#ea580c"/>
+    <text x="8" y="-12" class="font-sans" font-size="12" font-weight="bold" fill="#ea580c">Pre-Commit Hook (&lt;15ms)</text>
   </g>
 
-  <!-- ==================== STAGE 2: SHIIPSAFE GATEHOUSE (CENTER) ==================== -->
-  <g transform="translate(530, 180)">
+  <!-- ==================== STAGE 2: SHIPSAFE SENTRY GATEHOUSE (CENTER) ==================== -->
+  <g transform="translate(525, 170)">
     <!-- Stage Label -->
-    <rect x="0" y="40" width="220" height="26" rx="4" class="bg-orange-tint"/>
-    <text x="12" y="57" class="font-sans txt-tag fill-orange">2. PRE-FLIGHT QUALITY GATE</text>
+    <rect x="0" y="40" width="240" height="28" rx="5" class="bg-orange-tint"/>
+    <text x="12" y="59" class="font-sans txt-tag fill-orange">2. SHIPSAFE GHOSTBUSTER GATE</text>
 
-    <!-- Main Machine Box -->
-    <rect x="0" y="80" width="460" height="420" rx="14" fill="#ffffff" class="ink-bold"/>
+    <!-- Main Machine Fortress Box -->
+    <rect x="0" y="80" width="480" height="450" rx="14" fill="#ffffff" class="ink-bold"/>
 
     <!-- Radar Meter Header -->
-    <g transform="translate(30, 110)">
-      <rect x="0" y="0" width="400" height="70" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.8"/>
+    <g transform="translate(30, 105)">
+      <rect x="0" y="0" width="420" height="74" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.8"/>
       <!-- Radar Circle -->
-      <circle cx="45" cy="35" r="24" class="ink"/>
-      <path d="M 45,35 L 62,24" class="accent-green"/>
-      <circle cx="45" cy="35" r="4" fill="#10b981"/>
-      <text x="85" y="32" class="font-sans" font-size="15" fill="#111827">HEALTH SCORE: <tspan fill="#10b981" font-weight="bold">100 / 100</tspan></text>
-      <text x="85" y="52" class="font-hand txt-code" font-size="11" fill="#6b7280">SQLite Audit: .shipsafe/audit.db</text>
+      <circle cx="45" cy="37" r="26" class="ink"/>
+      <circle cx="45" cy="37" r="16" class="ink-thin dashed" stroke="#10b981"/>
+      <path d="M 45,37 L 64,22" class="accent-green" stroke-width="3"/>
+      <circle cx="45" cy="37" r="4" fill="#10b981"/>
+      <text x="85" y="32" class="font-sans" font-size="16" font-weight="bold" fill="#111827">PRE-FLIGHT RADAR: <tspan fill="#10b981">100 / 100</tspan></text>
+      <text x="85" y="54" class="font-sans" font-size="12" fill="#6b7280">Embedded SQLite: <tspan class="font-hand" fill="#374151">.shipsafe/audit.db (Sub-35ms)</tspan></text>
     </g>
 
-    <!-- 5 Multi-Stage Check Chutes -->
-    <g transform="translate(30, 200)">
-      <!-- Rule 1: Secrets -->
+    <!-- 4 Multi-Stage Ghostbuster Sensors -->
+    <g transform="translate(30, 195)">
+      <!-- Rule 1: Schema Table Locks -->
       <g transform="translate(0, 0)">
-        <rect x="0" y="0" width="395" height="42" rx="6" fill="#ffffff" class="ink-thin"/>
-        <circle cx="22" cy="21" r="9" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5"/>
-        <text x="18" y="25" class="font-sans" font-size="11" fill="#ef4444">🛡️</text>
-        <text x="40" y="24" class="font-sans" font-size="12" fill="#111827">Secrets &amp; Credentials Scanner</text>
-        <text x="260" y="24" class="font-hand" font-size="11" fill="#ef4444">AWS/Stripe/JWT</text>
+        <rect x="0" y="0" width="420" height="46" rx="6" fill="#ffffff" class="ink-thin"/>
+        <rect x="8" y="8" width="30" height="30" rx="4" fill="#fee2e2"/>
+        <text x="14" y="28" class="font-sans" font-size="14">🎃</text>
+        <text x="46" y="24" class="font-sans" font-size="13" font-weight="bold" fill="#111827">Schema &amp; Table Lock Detector</text>
+        <text x="46" y="38" class="font-sans" font-size="11" fill="#6b7280">Catches NOT NULL without DEFAULT</text>
+        <rect x="330" y="12" width="80" height="22" rx="4" fill="#fee2e2"/>
+        <text x="336" y="27" class="font-hand" font-size="10" fill="#991b1b">schema.ts</text>
       </g>
-      <!-- Rule 2: Hygiene -->
-      <g transform="translate(0, 48)">
-        <rect x="0" y="0" width="395" height="42" rx="6" fill="#ffffff" class="ink-thin"/>
-        <circle cx="22" cy="21" r="9" fill="#ffedd5" stroke="#f97316" stroke-width="1.5"/>
-        <text x="18" y="25" class="font-sans" font-size="11" fill="#f97316">🧹</text>
-        <text x="40" y="24" class="font-sans" font-size="12" fill="#111827">Code Hygiene &amp; Smells</text>
-        <text x="260" y="24" class="font-hand" font-size="11" fill="#f97316">debugger / logs</text>
+
+      <!-- Rule 2: Env Drift -->
+      <g transform="translate(0, 54)">
+        <rect x="0" y="0" width="420" height="46" rx="6" fill="#ffffff" class="ink-thin"/>
+        <rect x="8" y="8" width="30" height="30" rx="4" fill="#ffedd5"/>
+        <text x="14" y="28" class="font-sans" font-size="14">👻</text>
+        <text x="46" y="24" class="font-sans" font-size="13" font-weight="bold" fill="#111827">Config &amp; Env Drift Sentinel</text>
+        <text x="46" y="38" class="font-sans" font-size="11" fill="#6b7280">Syncs process.env to .env.example</text>
+        <rect x="345" y="12" width="65" height="22" rx="4" fill="#ffedd5"/>
+        <text x="355" y="27" class="font-hand" font-size="10" fill="#9a3412">env.ts</text>
       </g>
-      <!-- Rule 3: Git Guard -->
-      <g transform="translate(0, 96)">
-        <rect x="0" y="0" width="395" height="42" rx="6" fill="#ffffff" class="ink-thin"/>
-        <circle cx="22" cy="21" r="9" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="18" y="25" class="font-sans" font-size="11" fill="#3b82f6">🌿</text>
-        <text x="40" y="24" class="font-sans" font-size="12" fill="#111827">Git Guard &amp; Branch Policy</text>
-        <text x="260" y="24" class="font-hand" font-size="11" fill="#3b82f6">main / bloat / .env</text>
+
+      <!-- Rule 3: Performance & Zombie Loops -->
+      <g transform="translate(0, 108)">
+        <rect x="0" y="0" width="420" height="46" rx="6" fill="#ffffff" class="ink-thin"/>
+        <rect x="8" y="8" width="30" height="30" rx="4" fill="#ede9fe"/>
+        <text x="14" y="28" class="font-sans" font-size="14">🧟</text>
+        <text x="46" y="24" class="font-sans" font-size="13" font-weight="bold" fill="#111827">Performance &amp; N+1 Loop Sniffer</text>
+        <text x="46" y="38" class="font-sans" font-size="11" fill="#6b7280">Halts async db queries in loops &amp; sync I/O</text>
+        <rect x="345" y="12" width="65" height="22" rx="4" fill="#ede9fe"/>
+        <text x="353" y="27" class="font-hand" font-size="10" fill="#6b21a8">perf.ts</text>
       </g>
-      <!-- Rule 4: Syntax -->
-      <g transform="translate(0, 144)">
-        <rect x="0" y="0" width="395" height="42" rx="6" fill="#ffffff" class="ink-thin"/>
-        <circle cx="22" cy="21" r="9" fill="#e0e7ff" stroke="#6366f1" stroke-width="1.5"/>
-        <text x="18" y="25" class="font-sans" font-size="11" fill="#6366f1">🔍</text>
-        <text x="40" y="24" class="font-sans" font-size="12" fill="#111827">Syntax &amp; ESM Integrity</text>
-        <text x="260" y="24" class="font-hand" font-size="11" fill="#6366f1">node --check/JSON</text>
+
+      <!-- Rule 4: Blast Radius DAG -->
+      <g transform="translate(0, 162)">
+        <rect x="0" y="0" width="420" height="46" rx="6" fill="#ffffff" class="ink-thin"/>
+        <rect x="8" y="8" width="30" height="30" rx="4" fill="#dbeafe"/>
+        <text x="14" y="28" class="font-sans" font-size="14">💥</text>
+        <text x="46" y="24" class="font-sans" font-size="13" font-weight="bold" fill="#111827">Blast Radius 0-100% DAG Topology</text>
+        <text x="46" y="38" class="font-sans" font-size="11" fill="#6b7280">Calculates downstream ripple &amp; auth/db reach</text>
+        <rect x="340" y="12" width="70" height="22" rx="4" fill="#dbeafe"/>
+        <text x="348" y="27" class="font-hand" font-size="10" fill="#1e40af">blast.ts</text>
       </g>
-      <!-- Rule 5: Dependencies -->
-      <g transform="translate(0, 192)">
-        <rect x="0" y="0" width="395" height="42" rx="6" fill="#ffffff" class="ink-thin"/>
-        <circle cx="22" cy="21" r="9" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
-        <text x="18" y="25" class="font-sans" font-size="11" fill="#d97706">📦</text>
-        <text x="40" y="24" class="font-sans" font-size="12" fill="#111827">Dependency &amp; Lockfile Sync</text>
-        <text x="260" y="24" class="font-hand" font-size="11" fill="#d97706">package-lock.json</text>
+
+      <!-- Rule 5: Local Gemma 2 AI Pre-Mortem -->
+      <g transform="translate(0, 216)">
+        <rect x="0" y="0" width="420" height="46" rx="6" fill="#ffffff" stroke="#10b981" stroke-width="1.8"/>
+        <rect x="8" y="8" width="30" height="30" rx="4" fill="#d1fae5"/>
+        <text x="14" y="28" class="font-sans" font-size="14">🧠</text>
+        <text x="46" y="24" class="font-sans" font-size="13" font-weight="bold" fill="#065f46">Local AI Pre-Mortem (Gemma 2 / Qwen)</text>
+        <text x="46" y="38" class="font-sans" font-size="11" fill="#047857">100% Air-Gapped + Instant Deterministic Fallback</text>
+        <rect x="330" y="12" width="80" height="22" rx="4" fill="#d1fae5"/>
+        <text x="338" y="27" class="font-hand" font-size="10" fill="#065f46">engine.ts</text>
       </g>
     </g>
 
-    <!-- Central Sentry: Xiaohei Operator on Gatehouse Roof -->
-    <g transform="translate(200, -55)">
+    <!-- Central Sentry: Xiaohei Ghostbuster on Gatehouse Roof -->
+    <g transform="translate(210, -60)">
       <!-- Ladder to roof -->
-      <line x1="20" y1="50" x2="20" y2="135" class="ink-thin"/>
-      <line x1="40" y1="50" x2="40" y2="135" class="ink-thin"/>
+      <line x1="20" y1="50" x2="20" y2="140" class="ink-thin"/>
+      <line x1="40" y1="50" x2="40" y2="140" class="ink-thin"/>
       <line x1="20" y1="70" x2="40" y2="70" class="ink-thin"/>
-      <line x1="20" y1="90" x2="40" y2="90" class="ink-thin"/>
-      <line x1="20" y1="110" x2="40" y2="110" class="ink-thin"/>
+      <line x1="20" y1="95" x2="40" y2="95" class="ink-thin"/>
+      <line x1="20" y1="120" x2="40" y2="120" class="ink-thin"/>
 
-      <!-- Xiaohei Chief Inspector -->
-      <!-- Body -->
+      <!-- Xiaohei Chief Ghostbuster Inspector -->
       <ellipse cx="80" cy="50" rx="18" ry="26" class="xiaohei"/>
-      <!-- Head -->
       <circle cx="80" cy="14" r="16" class="xiaohei"/>
-      <!-- Headset -->
-      <path d="M 66,10 A 15,15 0 0,1 94,10" class="accent-orange"/>
-      <rect x="62" y="8" width="6" height="12" rx="2" fill="#f97316"/>
+      <!-- Ghostbuster Headset & Ghost Antenna -->
+      <path d="M 64,10 A 16,16 0 0,1 96,10" class="accent-orange"/>
+      <rect x="60" y="8" width="6" height="12" rx="2" fill="#ea580c"/>
+      <line x1="80" y1="-2" x2="80" y2="-22" class="ink-bold" stroke="#ea580c"/>
+      <circle cx="80" cy="-24" r="5" fill="#ea580c"/>
       <!-- Eyes -->
       <circle cx="76" cy="12" r="2.5" class="xiaohei-eye"/>
       <circle cx="84" cy="12" r="2.5" class="xiaohei-eye"/>
-      <!-- Legs sitting on edge -->
+      <!-- Legs sitting on roof edge -->
       <path d="M 72,75 L 72,105 L 80,105" class="ink-bold"/>
       <path d="M 88,75 L 88,105 L 96,105" class="ink-bold"/>
-      <!-- Arms holding giant magnifying glass down at code -->
-      <path d="M 70,40 Q 40,30 30,55" class="ink-bold"/>
-      <!-- Magnifying Glass -->
-      <circle cx="25" cy="65" r="18" class="ink-bold" stroke="#3b82f6"/>
-      <line x1="38" y1="77" x2="52" y2="92" class="ink-bold"/>
-      <text x="-40" y="10" class="font-sans" font-size="12" fill="#f97316">Xiaohei Operator</text>
+      <!-- Ghost Vacuum / Scanner held down -->
+      <path d="M 70,40 Q 35,30 25,58" class="ink-bold"/>
+      <!-- Magnifying Scanner Lens with Halloween Beam -->
+      <circle cx="20" cy="68" r="20" class="ink-bold" stroke="#ea580c"/>
+      <path d="M 20,88 L -10,135 L 50,135 Z" fill="#ffedd5" opacity="0.6"/>
+      <text x="-50" y="10" class="font-sans" font-size="12" font-weight="bold" fill="#ea580c">Xiaohei Inspector</text>
     </g>
 
     <!-- Server Live Indicator -->
-    <g transform="translate(140, 520)">
+    <g transform="translate(130, 545)">
       <circle cx="10" cy="10" r="5" fill="#10b981"/>
-      <text x="24" y="14" class="font-sans" font-size="12" fill="#111827">Local Server: <tspan fill="#3b82f6">http://localhost:4100</tspan> (Live SSE)</text>
+      <text x="24" y="14" class="font-sans" font-size="12" fill="#111827">Local Server: <tspan fill="#2563eb" font-weight="bold">http://127.0.0.1:4100</tspan> (Live SSE)</text>
     </g>
   </g>
 
   <!-- ==================== STAGE 3: DECISION FORK (RIGHT) ==================== -->
   
-  <!-- FORK PATH A: REJECTED & AUTO-FIX (TOP RIGHT) -->
-  <g transform="translate(1080, 180)">
-    <!-- Rejected Red Line -->
-    <path d="M -90,200 C -20,200 0,120 70,120" class="accent-red" stroke-width="3"/>
-    <polygon points="70,114 84,120 70,126" fill="#ef4444"/>
+  <!-- FORK PATH A: REJECTED & AUTO-REMEDIATION (TOP RIGHT) -->
+  <g transform="translate(1090, 175)">
+    <!-- Rejected Red Ghost Trap Line -->
+    <path d="M -90,210 C -20,210 0,110 70,110" class="accent-red" stroke-width="3.5"/>
+    <polygon points="70,104 84,110 70,116" fill="#ef4444"/>
 
-    <!-- Quarantine Bin -->
-    <rect x="90" y="40" width="370" height="180" rx="10" fill="#ffffff" stroke="#ef4444" stroke-width="2.4"/>
-    <rect x="90" y="40" width="370" height="34" rx="10" fill="#fee2e2"/>
-    <text x="110" y="63" class="font-sans txt-tag fill-red">✖ BLOCKED (Exit Code 1)</text>
-    <text x="310" y="63" class="font-hand" font-size="12" fill="#ef4444">Commit Prevented</text>
+    <!-- Quarantine Ghost Trap Chamber -->
+    <rect x="90" y="30" width="390" height="205" rx="10" fill="#ffffff" stroke="#ef4444" stroke-width="2.4"/>
+    <rect x="90" y="30" width="390" height="34" rx="10" fill="#fee2e2"/>
+    <text x="108" y="53" class="font-sans txt-tag fill-red">✖ GHOST TRAP ACTIVATED (Blocked)</text>
+    <text x="330" y="53" class="font-hand" font-size="11" fill="#ef4444">Exit Code 1</text>
 
-    <!-- Quarantined items -->
-    <g transform="translate(110, 90)">
-      <rect x="0" y="0" width="160" height="36" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
-      <text x="12" y="22" class="font-hand" font-size="12" fill="#991b1b">.env file un-staged</text>
+    <!-- Quarantined Hazards -->
+    <g transform="translate(108, 78)">
+      <rect x="0" y="0" width="170" height="40" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
+      <text x="10" y="24" class="font-hand" font-size="11" fill="#991b1b">🎃 Table lock blocked</text>
       
-      <rect x="175" y="0" width="160" height="36" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
-      <text x="12" y="22" class="font-hand" font-size="12" fill="#991b1b">debugger; removed</text>
+      <rect x="185" y="0" width="175" height="40" rx="4" fill="#fef2f2" stroke="#fca5a5"/>
+      <text x="10" y="24" class="font-hand" font-size="11" fill="#991b1b">👻 .env ghost caught</text>
 
-      <text x="5" y="65" class="font-sans" font-size="13" fill="#374151">Auto-Remediation Engine:</text>
-      <text x="5" y="85" class="font-hand" font-size="12" fill="#f97316">⚡ npx shipsafe fix (or 1-click UI)</text>
-      <text x="5" y="105" class="font-sans" font-size="11" fill="#6b7280">Secrets never reach Git remote commit tree</text>
+      <text x="5" y="66" class="font-sans" font-size="13" font-weight="bold" fill="#374151">Autonomous Chore Automator:</text>
+      <rect x="5" y="75" width="355" height="36" rx="4" fill="#ffedd5" stroke="#ea580c"/>
+      <text x="15" y="98" class="font-hand" font-size="12" fill="#9a3412">⚡ npx shipsafe fix</text>
+      <text x="160" y="98" class="font-sans" font-size="11" fill="#ea580c">(Auto-syncs .env &amp; cleans code)</text>
+      <text x="5" y="132" class="font-sans" font-size="11" fill="#6b7280">Production crash prevented before commit leaves machine</text>
     </g>
 
-    <!-- Xiaohei Assistant #2 (Sweeping bugs into bin) -->
-    <g transform="translate(470, 70)">
-      <!-- Body -->
+    <!-- Xiaohei Assistant #2 (Auto-Fix Alchemist with Vacuum / Wrench) -->
+    <g transform="translate(485, 75)">
       <ellipse cx="25" cy="50" rx="14" ry="22" class="xiaohei"/>
-      <!-- Head -->
       <circle cx="25" cy="18" r="13" class="xiaohei"/>
-      <!-- Eyes -->
       <circle cx="21" cy="16" r="2" class="xiaohei-eye"/>
       <circle cx="29" cy="16" r="2" class="xiaohei-eye"/>
-      <!-- Broom / Wrench -->
-      <line x1="25" y1="45" x2="-10" y2="75" class="accent-orange" stroke-width="3"/>
-      <rect x="-20" y="70" width="14" height="18" rx="2" fill="#f97316"/>
+      <!-- Vacuum Pipe sucking ghosts -->
+      <line x1="25" y1="45" x2="-12" y2="75" class="accent-orange" stroke-width="3"/>
+      <circle cx="-16" cy="78" r="8" fill="#ea580c"/>
       <line x1="18" y1="70" x2="12" y2="105" class="ink-bold"/>
       <line x1="32" y1="70" x2="38" y2="105" class="ink-bold"/>
-      <text x="-15" y="125" class="font-sans" font-size="11" fill="#f97316">Auto-Fixer</text>
+      <text x="-15" y="125" class="font-sans" font-size="11" font-weight="bold" fill="#ea580c">Auto-Fixer</text>
     </g>
   </g>
 
-  <!-- FORK PATH B: VERIFIED CLEAN RELEASE (BOTTOM RIGHT) -->
-  <g transform="translate(1080, 480)">
-    <!-- Approved Blue Line -->
-    <path d="M -90,-40 C -20,-40 0,60 70,60" class="accent-blue" stroke-width="3.5"/>
-    <polygon points="70,54 84,60 70,66" fill="#3b82f6"/>
+  <!-- FORK PATH B: VERIFIED CLEAN PRODUCTION HIGHWAY (BOTTOM RIGHT) -->
+  <g transform="translate(1090, 490)">
+    <!-- Approved Golden Green Line -->
+    <path d="M -90,-40 C -20,-40 0,60 70,60" class="accent-green" stroke-width="3.5"/>
+    <polygon points="70,54 84,60 70,66" fill="#10b981"/>
 
     <!-- Approved Destination Gate -->
-    <rect x="90" y="-10" width="370" height="210" rx="10" fill="#ffffff" stroke="#3b82f6" stroke-width="2.4"/>
-    <rect x="90" y="-10" width="370" height="34" rx="10" fill="#dbeafe"/>
-    <text x="110" y="13" class="font-sans txt-tag fill-blue">✔ APPROVED (Ready to Ship)</text>
-    <text x="330" y="13" class="font-hand" font-size="12" fill="#3b82f6">Exit Code 0</text>
+    <rect x="90" y="-10" width="390" height="225" rx="10" fill="#ffffff" stroke="#10b981" stroke-width="2.4"/>
+    <rect x="90" y="-10" width="390" height="34" rx="10" fill="#d1fae5"/>
+    <text x="108" y="13" class="font-sans txt-tag fill-green">✔ GOLDEN TICKET (Approved &amp; Clean)</text>
+    <text x="350" y="13" class="font-hand" font-size="11" fill="#047857">Exit Code 0</text>
 
-    <!-- Verified Code Blocks -->
-    <g transform="translate(110, 40)">
+    <!-- Verified Code Artifacts -->
+    <g transform="translate(108, 40)">
       <!-- Safe clean file box -->
-      <rect x="0" y="0" width="155" height="65" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.8"/>
-      <text x="12" y="24" class="font-hand" font-size="12" fill="#166534">auth.js [CLEAN]</text>
-      <text x="12" y="44" class="font-sans" font-size="11" fill="#15803d">✔ 0 Secrets, 0 Smells</text>
+      <rect x="0" y="0" width="170" height="65" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.8"/>
+      <text x="12" y="24" class="font-hand" font-size="12" fill="#166534">checkout.ts [CLEAN]</text>
+      <text x="12" y="44" class="font-sans" font-size="11" fill="#15803d">✔ 0 Ghosts, 0 N+1 Loops</text>
 
-      <rect x="170" y="0" width="165" height="65" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.8"/>
-      <text x="12" y="24" class="font-hand" font-size="12" fill="#166534">package-lock.json</text>
-      <text x="12" y="44" class="font-sans" font-size="11" fill="#15803d">✔ Synced Manifest</text>
+      <rect x="185" y="0" width="175" height="65" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1.8"/>
+      <text x="12" y="24" class="font-hand" font-size="12" fill="#166534">.env.example [SYNCED]</text>
+      <text x="12" y="44" class="font-sans" font-size="11" fill="#15803d">✔ 0 Config Drift</text>
 
-      <!-- Target Cloud -->
-      <g transform="translate(20, 85)">
-        <path d="M 20,40 A 20,20 0 0,1 60,30 A 30,30 0 0,1 115,25 A 25,25 0 0,1 150,45 A 15,15 0 0,1 135,65 L 20,65 Z" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+      <!-- Target GitHub & Production -->
+      <g transform="translate(10, 85)">
+        <path d="M 20,40 A 20,20 0 0,1 60,30 A 30,30 0 0,1 115,25 A 25,25 0 0,1 150,45 A 15,15 0 0,1 135,65 L 20,65 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
         <text x="45" y="52" class="font-sans" font-size="14" font-weight="bold" fill="#1e40af">GitHub / Remote</text>
-        <text x="165" y="48" class="font-sans" font-size="12" fill="#1e40af">CI Builds Pass 100%</text>
-        <text x="165" y="66" class="font-sans" font-size="11" fill="#6b7280">No failed 15min runs</text>
+        <text x="165" y="45" class="font-sans" font-size="13" font-weight="bold" fill="#1e40af">Production Deployment 100% Safe</text>
+        <text x="165" y="64" class="font-sans" font-size="11" fill="#6b7280">Zero table locks · Zero 3 AM emergency pages</text>
       </g>
     </g>
 
-    <!-- Xiaohei Assistant #3 (Signaling thumbs up at ship dock) -->
-    <g transform="translate(470, 45)">
-      <!-- Body -->
+    <!-- Xiaohei Assistant #3 (Signaling Green Lantern Thumbs Up) -->
+    <g transform="translate(485, 55)">
       <ellipse cx="25" cy="50" rx="14" ry="22" class="xiaohei"/>
-      <!-- Head -->
       <circle cx="25" cy="18" r="13" class="xiaohei"/>
-      <!-- Eyes -->
       <circle cx="21" cy="16" r="2" class="xiaohei-eye"/>
       <circle cx="29" cy="16" r="2" class="xiaohei-eye"/>
-      <!-- Hand signaling flag -->
-      <line x1="25" y1="40" x2="45" y2="15" class="ink-bold"/>
-      <polygon points="45,15 65,10 45,25" fill="#10b981"/>
+      <!-- Holding Green Light Lantern -->
+      <line x1="25" y1="40" x2="48" y2="18" class="ink-bold"/>
+      <circle cx="48" cy="16" r="8" fill="#10b981"/>
       <line x1="18" y1="70" x2="12" y2="105" class="ink-bold"/>
       <line x1="32" y1="70" x2="38" y2="105" class="ink-bold"/>
-      <text x="-5" y="125" class="font-sans" font-size="11" fill="#10b981">Shipped ✔</text>
+      <text x="-5" y="125" class="font-sans" font-size="11" font-weight="bold" fill="#10b981">Shipped ✔</text>
     </g>
   </g>
 
   <!-- ==================== FOOTER SPECIFICATION NOTE ==================== -->
-  <g transform="translate(100, 830)">
+  <g transform="translate(90, 845)">
     <text x="0" y="0" class="font-hand txt-code" font-size="12" fill="#4b5563">
-      [STYLE: Ian Xiaohei 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Accents: Red #EF4444, Orange #F97316, Blue #3B82F6]
+      [STYLE: Ian Xiaohei 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Xiaohei IP © TRioN]
     </text>
     <text x="0" y="20" class="font-sans" font-size="12" fill="#9ca3af">
-      Mandatory Rule: This illustration and README visual map must be maintained and updated with every code push and architecture update.
+      Architecture: Local Git Hook Buffer → AST Multi-Stage Hazard Sentry → Gemma 2 Pre-Mortem → Quarantine or Verified Release.
     </text>
   </g>
 </svg>
