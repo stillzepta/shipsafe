@@ -1,6 +1,27 @@
 # 🏗️ ShipSafe System Architecture (ARCHITECTURE.md)
 
-> **Technical Architecture & Data Flow Specification for ShipSafe**
+> **Technical Architecture & Data Flow Specification for ShipSafe**  
+> *Pre-Flight Blast Radius & Production Health Gatekeeper*
+
+---
+
+## 🎨 Visual Architecture Blueprint (Ian Bablu English Edition)
+
+![ShipSafe Architectural Blueprint — Ian Bablu English Edition](../assets/shipsafe-architecture.svg)
+
+> 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/shipsafe-architecture.svg`) and the breakdown below are maintained in 100% active synchronicity.
+
+### Architectural Breakdown: The 3-Stage Pipeline
+1. **Stage 1: Local Staging Buffer (Left)**
+   * Intercepts developer staged code (`git add .`) before commit objects are written to the `.git` tree.
+   * Catches high-risk hazards: table-locking migrations (`NOT NULL` without `DEFAULT`), missing environment variables, unindexed foreign keys, and stray debuggers.
+2. **Stage 2: ShipSafe Ghostbuster Gate (Center)**
+   * **Pre-Flight Radar (100/100)**: Evaluates code health in `<35ms` with persistent local audit logging to `.shipsafe/audit.db` using Node's native `node:sqlite`.
+   * **5 Multi-Stage Sensors**: Schema & Table Lock Detector, Config & Env Drift Sentinel, Performance & N+1 Loop Sniffer, Blast Radius DAG Topology, and Local AI Pre-Mortem (Gemma 2 / Sovereign Heuristic).
+   * **Bablu Chief Inspector**: Sentry actively scanning code entering the pre-flight tunnel.
+3. **Stage 3: Sovereign Decision Fork (Right)**
+   * **Path A: Quarantined & Auto-Remediated (Exit Code 1)** — Hazardous commits are blocked. Developers run `npx shipsafe fix` to autonomously heal config drift and scrub hygiene issues.
+   * **Path B: Golden Ticket Approved (Exit Code 0)** — Verified clean code deploys to GitHub and Production with zero runtime table locks and zero 3 AM emergency pages.
 
 ---
 

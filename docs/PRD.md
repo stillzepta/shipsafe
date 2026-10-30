@@ -22,6 +22,12 @@ It **never** answers the critical questions that cause P0 outages:
 ### The Core Mission
 **ShipSafe** is the **automated pre-flight quality gatekeeper** that calculates blast radius, sniffs production-destroying hazards before code ships, automates developer chores, and generates risk-annotated pre-mortems.
 
+### 🎃 Visual Problem & Solution Storyboard (ELI5 Edition)
+
+![Bablu and the Spooky Code Monsters — ELI5 Storyboard](../assets/explain-like-im-5.svg)
+
+> 💡 **Product Vision**: Every stakeholder—from a 5-year-old child to the VP of Engineering—immediately grasps why ShipSafe exists. Code looks innocent like LEGO bricks, but hides spooky runtime monsters (table locks, missing secrets, zombie loops) that trigger 3 AM pages and cost \$120,000. Bablu traps the hazards in quarantine and grants the Golden Ticket to clean code.
+
 ---
 
 ## 2. 👥 Personas & Value Proposition
@@ -41,6 +47,12 @@ It **never** answers the critical questions that cause P0 outages:
 ---
 
 ## 3. 🛡️ The 4 Core Pre-Ship Health Gatekeepers
+
+### 🎨 System Architecture Blueprint (Ian Bablu English Edition)
+
+![ShipSafe Architectural Blueprint — Ian Bablu Style](../assets/shipsafe-architecture.svg)
+
+> 📌 **Architectural Quality Gate**: The multi-stage checks inspect staged code, feed findings into the dual-inference pre-mortem synthesizer, and present clear visual decisions (Quarantine vs Golden Ticket) before any commit leaves the workstation.
 
 | Gatekeeper | Threat Mitigated | Severity | Detection Mechanism | Remediation |
 | :--- | :--- | :--- | :--- | :--- |
