@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShipSafe — Autonomous Pre-Flight Blast Radius & Production Health Gatekeeper</title>
+  <title>ShipSafe — Halloween Pre-Flight Blast Radius & Production Health Gatekeeper</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,10 +15,10 @@
     <header class="top-nav">
       <div class="nav-left">
         <div class="logo">
-          <div class="logo-icon">🛡️</div>
+          <div class="logo-icon">🎃</div>
           <div>
-            <div class="logo-title">ShipSafe <span class="badge-tag">QUALITY GATE</span></div>
-            <div class="logo-sub">Pre-Flight Blast Radius & Production Health Sentry</div>
+            <div class="logo-title">ShipSafe <span class="badge-tag">HALLOWEEN EDITION</span></div>
+            <div class="logo-sub">Pre-Flight Blast Radius &amp; Production Health Sentry</div>
           </div>
         </div>
 
@@ -41,7 +41,7 @@
         <button id="btnHooks" class="btn btn-secondary">
           <span class="btn-icon">⚡</span> <span id="hookBtnText">Install Git Hooks</span>
         </button>
-        <button id="btnRunCheck" class="btn btn-primary">
+        <button id="btnRunCheck" class="btn btn-hotpink">
           <span class="btn-icon">▶</span> Run Pre-Flight Scan
         </button>
       </div>
@@ -50,6 +50,46 @@
     <!-- Main Content Container -->
     <main class="main-container">
       
+      <!-- ========================================================
+           PROJECT PATH SELECTOR & SCANNER HERO
+           ======================================================== -->
+      <section class="path-selector-hero card">
+        <div class="path-selector-header">
+          <div class="path-title-group">
+            <span class="path-icon">🎃</span>
+            <div>
+              <h3>PROJECT &amp; REPO PATH SENTINEL</h3>
+              <p class="subtext">Scan any project path, directory, or individual file before shipping to GitHub or Production</p>
+            </div>
+          </div>
+          <div class="path-stats-badge" id="pathTargetLabel">Target: Whole Workspace (.)</div>
+        </div>
+
+        <div class="path-input-group">
+          <div class="input-icon-wrap">
+            <span class="input-icon">📁</span>
+            <input type="text" id="targetPathInput" class="path-input" placeholder="Enter path to scan (e.g. '.', 'demo/sample_app.ts', 'src/', 'benchmarks/fixtures/01_table_lock_migration/migration.sql')" value=".">
+          </div>
+          <button id="btnScanTarget" class="btn btn-hotpink">
+            <span class="btn-icon">⚡</span> Scan Target Path
+          </button>
+          <button id="btnScanAll" class="btn btn-secondary">
+            <span class="btn-icon">📦</span> Scan All Tracked
+          </button>
+        </div>
+
+        <div class="preset-chips">
+          <span class="chip-label">Quick Targets:</span>
+          <button class="path-chip active" data-path=".">🎃 Whole Workspace (.)</button>
+          <button class="path-chip" data-path="demo/sample_app.ts">⚡ Demo Trap (demo/sample_app.ts)</button>
+          <button class="path-chip" data-path="benchmarks/fixtures/01_table_lock_migration/migration.sql">🗄️ 01 Table Lock</button>
+          <button class="path-chip" data-path="benchmarks/fixtures/02_missing_stripe_secret_env/checkout.ts">🌿 02 Stripe Drift</button>
+          <button class="path-chip" data-path="benchmarks/fixtures/03_n_plus_one_checkout_query/orders.ts">⚡ 03 N+1 Loop</button>
+          <button class="path-chip" data-path="benchmarks/fixtures/04_sync_io_in_route/server.ts">🦇 04 Sync I/O</button>
+          <button class="path-chip" data-path="src/">🛡️ Core Engine (src/)</button>
+        </div>
+      </section>
+
       <!-- Top Overview Hero: Score Gauge & Health Radar -->
       <section class="hero-overview">
         <!-- Health Gauge Card -->
@@ -119,7 +159,7 @@
               <span class="blast-icon">💥</span>
               <div>
                 <h3>DOWNSTREAM BLAST RADIUS</h3>
-                <span class="subtext" id="blastSubtitle">Dependency cascade & critical path analysis</span>
+                <span class="subtext" id="blastSubtitle">Dependency cascade &amp; critical path analysis</span>
               </div>
             </div>
             <span id="blastRiskBadge" class="status-badge status-neutral">LOW IMPACT</span>
@@ -168,19 +208,19 @@
       <!-- Navigation Tabs -->
       <div class="tabs-header">
         <button class="tab-btn active" data-tab="findings">
-          🚨 Findings & Auto-Fix (<span id="findingsCount">0</span>)
+          🚨 Findings &amp; Auto-Fix (<span id="findingsCount">0</span>)
         </button>
         <button class="tab-btn" data-tab="diff">
-          📝 Staged Changes & Diff (<span id="stagedCount">0</span>)
+          📝 Staged Changes &amp; Diff (<span id="stagedCount">0</span>)
         </button>
         <button class="tab-btn" data-tab="benchmark">
           🔬 Outage Benchmark (10/10 Proof)
         </button>
         <button class="tab-btn" data-tab="history">
-          📜 Audit Log & Trajectory
+          📜 Audit Log &amp; Trajectory
         </button>
         <button class="tab-btn" data-tab="rules">
-          ⚙️ Gate Rules & Policies
+          ⚙️ Gate Rules &amp; Policies
         </button>
       </div>
 
@@ -202,7 +242,7 @@
         </div>
 
         <div class="findings-list" id="findingsList">
-          <!-- Dynamically populated -->
+          <!-- Dynamically populated with 4-part cognitive diagnosis -->
         </div>
       </section>
 
@@ -236,7 +276,7 @@
               <h3>EMPIRICAL PRODUCTION OUTAGE BENCHMARK</h3>
               <p class="subtext">Evaluated against 10 real-world post-mortem traps (GitLab lock, Stripe leak, N+1 cascades)</p>
             </div>
-            <button id="btnTriggerBenchmark" class="btn btn-primary">
+            <button id="btnTriggerBenchmark" class="btn btn-hotpink">
               <span class="btn-icon">▶</span> Run 10-Scenario Benchmark
             </button>
           </div>
@@ -277,7 +317,7 @@
       <section id="tab-history" class="tab-content">
         <div class="card history-card">
           <div class="card-header">
-            <h3>AUDIT TRAJECTORY & RUN LEDGER</h3>
+            <h3>AUDIT TRAJECTORY &amp; RUN LEDGER</h3>
             <span class="subtext">Synchronously logged to SQLite (.shipsafe/audit.db)</span>
           </div>
           <div class="table-responsive">

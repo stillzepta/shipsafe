@@ -44,12 +44,25 @@ export function scanEnvDrift(
   for (const file of files) {
     if (file.path.startsWith('.env') || file.path.includes('node_modules')) continue;
 
-    for (const pattern of envPatterns) {
-      let match: RegExpExecArray | null;
-      while ((match = pattern.exec(file.content)) !== null) {
-        const varName = match[1];
-        if (!systemWhitelist.has(varName)) {
-          referencedVars.add(varName);
+    const lines = file.content.split('\n');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('#')) continue;
+
+      for (const pattern of envPatterns) {
+        pattern.lastIndex = 0;
+        let match: RegExpExecArray | null;
+        while ((match = pattern.exec(line)) !== null) {
+          // Ignore references inside string literals or comments (e.g. 'Use process.env.KEY')
+          const beforeMatch = line.slice(0, match.index);
+          const singleQuotes = (beforeMatch.match(/'/g) || []).length;
+          const doubleQuotes = (beforeMatch.match(/"/g) || []).length;
+          if (singleQuotes % 2 === 1 || doubleQuotes % 2 === 1) continue;
+
+          const varName = match[1];
+          if (!systemWhitelist.has(varName)) {
+            referencedVars.add(varName);
+          }
         }
       }
     }
