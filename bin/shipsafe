@@ -10,6 +10,8 @@ import { loadConfig } from '../lib/config.js';
 import { installGitHooks, uninstallGitHooks, getHookStatus, getCurrentBranch, getStagedFiles, getLatestCommit } from '../lib/git.js';
 import { executeFix } from '../lib/fixers.js';
 import { startServer } from '../server.js';
+import { runCli } from '../src/cli/index.ts';
+import { runBenchmark } from '../benchmarks/suite.ts';
 
 const ARGS = process.argv.slice(2);
 const COMMAND = ARGS[0] || 'check';
@@ -168,9 +170,12 @@ function handleHelp() {
   console.log(`${C.bold}Usage:${C.reset} shipsafe <command> [options]\n`);
   console.log(`${C.bold}Commands:${C.reset}`);
   console.log(`  ${C.cyan}check${C.reset}             Evaluate health checks on staged changes (default)`);
+  console.log(`  ${C.cyan}scan${C.reset}              Run full pre-flight scan with blast radius analysis`);
   console.log(`  ${C.cyan}check --all${C.reset}       Evaluate health checks on all tracked files`);
+  console.log(`  ${C.cyan}benchmark${C.reset}         Run empirical benchmark against 10 real-world outage traps`);
+  console.log(`  ${C.cyan}commit [msg]${C.reset}      Atomic git commit with risk & blast radius tag`);
   console.log(`  ${C.cyan}serve${C.reset}             Launch the local interactive web dashboard & API`);
-  console.log(`  ${C.cyan}fix${C.reset}               Auto-remediate fixable issues (unstage secrets, strip debuggers)`);
+  console.log(`  ${C.cyan}fix${C.reset}               Auto-remediate fixable issues (unstage secrets, strip debuggers, sync .env)`);
   console.log(`  ${C.cyan}install-hooks${C.reset}     Install automated pre-commit and pre-push hooks`);
   console.log(`  ${C.cyan}uninstall-hooks${C.reset}   Remove git hooks`);
   console.log(`  ${C.cyan}status${C.reset}            Display current branch, staged files, and hook status`);
@@ -181,6 +186,15 @@ function handleHelp() {
 switch (COMMAND) {
   case 'check':
     handleCheck();
+    break;
+  case 'scan':
+    runCli(ARGS);
+    break;
+  case 'commit':
+    runCli(ARGS);
+    break;
+  case 'benchmark':
+    runBenchmark();
     break;
   case 'fix':
     handleFix();

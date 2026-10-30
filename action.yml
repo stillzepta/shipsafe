@@ -1,0 +1,19 @@
+name: 'ShipSafe Pre-Flight Quality Gate'
+description: 'Pre-flight blast radius & production health gatekeeper for pull requests.'
+author: 'ShipSafe Engineering'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  fail-on-critical:
+    description: 'Whether to fail the CI build if critical hazards are detected'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run ShipSafe Scan
+      shell: bash
+      run: node ${{ github.action_path }}/bin/shipsafe scan

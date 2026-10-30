@@ -1,0 +1,27 @@
+name: ShipSafe Quality Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  gate:
+    name: Pre-Flight Health & Blast Radius Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run ShipSafe Gatekeeper
+        run: node bin/shipsafe scan

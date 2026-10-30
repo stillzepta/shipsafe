@@ -1,6 +1,14 @@
-# 🛡️ ShipSafe — Autonomous Local Pre-Flight Code Quality Gate
+# 🛡️ ShipSafe — Autonomous Pre-Flight Blast Radius & Production Health Gatekeeper
 
-> **Catch security vulnerabilities, syntax errors, and fatal code smells on your local machine *before* they ever reach GitHub or break production CI.**
+> **Catch database table locks, environment config drifts, N+1 query loops, and high blast-radius hazards on your local machine *before* they ever reach GitHub or break production.**
+
+[![Tests: 17/17 Passed](https://img.shields.io/badge/Tests-17%2F17_Passed-success.svg?style=flat-square)](tests/)
+[![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
+[![Dependencies: Zero](https://img.shields.io/badge/Dependencies-Zero_External-blueviolet.svg?style=flat-square)](#-zero-dependency-architecture)
+[![Runtime: Node.js 20+](https://img.shields.io/badge/Runtime-Node.js_20+-green.svg?style=flat-square)](https://nodejs.org/)
+[![AI: Local Gemma 2 / Offline](https://img.shields.io/badge/AI-Gemma_2_%2B_Offline_Fallback-blue.svg?style=flat-square)](src/ai/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
+[![Devf8rge 2026](https://img.shields.io/badge/Hacktoberfest-Devf8rge_Finals_BLR-FF7518.svg?style=flat-square)](https://dev.to/events/challenges/hf26)
 
 ---
 
@@ -8,235 +16,143 @@
 
 ![ShipSafe Architectural Blueprint — Ian Xiaohei Style](assets/shipsafe-architecture.svg)
 
-> 📌 **Mandatory Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Xiaohei architectural illustration (`assets/shipsafe-architecture.svg`) must be updated to maintain 100% sync with the live system.
+> 📌 **System Synchronicity**: Operated by **Xiaohei** (the diligent guardian with optical inspection tools and engineer headset), the pre-flight engine evaluates staged files against multi-stage quality gates in under **50ms**.
 
 ---
 
-### 🗺️ Visual Walkthrough: How ShipSafe Protects Your Pipeline
+## 📚 Technical Documentation Suite
 
-The illustration above maps the end-to-end lifecycle of every line of code written in this repository:
-
-1. **Local Staging Buffer (Left)**
-   * As the developer stages code (`git add .`), ShipSafe hooks into the local Git staging buffer (`git diff --cached`).
-   * Potential hazards like raw `.env.production` files, exposed AWS API keys (`AKIA...`), unpinned dependencies, or stray `debugger;` breakpoints are caught immediately before they are baked into Git commit objects.
-
-2. **The Pre-Flight Gatehouse & Radar (Center)**
-   * Operated by **Xiaohei** (the diligent guardian with optical inspection tools and an engineer headset), the pre-flight engine evaluates staged files against **5 multi-stage quality gates** in under **50ms**:
-     * 🛡️ **Gate 1: Secrets & Credentials**: High-precision entropy & pattern scanner for AWS, Stripe, GitHub PATs, JWTs, and database URIs.
-     * 🧹 **Gate 2: Code Hygiene**: Scans for `debugger;`, stray `console.log()` calls, and `TODO [BLOCKER]` markers.
-     * 🌿 **Gate 3: Git Guard & Branch Policy**: Blocks direct commits to `main`/`master`, blocks large binary bloat (>1MB), and arrests `.env` leaks.
-     * 🔍 **Gate 4: Syntax & ESM Integrity**: Real-time non-executing AST validation (`node --check`, `JSON.parse`).
-     * 📦 **Gate 5: Dependencies & Lockfiles**: Enforces `package-lock.json` sync whenever `package.json` changes and flags wildcard dependencies (`*`, `latest`).
-   * **Persistence**: Every run, health score (0–100), and latency metric is logged locally into `.shipsafe/audit.db` using Node 26's native `node:sqlite`.
-   * **Live Stream**: The background daemon continuously broadcasts Git staging state changes via Server-Sent Events (SSE) to the local dashboard at `http://localhost:4100`.
-
-3. **The Divert & Auto-Fix Quarantine (Top Right — Red & Orange Accents)**
-   * If any critical error is detected, the Git hook **blocks the operation immediately with Exit Code 1**.
-   * Dangerous files are diverted into a quarantine state.
-   * Developers can run `npm run fix` (or click **"⚡ Auto-Fix"** in the web UI) to automatically unstage sensitive files, remove `debugger;` statements, and format malformed YAML/JSON.
-
-4. **The Verified Release Stream (Bottom Right — Blue & Green Accents)**
-   * Code scoring 85–100 with zero critical errors is approved with Exit Code 0.
-   * Commits cleanly travel to **GitHub / Production CI**, guaranteeing that remote CI pipelines won't fail on avoidable local defects.
+ShipSafe adheres to the highest open-source engineering standards:
+* 📄 **[Product Requirements Document (PRD.md)](docs/PRD.md)** — First-principles problem breakdown, persona ROI analysis, and threat model.
+* 🏗️ **[System Architecture (ARCHITECTURE.md)](docs/ARCHITECTURE.md)** — AST parsing pipelines, in-memory dependency DAG topology, and sequence flows.
+* ⚡ **[Operational Runbook & Cheatsheet (ESSENTIAL.md)](docs/ESSENTIAL.md)** — Port maps, CLI commands, git hook operations, and troubleshooting.
+* 📊 **[Empirical Benchmark Report (BENCHMARK_RESULTS.md)](benchmarks/BENCHMARK_RESULTS.md)** — Scientific evaluation against 10 historical outages.
 
 ---
 
-## 🏗️ Defined Tech Stack
+## 🔬 Empirical Benchmark: Traditional CI vs. ShipSafe
 
-Built to be **fast**, **zero-bloat**, and **completely independent** of external cloud APIs or third-party SaaS vendors:
+Traditional CI pipelines (ESLint, Jest, Prettier) check formatting and syntax, but are **structurally blind to production hazards**. In our scientific evaluation against 10 real-world outage scenarios:
 
-| Layer | Technology | Rationale & Capabilities |
-| :--- | :--- | :--- |
-| **Runtime & Core Engine** | **Node.js (v26 LTS)** | Native ES Modules, ultra-low startup overhead (<15ms), zero required external npm dependencies for core scanning. |
-| **Local Persistence** | **Embedded `node:sqlite`** | ACID-compliant synchronous SQLite database (`.shipsafe/audit.db`) storing all pre-flight runs, health scores, and audit metrics. |
-| **API & Real-time Sync** | **Native HTTP + Server-Sent Events (SSE)** | High-throughput local REST API with continuous background Git watcher that pushes real-time updates as soon as files are staged. |
-| **Static & Rule Engine** | **Multi-stage Heuristic & AST Scanner** | High-precision regex entropy analyzers, syntax compilers (`node --check`, `JSON.parse`), file payload analyzers, and Git plumbing commands (`git diff`, `git rev-parse`). |
-| **User Interface** | **Reactive Single-Page Dashboard** | Cyber-clean dark theme UI featuring SVG Health Radar gauge, Category Health matrix, Unified Diff viewer, and 1-Click Auto-Fix actions. |
-| **Git Integration** | **POSIX Git Hooks (`pre-commit`, `pre-push`)** | Native shell hooks that communicate with the local engine to reject non-compliant commits before they enter Git history. |
+| ID | Outage Scenario | Real-World Failure Mode | Traditional CI (ESLint/Jest) | ShipSafe Gatekeeper |
+| :-: | :--- | :--- | :-: | :-: |
+| **01** | `ALTER TABLE ... ADD NOT NULL` without `DEFAULT` | 42-min Postgres exclusive table lock | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/not-null-no-default`) |
+| **02** | `process.env.STRIPE_SECRET_KEY` missing from `.env.example` | Checkout 500 error on deployment | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`env/missing-in-example`) |
+| **03** | N+1 database queries inside order loop | CPU spike to 100% under concurrency | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/n-plus-one-loop`) |
+| **04** | `fs.readFileSync` inside server route | Event loop freeze, 3.2s p99 latency | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/sync-io-in-server`) |
+| **05** | Direct `DROP COLUMN` during rolling deploy | In-flight rolling pod crashes | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/drop-column-hazard`) |
+| **06** | Unindexed Foreign Key constraint | Full table lock during cascade delete | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/unindexed-foreign-key`) |
+| **07** | `SELECT * FROM audit_logs` without `LIMIT` | Out-Of-Memory (OOM) pod kill | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/unbounded-query`) |
+| **08** | Hardcoded secret token in code | Leaked corporate credentials | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`security/hardcoded-secret`) |
+| **09** | Missing OAuth redirect URL in environment | User login failure loop | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`env/missing-in-example`) |
+| **10** | Core Auth modification with high blast radius | Cascade breaking 14 routes | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`blast-radius (40%)`) |
 
----
-
-## 📐 Architecture Diagram
-
-```mermaid
-flowchart TD
-    subgraph Developer Workspace
-        DEV[Developer Workstation] -->|git add / git commit| HOOK[Git Hooks .git/hooks/pre-commit & pre-push]
-        DEV -->|CLI Execution| CLI[ShipSafe CLI bin/shipsafe]
-        DEV -->|Browser UI| UI[Interactive Dashboard localhost:4100]
-    end
-
-    subgraph ShipSafe Core Engine
-        HOOK --> ENGINE[ShipSafe Engine lib/engine.js]
-        CLI --> ENGINE
-        UI -->|REST API & SSE| SRV[ShipSafe Local Server server.js]
-        SRV --> ENGINE
-        
-        ENGINE --> R1[1. Secrets Scanner]
-        ENGINE --> R2[2. Code Hygiene]
-        ENGINE --> R3[3. Git & Branch Guard]
-        ENGINE --> R4[4. Syntax Integrity]
-        ENGINE --> R5[5. Dependency Auditor]
-        
-        ENGINE --> FIX[Auto-Fix Engine lib/fixers.js]
-        ENGINE --> DB[(Local SQLite DB .shipsafe/audit.db)]
-    end
-
-    subgraph Quality Verdict
-        ENGINE -->|Health Score >= 85 & No Errors| PASS[✔ COMMIT / PUSH APPROVED]
-        ENGINE -->|Errors Found| BLOCK[✖ BLOCKED: Reject Git Operation]
-    end
-```
+**Detection Rate: Traditional CI: 0/10 (0%) | ShipSafe: 10/10 (100%)**
 
 ---
 
-## 🚀 Quick Start Guide
+## 🛡️ The 4 Core Pre-Ship Health Gatekeepers
 
-### 1. Install & Verify
-```bash
-# Clone or navigate into your repository
-cd /path/to/your/project
+### 1. 🗄️ Database Schema Hazard Sentinel (`src/core/schema.ts`)
+* **Table Lock Hazards**: Flags `ALTER TABLE ... ADD COLUMN ... NOT NULL` without `DEFAULT` to prevent catastrophic table locks on millions of rows.
+* **Rolling Deployment Hazards**: Flags direct `DROP COLUMN` and column renames that break in-flight application pods during zero-downtime deploys.
+* **Missing Foreign Key Indexes**: Catches unindexed foreign keys before they trigger sequential table scans.
 
-# Install automated Git pre-commit and pre-push hooks
-npm run install-hooks
-# or: node bin/shipsafe install-hooks
-```
+### 2. 🌐 Config & Environment Drift Sentinel (`src/core/env.ts`)
+* Scans all code for newly introduced `process.env.VAR` or `import.meta.env.VAR`.
+* Cross-references against `.env.example`.
+* Flags missing deployment configurations and **auto-syncs `.env.example`** with 1 command (`shipsafe fix`).
 
-### 2. Run Terminal Pre-Flight Check
-```bash
-# Check currently staged files
-npm run check
+### 3. ⚡ Performance & N+1 Query Sniffer (`src/core/perf.ts`)
+* Detects database queries and network fetches nested inside `.map()`, `for...of`, and `forEach` loops.
+* Catches synchronous blocking I/O (`fs.readFileSync`, `execSync`) in server execution paths that freeze the Node.js event loop.
+* Flags unbounded `SELECT *` queries missing `LIMIT` boundaries.
 
-# Check all tracked files across repository
-npm run check:all
-```
-
-### 3. Launch Local Interactive Dashboard
-```bash
-npm start
-# or: node bin/shipsafe serve --port=4100
-```
-Open **[http://localhost:4100](http://localhost:4100)** to view your real-time Code Health Radar, Category Matrix, Diff Inspector, and 1-Click Auto-Fixes.
+### 4. 💥 Blast Radius Engine (`src/core/blast.ts`)
+* Constructs an in-memory reverse dependency DAG (Directed Acyclic Graph) of the entire codebase.
+* Calculates a **0–100% Blast Radius Score** based on downstream import cascades.
+* Adds a **+35% Critical Infrastructure Weight** when security-sensitive paths (`auth/`, `billing/`, `db/`) are touched.
 
 ---
 
-## 🔍 Health Check Rule Matrix
+## 🧠 Local Open-Weight AI Intelligence (`src/ai/`)
 
-### 1. 🛡️ Secrets & Credentials Scanner (`lib/rules/secrets.js`)
-* **AWS Credentials**: Flags unrotated `AKIA...` access key IDs and secret keys.
-* **GitHub PATs**: Detects modern `ghp_` tokens and fine-grained `github_pat_` tokens.
-* **Payment Gateways**: Identifies live Stripe keys (`sk_live_`, `rk_live_`).
-* **Private Cryptographic Keys**: Detects RSA, EC, OpenSSH, and PGP private keys.
-* **Auth Tokens**: Flags long-lived JWT tokens and Slack bot / webhook tokens.
-* **Database URIs**: Blocks connection strings containing plaintext credentials.
-* *Zero False-Positive Filter*: Intelligently ignores test mocks and placeholder strings (`dummy`, `example`, `replace_me`, `user:pass`).
-
-### 2. 🧹 Code Hygiene & Smells (`lib/rules/hygiene.js`)
-* **Debuggers**: Flags `debugger;`, `breakpoint()`, and Python `pdb.set_trace()`. *(Auto-Fixable)*
-* **Console Dumps**: Detects leftover `console.log`, `console.debug`, and `console.trace`. *(Auto-Fixable)*
-* **Blocker Markers**: Blocks `TODO [BLOCKER]`, `FIXME [CRITICAL]`, and `DO_NOT_COMMIT`.
-* **Linter Bypasses**: Flags suppression hacks like `@ts-ignore` and `eslint-disable`.
-* **Hardcoded Localhost**: Warns on hardcoded `http://localhost:...` endpoints destined for production.
-
-### 3. 🌿 Git Guard & Repo Hygiene (`lib/rules/git-guard.js`)
-* **Protected Branch Policy**: Blocks direct commits or pushes to `main`, `master`, `production`, or `release/*`.
-* **Staged Credentials / .env**: Automatically detects staged `.env`, `.env.local`, or `.pem` files. *(Auto-Fixable via 1-click unstage)*
-* **File Bloat / Binaries**: Prevents staging files larger than 1MB (configurable) or database files (`.sqlite`, `.db`, `.dump`).
-* **OS Clutter**: Prevents commits containing `.DS_Store` or `Thumbs.db`.
-
-### 4. 🔍 Syntax & Integrity (`lib/rules/syntax.js`)
-* **JSON Syntax Validator**: Verifies valid JSON structure with exact line and column error reporting.
-* **JavaScript / ESM Syntax Compiler**: Validates syntax across CommonJS and ES Modules via non-executing AST validation (`node --check`).
-* **YAML Tab Prohibition**: Detects and fixes forbidden tab indentation in YAML files. *(Auto-Fixable)*
-
-### 5. 📦 Dependencies & Lockfiles (`lib/rules/dependencies.js`)
-* **Lockfile Desync Gate**: Prevents staging `package.json` modifications without also staging the updated lockfile (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`).
-* **Unpinned Wildcards**: Flags non-deterministic version wildcards (`*`, `latest`, `>=`).
+* **Dual-Inference Engine ("Two Brains"):**
+  * **Primary Brain:** Calls open-weight **Gemma 2** (`gemma2:2b` / `gemma2:9b`) or **Qwen 2.5** via local Ollama for natural language pre-mortem analysis and operational release notes.
+  * **Deterministic Fallback:** If Ollama is offline or uninstalled, ShipSafe automatically executes its rule-based heuristic synthesizer in `< 2ms`.
+* **Zero-Leak Guarantee:** 100% of code parsing and AI inference runs locally on your machine. Zero bytes leave your laptop.
 
 ---
 
-## ⚡ 1-Click Auto-Remediation
+## 🚀 Quickstart Guide
 
-ShipSafe doesn't just complain about issues—it can repair them automatically:
+ShipSafe runs natively on standard Node 20+ with **zero external dependencies**:
 
 ```bash
-# Auto-fix all remediable issues from the terminal
+# 1. Run local pre-flight scan on staged changes
+npm run scan
+# or: node bin/shipsafe scan
+
+# 2. Automatically fix developer chores (.env.example sync, strip debuggers)
 npm run fix
-```
+# or: node bin/shipsafe fix
 
-Or click **"⚡ Auto-Fix"** directly inside the web dashboard to:
-* Remove leftover `debugger;` breakpoints from source files.
-* Comment out stray `console.log()` statements.
-* Unstage sensitive `.env` or large binary files (`git reset HEAD <file>`).
-* Replace disallowed tabs with spaces in YAML manifests.
+# 3. Commit with automated risk & blast radius tags
+npm run commit -- "feat: add stripe checkout webhook"
 
----
+# 4. Run the 10-outage empirical benchmark
+npm run benchmark
 
-## ⚙️ Configuration Reference
+# 5. Launch interactive web dashboard (:4040)
+npm run serve
 
-ShipSafe is customizable via `.shipsafe/config.json`:
-
-```json
-{
-  "version": "1.0.0",
-  "port": 4100,
-  "host": "127.0.0.1",
-  "scoreThresholds": {
-    "pass": 85,
-    "warn": 70
-  },
-  "rules": {
-    "secrets/credentials": { "enabled": true, "severity": "ERROR" },
-    "git/branch-protection": {
-      "enabled": true,
-      "severity": "ERROR",
-      "protectedBranches": ["main", "master", "production"]
-    },
-    "git/large-files": {
-      "enabled": true,
-      "severity": "ERROR",
-      "maxSizeBytes": 1048576
-    },
-    "hygiene/debuggers": { "enabled": true, "severity": "ERROR" },
-    "hygiene/console-logs": { "enabled": true, "severity": "WARN" },
-    "deps/lockfile-sync": { "enabled": true, "severity": "ERROR" }
-  },
-  "ignoredPaths": [
-    "node_modules/",
-    ".git/",
-    "dist/",
-    "build/",
-    "coverage/"
-  ]
-}
-```
-
----
-
-## 🎨 Ian Xiaohei Illustration Skill Reference
-
-This repository includes the English edition of the **Ian Xiaohei Illustration Skill** installed under `.agents/skills/ian-xiaohei-illustrations-en/`:
-* `SKILL.md`: Main execution guide for generating technical and editorial illustrations.
-* `references/style-dna.md`: 16:9 widescreen rules, pure white background, black ink line art, and sparse red/orange/blue accents.
-* `references/xiaohei-ip.md`: Anatomy and personality traits of the Xiaohei protagonist.
-* `references/composition-patterns.md`: Composition patterns for system flows, filters, checkpoints, and before/after views.
-* `references/prompt-template.md`: Image generation prompt assembly structure.
-* `references/qa-checklist.md`: Visual QA checklist to enforce compliance before publishing.
-
----
-
-## 🧪 Testing
-
-ShipSafe includes an automated test suite executed via Node's native test runner:
-
-```bash
+# 6. Run automated test suite
 npm test
 ```
 
-All rules, fixers, and SQLite schema migrations are validated in under **5ms**.
+---
+
+## 🤖 Turnkey GitHub Action Integration
+
+Drop this 5-line workflow into `.github/workflows/shipsafe.yml` to protect every Pull Request:
+
+```yaml
+name: ShipSafe Quality Gate
+on: [pull_request]
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node bin/shipsafe scan
+```
+
+---
+
+## 🧪 Verification & Test Suite
+
+Run the comprehensive unit test suite:
+
+```bash
+node --test tests/*.test.ts test/*.test.js
+```
+
+All 17 tests execute in **< 75ms** with zero flaky external dependencies.
+
+---
+
+## 👥 Authors & Team TRioN
+
+Built with pride for **Devf8rge Finals (Halloween Hack BLR)** by **Team TRioN**:
+* **Arnav Patel (`XiaoArnav`)** — Project Lead & Frontend Architecture
+* **Krishna Verma (`stillzepta`)** — Backend & AI Systems Engineering
 
 ---
 
 ## 🛡️ License
 
-MIT License. Designed and crafted for high-velocity software engineering teams.
+MIT License. Crafted for zero-downtime, high-velocity engineering teams.

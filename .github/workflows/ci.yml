@@ -1,0 +1,30 @@
+name: ShipSafe CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Unit Tests & Benchmark Suite
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x, 24.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run Zero-Dependency Test Suite
+        run: node --test tests/*.test.ts test/*.test.js
+
+      - name: Run Empirical Outage Benchmark Suite
+        run: node benchmarks/suite.ts
