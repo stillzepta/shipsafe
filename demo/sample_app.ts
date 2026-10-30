@@ -1,6 +1,6 @@
 /**
  * ShipSafe Live Demo: Production Traps Simulation
- * Used during the 3-minute pitch to demonstrate instant pre-flight gatekeeping.
+ * Staged changes demonstrating instant pre-flight quality gatekeeping.
  */
 
 export async function processUserNotifications(users: { id: string; email: string }[]) {
@@ -14,6 +14,8 @@ export async function processUserNotifications(users: { id: string; email: strin
     const preferences = await db.query.find({ where: { userId: user.id } });
     results.push(preferences);
   }
+
+  // Trap 3: Leftover developer breakpoint
 
   return results;
 }
