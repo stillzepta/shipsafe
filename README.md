@@ -10,7 +10,7 @@
 [![Traditional CI Detection](https://img.shields.io/badge/Traditional_CI_Detection-0%2F10_(0%25)-red.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-why-open-innovation-matters-100-air-gapped-sovereignty)
 [![Dependencies: Zero](https://img.shields.io/badge/Dependencies-Zero_External-blueviolet.svg?style=flat-square)](#-zero-dependency-core)
-[![Runtime: Node.js 20+](https://img.shields.io/badge/Runtime-Node.js_20+-green.svg?style=flat-square)](https://nodejs.org/)
+[![Runtime: Node.js 22+ (LTS)](https://img.shields.io/badge/Runtime-Node.js_22+_(LTS)-green.svg?style=flat-square)](https://nodejs.org/)
 [![Model: Gemma 2](https://img.shields.io/badge/Open--Weight-Gemma_2-4285F4.svg?style=flat-square)](https://ai.google.dev/gemma)
 [![Execution: Sub-35ms](https://img.shields.io/badge/Speed-%3C35ms_Execution-orange.svg?style=flat-square)](#-the-3-command-developer-quickstart)
 
@@ -143,7 +143,7 @@ Most commercial "AI PR Reviewers" upload proprietary source code diffs to closed
 
 ## 🚀 The 3-Command Developer Quickstart
 
-ShipSafe runs natively on standard Node 20+ with **zero external npm dependencies**:
+ShipSafe runs natively on standard Node 22+ (Active LTS) with **zero external npm dependencies** (leveraging native TypeScript type-stripping and embedded `node:sqlite`):
 
 ```bash
 # 1. Run local pre-flight scan on staged changes

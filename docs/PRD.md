@@ -62,7 +62,7 @@ It **never** answers the critical questions that cause P0 outages:
 
 ## 5. 📊 Non-Functional Requirements (NFRs)
 
-* **Zero Heavy Dependencies:** Core scanner runs on Node 20+ built-ins with zero bulky external npm packages.
+* **Zero Heavy Dependencies:** Core scanner runs on Node 22+ (Active LTS) built-ins (native TS type-stripping & `node:sqlite`) with zero bulky external npm packages.
 * **Sub-50ms Execution Time:** Fast enough to run on every `git commit` without irritating developers.
 * **Cross-Platform:** Runs on macOS, Linux, and Windows terminals.
 * **Drop-In CI Integration:** 3 lines of YAML in `.github/workflows/` turns any repo into a ShipSafe-protected codebase.
