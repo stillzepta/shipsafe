@@ -175,29 +175,50 @@ if (els.diffFileSelect) {
   els.diffFileSelect.onchange = e => { if (e.target.value) loadDiff(e.target.value); };
 }
 
-async function loadDiff(filePath) {
+async function loadDiff(filePath, targetLine = null) {
   state.activeDiffFile = filePath;
-  if (els.diffFileSelect) els.diffFileSelect.value = filePath;
+  if (els.diffFileSelect && filePath) {
+    let exists = false;
+    for (const opt of els.diffFileSelect.options) {
+      if (opt.value === filePath) { exists = true; break; }
+    }
+    if (!exists) {
+      const opt = document.createElement('option');
+      opt.value = filePath;
+      opt.textContent = `${filePath} (Inspected)`;
+      els.diffFileSelect.appendChild(opt);
+    }
+    els.diffFileSelect.value = filePath;
+  }
   try {
     const res  = await fetch(`/api/diff?file=${encodeURIComponent(filePath)}`);
     const data = await res.json();
-    renderDiff(data.diff || '(No diff or untracked binary file)');
+    renderDiff(data.diff || '(File content empty or untracked binary file)', targetLine);
   } catch (err) {
     if (els.diffContent) els.diffContent.innerHTML = `<div class="empty-state"><code>Failed to load diff: ${err.message}</code></div>`;
   }
 }
 
-function renderDiff(rawDiff) {
+function renderDiff(rawDiff, targetLine = null) {
   if (!els.diffContent) return;
   const lines = rawDiff.split('\n');
-  if (els.diffLineCount) els.diffLineCount.textContent = `${lines.length} lines changed`;
+  if (els.diffLineCount) els.diffLineCount.textContent = `${lines.length} lines`;
 
+  let currentLineNum = 1;
   els.diffContent.innerHTML = lines.map(line => {
     const e = escapeHtml(line);
-    if (line.startsWith('+') && !line.startsWith('+++')) return `<div class="diff-add">${e}</div>`;
-    if (line.startsWith('-') && !line.startsWith('---')) return `<div class="diff-del">${e}</div>`;
-    if (line.startsWith('@@') || line.startsWith('diff --git')) return `<div class="diff-meta">${e}</div>`;
-    return `<div>${e}</div>`;
+    if (line.startsWith('+') && !line.startsWith('+++')) return `<div class="diff-line diff-add">${e}</div>`;
+    if (line.startsWith('-') && !line.startsWith('---')) return `<div class="diff-line diff-del">${e}</div>`;
+    if (line.startsWith('@@') || line.startsWith('diff --git') || line.startsWith('---') || line.startsWith('+++')) {
+      return `<div class="diff-line diff-meta">${e}</div>`;
+    }
+    const isTarget = targetLine && currentLineNum === Number(targetLine);
+    const lineDisplay = currentLineNum++;
+    const numPrefix = `<span class="diff-line-num">${lineDisplay}</span>`;
+    if (isTarget) {
+      return `<div class="diff-line diff-highlight-line">${numPrefix} ${e} <span class="diff-hazard-badge">⚠️ HAZARD DETECTED HERE (Line ${lineDisplay})</span></div>`;
+    }
+    return `<div class="diff-line">${numPrefix} ${e}</div>`;
   }).join('');
 }
 
@@ -449,13 +470,32 @@ function renderCategories(categories) {
     if (isErr) {
       card.querySelector('.btn-inspect-cat').onclick = () => {
         switchTab('findings');
-        state.activeFilter = 'ERROR';
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'ERROR'));
-        if (state.checkResult) renderFindings(state.checkResult.findings || []);
+        state.activeFilter = key;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (state.checkResult) {
+          const catFindings = (state.checkResult.findings || []).filter(f => f.category === key);
+          renderFindings(catFindings.length > 0 ? catFindings : (state.checkResult.findings || []));
+          showToast(`Filtered findings: ${info.title} (${catFindings.length} issue(s))`, 'info');
+        }
+        document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
     }
 
     els.categoryGrid.appendChild(card);
+  }
+}
+
+async function sendFixRequest(f) {
+  try {
+    const res = await fetch('/api/fix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fixerType: f.fixerType, filePath: f.filePath, extraData: f.extraData || {} })
+    });
+    const r = await res.json();
+    return r.success === true;
+  } catch {
+    return false;
   }
 }
 
@@ -470,10 +510,29 @@ function renderFindings(findings) {
     if (state.activeFilter === 'ERROR')   return f.severity === 'ERROR' || f.severity === 'CRITICAL';
     if (state.activeFilter === 'WARN')    return f.severity === 'WARN';
     if (state.activeFilter === 'autofix') return f.autoFixable;
+    if (f.category === state.activeFilter) return true;
     return true;
   });
 
-  if (els.btnAutoFixAll) els.btnAutoFixAll.style.display = findings.some(f => f.autoFixable) ? 'inline-block' : 'none';
+  const autoFixableFindings = filtered.filter(f => f.autoFixable && f.fixerType);
+  if (els.btnAutoFixAll) {
+    if (autoFixableFindings.length > 0) {
+      els.btnAutoFixAll.style.display = 'inline-block';
+      els.btnAutoFixAll.textContent = `⚡ Auto-Fix All (${autoFixableFindings.length})`;
+      els.btnAutoFixAll.onclick = async () => {
+        els.btnAutoFixAll.disabled = true;
+        els.btnAutoFixAll.textContent = 'Applying Fixes...';
+        const fixResults = await Promise.all(autoFixableFindings.map(sendFixRequest));
+        const fixedCount = fixResults.filter(Boolean).length;
+        showToast(`Remediation complete: ${fixedCount} issue(s) resolved!`, 'success');
+        els.btnAutoFixAll.disabled = false;
+        await loadStatus();
+        runCheck(state.currentTargetPath);
+      };
+    } else {
+      els.btnAutoFixAll.style.display = 'none';
+    }
+  }
 
   if (filtered.length === 0) {
     els.findingsList.innerHTML = `
@@ -504,9 +563,9 @@ function renderFindings(findings) {
           <span class="badge-tag">${escapeHtml(f.category || 'Quality Gate')}</span>
         </div>
         <div class="finding-actions">
-          ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType}" data-path="${f.filePath}">Auto-Fix</button>` : ''}
-          <button class="btn btn-xs btn-secondary btn-copy-fix">Copy Fix</button>
-          <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}">View Diff</button>
+          ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || ''}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
+          <button class="btn btn-xs btn-secondary btn-copy-fix">📋 Copy Fix</button>
+          <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}" data-line="${f.line || ''}">🔍 Inspect File</button>
         </div>
       </div>
       <div class="finding-body">
@@ -535,8 +594,15 @@ function renderFindings(findings) {
       showToast('Remediation fix copied to clipboard!', 'success');
     };
     const fixBtn = card.querySelector('.btn-fix');
-    if (fixBtn) fixBtn.onclick = () => runSingleFix(f.fixerType, f.filePath);
-    card.querySelector('.btn-inspect').onclick = () => { switchTab('diff'); loadDiff(f.filePath); };
+    if (fixBtn) {
+      fixBtn.onclick = () => runSingleFix(f.fixerType, f.filePath, f.extraData || {});
+    }
+    card.querySelector('.btn-inspect').onclick = () => {
+      switchTab('diff');
+      loadDiff(f.filePath, f.line || null);
+      document.getElementById('tab-diff')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Inspecting ${f.filePath}${f.line ? ` at line ${f.line}` : ''}`, 'info');
+    };
 
     els.findingsList.appendChild(card);
   });
@@ -547,13 +613,24 @@ function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-async function runSingleFix(fixerType, filePath) {
+async function runSingleFix(fixerType, filePath, extraData = {}) {
   try {
-    const res    = await fetch('/api/fix', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fixerType, filePath }) });
+    const res    = await fetch('/api/fix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fixerType, filePath, extraData })
+    });
     const result = await res.json();
-    if (result.success) { showToast(result.message || 'Auto-fix executed!', 'success'); runCheck(); }
-    else showToast(`Fix failed: ${result.message}`, 'error');
-  } catch (err) { showToast(`Fix error: ${err.message}`, 'error'); }
+    if (result.success) {
+      showToast(result.message || 'Auto-fix executed successfully!', 'success');
+      await loadStatus();
+      runCheck(state.currentTargetPath);
+    } else {
+      showToast(`Fix failed: ${result.message}`, 'error');
+    }
+  } catch (err) {
+    showToast(`Fix error: ${err.message}`, 'error');
+  }
 }
 
 // ── Benchmark ────────────────────────────────────────────────────────────
@@ -751,7 +828,13 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // ── View Fixes banner button ──
   if (els.btnViewFixes) {
-    els.btnViewFixes.onclick = () => switchTab('findings');
+    els.btnViewFixes.onclick = () => {
+      switchTab('findings');
+      state.activeFilter = 'all';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+      if (state.checkResult) renderFindings(state.checkResult.findings || []);
+      document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
   }
 
   // ── Benchmark ──

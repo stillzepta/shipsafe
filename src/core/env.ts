@@ -113,7 +113,9 @@ export function scanEnvDrift(
               line: i + 1,
               snippet: lines[i].trim(),
               recommendation: `Add "${varName}=" to ${examplePath || '.env.example'} to prevent missing configuration crashes in staging/production. Run "shipsafe fix" to sync automatically.`,
-              autoFixable: true
+              autoFixable: true,
+              fixerType: 'sync-env',
+              extraData: { varName, exampleFile: examplePath || '.env.example' }
             });
             break;
           }
