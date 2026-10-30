@@ -34,17 +34,29 @@ export async function runCli(args: string[] = process.argv.slice(2), cwd: string
   }
 
   if (command === 'scan' || command === 'check') {
-    const isAll = args.includes('--all');
-    await handleScan(isAll, cwd);
+    await handleScan(args, cwd);
     return;
   }
 
   console.log(`\n  Unknown command: "${command}". Run "shipsafe --help" for usage.\n`);
 }
 
-async function handleScan(all: boolean, cwd: string) {
+async function handleScan(args: string[], cwd: string) {
   const startTime = Date.now();
-  const files = getFilesToInspect(cwd, all);
+  const isAll = args.includes('--all');
+  const explicitPaths = args.filter(a => !a.startsWith('-') && a !== 'scan' && a !== 'check');
+
+  let files: { path: string; content: string }[] = [];
+  if (explicitPaths.length > 0) {
+    for (const rel of explicitPaths) {
+      const full = path.resolve(cwd, rel);
+      if (fs.existsSync(full) && !fs.statSync(full).isDirectory()) {
+        files.push({ path: path.relative(cwd, full), content: fs.readFileSync(full, 'utf-8') });
+      }
+    }
+  } else {
+    files = getFilesToInspect(cwd, isAll);
+  }
 
   if (files.length === 0) {
     console.log(`\n  \x1b[33mNo modified or staged files found.\x1b[0m Stage files with "git add" or use "--all".\n`);
