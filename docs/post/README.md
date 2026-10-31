@@ -1,3 +1,3 @@
-# 📸 ShipSafe Post & Presentation Assets
+# 📸 ShipSafe Post & Demo Assets
 
-This directory stores terminal screen recordings, GIFs, and presentation slides for the Devf8rge finals pitch.
+This directory stores terminal screen recordings, GIFs, and presentation slides for Devf8rge.
