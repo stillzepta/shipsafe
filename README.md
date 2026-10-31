@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/shipsafe-logo.png" alt="ShipSafe — Local Code &amp; Vulnerability Scanner" width="680">
+</p>
+
 # 🛡️ ShipSafe // 2026
 
 > **The Autonomous Pre-Flight Blast Radius Sentinel & Zero-Downtime Quality Gatekeeper**  
@@ -6,7 +10,7 @@
 
 [![ShipSafe CI](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
-[![Tests: 18/18 Passed](https://img.shields.io/badge/Tests-18%2F18_Passed-success.svg?style=flat-square)](tests/)
+[![Tests: 20/20 Passed](https://img.shields.io/badge/Tests-20%2F20_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Traditional CI Detection](https://img.shields.io/badge/Traditional_CI_Detection-0%2F10_(0%25)-red.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-why-open-innovation-matters-100-air-gapped-sovereignty)

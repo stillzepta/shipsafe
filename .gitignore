@@ -2,3 +2,6 @@ node_modules/
 .DS_Store
 .shipsafe/audit.db
 .shipsafe/tmp-test/
+.env
+.env.local
+.env.*.local

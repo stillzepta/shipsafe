@@ -3,59 +3,237 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ShipSafe — Autonomous Pre-Flight Blast Radius & Production Health Gatekeeper</title>
+  <title>ShipSafe — Local Code &amp; Vulnerability Scanner</title>
+  <link rel="icon" type="image/png" href="assets/shipsafe-icon.png">
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="app-layout">
-    <!-- Top Navigation Bar -->
+
+    <!-- =====================================================
+         MINIMAL STICKY HEADER (always visible, very quiet)
+         ===================================================== -->
     <header class="top-nav">
-      <div class="nav-left">
-        <div class="logo">
-          <div class="logo-icon">🛡️</div>
-          <div>
-            <div class="logo-title">ShipSafe <span class="badge-tag">QUALITY GATE</span></div>
-            <div class="logo-sub">Pre-Flight Blast Radius & Production Health Sentry</div>
+      <div class="brand-lockup">
+        <div class="brand-icon-box">
+          <img src="assets/shipsafe-icon.png" alt="ShipSafe Shield" class="brand-logo-img">
+        </div>
+        <div class="brand-text-col">
+          <div class="brand-headline">
+            <span class="brand-title">ShipSafe</span>
+            <span class="badge-edition">OPEN SOURCE</span>
           </div>
-        </div>
-
-        <div class="repo-pill">
-          <span class="git-icon">🌿</span>
-          <span class="branch-label">Branch:</span>
-          <strong id="branchName">loading...</strong>
-        </div>
-
-        <div class="live-pill" id="liveWatcherBadge">
-          <span class="live-dot"></span>
-          <span class="live-text">WATCHING REPO</span>
+          <div class="brand-tagline">Local Code &amp; Vulnerability Scanner &bull; Production Health Gatekeeper</div>
         </div>
       </div>
 
-      <div class="nav-right">
-        <button id="btnRunBenchmarkTop" class="btn btn-secondary">
-          <span class="btn-icon">🔬</span> 10/10 Benchmark
+      <!-- Clean Nav Right with Cog Settings Menu -->
+      <div class="nav-right" id="navActions">
+        <button id="btnRunCheck" class="btn btn-primary btn-sm btn-rescan-nav" style="display:none;" title="Re-scan current target">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Re-Scan</span>
         </button>
-        <button id="btnHooks" class="btn btn-secondary">
-          <span class="btn-icon">⚡</span> <span id="hookBtnText">Install Git Hooks</span>
-        </button>
-        <button id="btnRunCheck" class="btn btn-primary">
-          <span class="btn-icon">▶</span> Run Pre-Flight Scan
-        </button>
+
+        <div class="settings-menu-wrap">
+          <button id="btnSettingsToggle" class="btn-icon-cog" title="Settings &amp; Tools" aria-label="Settings and Tools">
+            <svg class="cog-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+
+          <!-- Glassmorphic Settings Dropdown -->
+          <div id="settingsDropdown" class="settings-dropdown" style="display:none;">
+            <div class="dropdown-header">
+              <span class="dropdown-title">Repository &amp; Gate Controls</span>
+            </div>
+
+            <!-- Git Environment -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Git Environment</div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Branch:</span>
+                <span class="dropdown-chip">
+                  <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                  <strong id="branchName" class="chip-val">main</strong>
+                </span>
+              </div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Staged Files:</span>
+                <span class="dropdown-chip">
+                  <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <strong id="stagedCount" class="chip-val">0</strong>&nbsp;staged
+                </span>
+              </div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Live Watcher:</span>
+                <div class="status-chip live-chip" id="liveWatcherBadge" style="margin:0; padding:0.2rem 0.55rem;">
+                  <span class="live-pulse-dot"></span>
+                  <span class="live-text" style="font-size:0.7rem;">WATCHING REPO</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Quality Gate Hooks -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Local Pre-Commit Gate</div>
+              <button id="btnHooks" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <span class="chip-dot"></span>
+                <span id="hookBtnText">Git Hooks Active</span>
+              </button>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Diagnostic Tools -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Diagnostic Tools</div>
+              <button id="btnRunBenchmarkTop" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h12"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-4 0"/><path d="M9 14h6"/><path d="M12 6V3"/><path d="M8 3h8"/></svg>
+                <span>Run 10-Scenario Benchmark</span>
+              </button>
+              <button id="btnOpenRulesTab" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Quality Gate Rules</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="main-container">
-      
-      <!-- Top Overview Hero: Score Gauge & Health Radar -->
+    <!-- =====================================================
+         HERO LANDING: shown until first scan completes
+         ===================================================== -->
+    <section id="heroLanding" class="hero-landing">
+      <!-- Ambient orbs -->
+      <div class="orb orb-orange"></div>
+      <div class="orb orb-violet"></div>
+
+      <div class="hero-content">
+        <!-- Brand Logo Banner -->
+        <div class="hero-logo-wrap">
+          <img src="assets/shipsafe-logo.png" alt="ShipSafe — Local Code &amp; Vulnerability Scanner" class="hero-logo-banner">
+        </div>
+
+        <!-- Badge row -->
+        <div class="hero-badge-row">
+          <span class="hero-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Catches 10/10 outages linters miss
+          </span>
+          <span class="hero-badge hero-badge-green">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Zero-downtime quality gate
+          </span>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="hero-headline">
+          Ship code you can<br>
+          <span class="hero-headline-accent">actually trust.</span>
+        </h1>
+        <p class="hero-sub">
+          Point ShipSafe at any file, directory, or your whole repo.<br>
+          Get a full pre-flight health report in seconds — before it reaches GitHub.
+        </p>
+
+        <!-- ── SCAN CARD ── -->
+        <div class="scan-card" id="scanCard">
+          <!-- Source selector -->
+          <div class="scan-source-label">Choose what to scan</div>
+          <div class="chips-scroll-wrap hero-chips">
+            <button class="path-chip active" data-path=".">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span>Whole Workspace</span>
+            </button>
+            <button class="path-chip" data-path="src/">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Core Engine (src/)</span>
+            </button>
+            <button class="path-chip" data-path="demo/sample_app.ts">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="14" x="8" y="6" rx="4"/><path d="m19 7-3 2"/><path d="m5 7 3 2"/><path d="m19 19-3-2"/><path d="m5 19 3-2"/><path d="M20 13h-4"/><path d="M4 13h4"/></svg>
+              <span>Demo Trap</span>
+            </button>
+            <button class="path-chip" data-path="benchmarks/fixtures/01_table_lock_migration/migration.sql">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              <span>01 Table Lock</span>
+            </button>
+            <button class="path-chip" data-path="benchmarks/fixtures/03_n_plus_one_checkout_query/orders.ts">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>03 N+1 Loop</span>
+            </button>
+            <button class="path-chip" data-path="benchmarks/fixtures/04_sync_io_in_route/server.ts">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              <span>04 Sync I/O</span>
+            </button>
+            <button class="path-chip chip-custom" id="heroChipCustom" data-path="">
+              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <span>Custom path…</span>
+            </button>
+          </div>
+
+          <!-- Custom path input (hidden until "Custom path" is selected) -->
+          <div class="hero-custom-input-wrap" id="heroCustomInputWrap" style="display:none;">
+            <svg class="input-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            <input type="text" id="targetPathInput" class="path-input" placeholder="e.g.  src/core/blast.ts  or  benchmarks/fixtures/02_missing_stripe_secret_env/" value=".">
+          </div>
+
+          <!-- Big CTA -->
+          <button id="btnHeroScan" class="btn-hero-scan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span id="btnHeroScanLabel">Run Pre-Flight Scan</span>
+          </button>
+
+          <!-- Proof line -->
+          <div class="scan-proof-row">
+            <span class="proof-item proof-green">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              18 tests passing
+            </span>
+            <span class="proof-dot"></span>
+            <span class="proof-item">10/10 real outages caught</span>
+            <span class="proof-dot"></span>
+            <span class="proof-item">~50 ms scan time</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         FULL REPORT (hidden until scan runs)
+         ===================================================== -->
+    <main class="main-container report-area" id="reportArea" style="display:none;">
+
+      <!-- ── Summary bar: score + gate status at a glance ── -->
+      <div class="report-summary-bar" id="reportSummaryBar">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- ── Path context pill + re-scan link ── -->
+      <div class="report-context-row">
+        <div class="report-path-pill" id="pathTargetLabel">Target: .</div>
+        <div class="report-context-actions">
+          <button class="btn-text-link" id="btnBackToHero">← Change target</button>
+        </div>
+      </div>
+
+      <!-- ── 12-column overview grid ── -->
       <section class="hero-overview">
-        <!-- Health Gauge Card -->
+        <!-- 4-col: Code Health Radar -->
         <div class="card gauge-card">
           <div class="gauge-header">
-            <h3>CODE HEALTH RADAR</h3>
+            <div class="card-title-group">
+              <span class="card-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <h3>CODE HEALTH RADAR</h3>
+            </div>
             <span id="gateStatusBadge" class="status-badge status-neutral">EVALUATING</span>
           </div>
 
@@ -72,115 +250,132 @@
               </div>
             </div>
 
-            <div class="gauge-meta">
-              <div class="meta-item">
+            <!-- View Fixes action button directly near the radar graph -->
+            <button id="btnViewFixesRadar" class="btn btn-radar-fixes" style="display:none;" title="View detected issues &amp; automated remediations">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <span id="btnViewFixesRadarText">View Fixes &rarr;</span>
+            </button>
+
+            <div class="gauge-meta-grid">
+              <div class="meta-stat-box">
                 <span class="meta-label">Inspected Files</span>
-                <strong id="metaFilesChecked">0</strong>
+                <strong id="metaFilesChecked" class="meta-val">0</strong>
               </div>
-              <div class="meta-item">
+              <div class="meta-stat-box">
                 <span class="meta-label">Critical Errors</span>
-                <strong id="metaErrors" class="text-danger">0</strong>
+                <strong id="metaErrors" class="meta-val text-danger">0</strong>
               </div>
-              <div class="meta-item">
+              <div class="meta-stat-box">
                 <span class="meta-label">Warnings</span>
-                <strong id="metaWarnings" class="text-warning">0</strong>
+                <strong id="metaWarnings" class="meta-val text-warning">0</strong>
               </div>
-              <div class="meta-item">
+              <div class="meta-stat-box">
                 <span class="meta-label">Latency</span>
-                <strong id="metaDuration">0ms</strong>
+                <strong id="metaDuration" class="meta-val">0ms</strong>
               </div>
             </div>
           </div>
-
           <div class="gauge-footer">
             <span id="summaryText">Initializing pre-flight health gates...</span>
           </div>
         </div>
 
-        <!-- Category Readiness Matrix -->
+        <!-- 8-col: Production Health Matrix -->
         <div class="card categories-card">
           <div class="card-header">
-            <h3>PRODUCTION HEALTH MATRIX</h3>
-            <span class="subtext">Zero-downtime safety gates before GitHub/Prod</span>
+            <div class="card-title-group">
+              <span class="card-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </span>
+              <div>
+                <h3>PRODUCTION HEALTH MATRIX</h3>
+                <span class="subtext">Zero-downtime safety gates before GitHub / Prod</span>
+              </div>
+            </div>
           </div>
-
-          <div class="category-grid" id="categoryGrid">
-            <!-- Dynamically populated -->
-          </div>
+          <div class="category-grid" id="categoryGrid"></div>
         </div>
       </section>
 
-      <!-- Blast Radius & AI Pre-Mortem Banner -->
+      <!-- ── Blast Radius & AI Pre-Mortem ── -->
       <section class="blast-premortem-banner">
-        <!-- Blast Radius Card -->
         <div class="card blast-card">
           <div class="card-header blast-header">
             <div class="blast-title-group">
-              <span class="blast-icon">💥</span>
+              <span class="blast-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="M2 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="M12 22v-4"/><path d="m19.07 19.07-2.83-2.83"/><path d="M22 12h-4"/><path d="m19.07 4.93-2.83 2.83"/></svg>
+              </span>
               <div>
                 <h3>DOWNSTREAM BLAST RADIUS</h3>
-                <span class="subtext" id="blastSubtitle">Dependency cascade & critical path analysis</span>
+                <span class="subtext" id="blastSubtitle">Dependency cascade &amp; critical path analysis</span>
               </div>
             </div>
             <span id="blastRiskBadge" class="status-badge status-neutral">LOW IMPACT</span>
           </div>
-
           <div class="blast-body">
             <div class="blast-meter-wrapper">
               <div class="blast-meter-bar">
-                <div id="blastMeterFill" class="blast-meter-fill" style="width: 10%;"></div>
+                <div id="blastMeterFill" class="blast-meter-fill" style="width:10%;"></div>
               </div>
               <div class="blast-meter-stats">
                 <span id="blastScoreText"><strong>10%</strong> Blast Radius</span>
                 <span id="blastDependentsText">0 downstream dependents</span>
               </div>
             </div>
-
             <div class="blast-modules" id="blastModulesList">
               <span class="text-dim">No downstream dependents affected</span>
             </div>
           </div>
         </div>
 
-        <!-- AI Pre-Mortem Sentinel Card -->
         <div class="card premortem-card">
           <div class="card-header premortem-header">
             <div class="premortem-title-group">
-              <span class="premortem-icon">🧠</span>
+              <span class="premortem-icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 3 2 5.5 4 7v3h8v-3c2-1.5 4-4 4-7a8 8 0 0 0-8-8z"/><line x1="10" y1="22" x2="14" y2="22"/></svg>
+              </span>
               <div>
-                <h3>AI PRE-MORTEM SENTINEL</h3>
-                <span class="subtext" id="aiSourceLabel">Powered by Gemma 2 / Heuristic</span>
+                <h3>AI OUTAGE RISK PREDICTOR</h3>
+                <span class="subtext" id="aiSourceLabel">Simulated production failure scenarios &amp; deployment safety analysis</span>
               </div>
             </div>
-            <span id="premortemActionBadge" class="badge-tag">PASS</span>
+            <span id="premortemActionBadge" class="status-badge status-pass">PASS</span>
           </div>
-
           <div class="premortem-body">
             <p id="premortemSummaryText" class="premortem-quote">"All pre-flight health checks passed. Blast radius is safe for deployment."</p>
-            <div id="opsWarningsBox" class="ops-warnings-box" style="display: none;">
-              <strong>⚠️ Operational Alerts:</strong>
+            <div id="opsWarningsBox" class="ops-warnings-box" style="display:none;">
+              <strong>Operational Alerts:</strong>
               <ul id="opsWarningsList"></ul>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Navigation Tabs -->
+      <!-- ── Detail Tabs ── -->
       <div class="tabs-header">
         <button class="tab-btn active" data-tab="findings">
-          🚨 Findings & Auto-Fix (<span id="findingsCount">0</span>)
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Findings &amp; Auto-Fix (<span id="findingsCount">0</span>)
         </button>
         <button class="tab-btn" data-tab="diff">
-          📝 Staged Changes & Diff (<span id="stagedCount">0</span>)
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          Staged Diff (<span id="stagedCount">0</span>)
         </button>
         <button class="tab-btn" data-tab="benchmark">
-          🔬 Outage Benchmark (10/10 Proof)
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-4 0"/><path d="M9 14h6"/><path d="M12 6V3"/><path d="M8 3h8"/></svg>
+          Outage Benchmark (10/10)
         </button>
         <button class="tab-btn" data-tab="history">
-          📜 Audit Log & Trajectory
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Audit Log
         </button>
         <button class="tab-btn" data-tab="rules">
-          ⚙️ Gate Rules & Policies
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Gate Rules
         </button>
       </div>
 
@@ -190,20 +385,15 @@
           <div class="filter-group">
             <span class="filter-label">Filter:</span>
             <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="ERROR">Errors Only</button>
-            <button class="filter-btn" data-filter="WARN">Warnings Only</button>
-            <button class="filter-btn" data-filter="autofix">⚡ Auto-Fixable</button>
+            <button class="filter-btn" data-filter="ERROR">Errors</button>
+            <button class="filter-btn" data-filter="WARN">Warnings</button>
+            <button class="filter-btn" data-filter="autofix">Auto-Fixable</button>
           </div>
           <div class="toolbar-actions">
-            <button id="btnAutoFixAll" class="btn btn-sm btn-success" style="display:none;">
-              ⚡ Auto-Fix All Available
-            </button>
+            <button id="btnAutoFixAll" class="btn btn-sm btn-success" style="display:none;">Auto-Fix All</button>
           </div>
         </div>
-
-        <div class="findings-list" id="findingsList">
-          <!-- Dynamically populated -->
-        </div>
+        <div class="findings-list" id="findingsList"></div>
       </section>
 
       <!-- Tab 2: Staged Diff -->
@@ -211,36 +401,35 @@
         <div class="diff-container card">
           <div class="diff-header">
             <div class="diff-file-selector">
-              <span class="file-icon">📄</span>
-              <select id="diffFileSelect">
-                <option value="">Select a staged file...</option>
-              </select>
+              <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <select id="diffFileSelect"><option value="">Select a staged file...</option></select>
             </div>
             <span class="diff-badge" id="diffLineCount">0 lines changed</span>
           </div>
-
           <div class="diff-body" id="diffContent">
             <div class="empty-state">
-              <div class="empty-icon">📁</div>
-              <p>Stage files with <code>git add</code> to preview unified diffs and health annotations.</p>
+              <div class="empty-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <p>Stage files with <code>git add</code> to preview unified diffs.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Tab 3: Outage Benchmark -->
+      <!-- Tab 3: Benchmark -->
       <section id="tab-benchmark" class="tab-content">
         <div class="card benchmark-card">
           <div class="benchmark-header">
             <div>
               <h3>EMPIRICAL PRODUCTION OUTAGE BENCHMARK</h3>
-              <p class="subtext">Evaluated against 10 real-world post-mortem traps (GitLab lock, Stripe leak, N+1 cascades)</p>
+              <p class="subtext">Evaluated against 10 real-world post-mortem traps</p>
             </div>
             <button id="btnTriggerBenchmark" class="btn btn-primary">
-              <span class="btn-icon">▶</span> Run 10-Scenario Benchmark
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>Run 10-Scenario Benchmark</span>
             </button>
           </div>
-
           <div class="benchmark-summary-strip">
             <div class="bench-stat-card traditional-ci">
               <span class="bench-label">Traditional CI (ESLint / Unit Tests)</span>
@@ -253,52 +442,44 @@
               <span class="bench-sub">100% precision with instant remediation</span>
             </div>
           </div>
-
           <div class="table-responsive">
             <table class="benchmark-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Historical Outage Scenario</th>
-                  <th>Category</th>
-                  <th>Traditional CI</th>
-                  <th>ShipSafe Detection</th>
+                  <th>ID</th><th>Historical Outage Scenario</th><th>Category</th>
+                  <th>Traditional CI</th><th>ShipSafe Detection</th>
                 </tr>
               </thead>
-              <tbody id="benchmarkTableBody">
-                <!-- Dynamically populated -->
-              </tbody>
+              <tbody id="benchmarkTableBody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- Tab 4: Audit History -->
+      <!-- Tab 4: History -->
       <section id="tab-history" class="tab-content">
         <div class="card history-card">
           <div class="card-header">
-            <h3>AUDIT TRAJECTORY & RUN LEDGER</h3>
-            <span class="subtext">Synchronously logged to SQLite (.shipsafe/audit.db)</span>
+            <div class="card-title-group">
+              <span class="card-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </span>
+              <div>
+                <h3>AUDIT TRAJECTORY &amp; RUN LEDGER</h3>
+                <span class="subtext">Synchronously logged to SQLite (.shipsafe/audit.db)</span>
+              </div>
+            </div>
           </div>
           <div class="table-responsive">
             <table class="history-table">
               <thead>
                 <tr>
-                  <th>Run ID</th>
-                  <th>Timestamp</th>
-                  <th>Commit</th>
-                  <th>Branch</th>
-                  <th>Status</th>
-                  <th>Score</th>
-                  <th>Errors</th>
-                  <th>Warnings</th>
-                  <th>Duration</th>
-                  <th>Summary</th>
+                  <th>Run</th><th>Time</th><th>Commit</th><th>Branch</th>
+                  <th>Status</th><th>Score</th><th>Errors</th><th>Warnings</th>
+                  <th>Duration</th><th>Summary</th>
                 </tr>
               </thead>
-              <tbody id="historyTableBody">
-                <!-- Dynamically populated -->
-              </tbody>
+              <tbody id="historyTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -308,18 +489,23 @@
       <section id="tab-rules" class="tab-content">
         <div class="card rules-card">
           <div class="card-header">
-            <h3>QUALITY GATE CONFIGURATION</h3>
-            <span class="subtext">Configured via .shipsafe/config.json</span>
+            <div class="card-title-group">
+              <span class="card-title-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </span>
+              <div>
+                <h3>QUALITY GATE CONFIGURATION</h3>
+                <span class="subtext">Configured via .shipsafe/config.json</span>
+              </div>
+            </div>
           </div>
-          <div class="rules-form" id="rulesForm">
-            <!-- Dynamically populated -->
-          </div>
+          <div class="rules-form" id="rulesForm"></div>
         </div>
       </section>
 
     </main>
 
-    <!-- Global Toast Notification -->
+    <!-- Toast -->
     <div id="toast" class="toast"></div>
   </div>
 

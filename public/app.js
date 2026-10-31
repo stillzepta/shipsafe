@@ -1,96 +1,162 @@
 /**
- * ShipSafe Frontend Controller
- * Reactive client with Server-Sent Events, real-time gauge, diff viewer & auto-fix
+ * ShipSafe Frontend Controller — Progressive-Disclosure Hero Edition
+ * Landing: choose target → hit Scan → report revealed
+ * Reactive SSE updates, 4-Part Cognitive Diagnosis, Auto-Fix
  */
 
+// ── State ──────────────────────────────────────────────────────────────
 const state = {
-  status: null,
-  checkResult: null,
-  activeFilter: 'all',
-  activeDiffFile: null,
-  activeTab: 'findings',
-  rulesConfig: null
+  status:            null,
+  checkResult:       null,
+  activeFilter:      'all',
+  activeDiffFile:    null,
+  activeTab:         'findings',
+  rulesConfig:       null,
+  currentTargetPath: '.',
+  reportVisible:     false,
 };
 
-// UI Elements
+// ── DOM references ──────────────────────────────────────────────────────
 const els = {
-  branchName: document.getElementById('branchName'),
-  liveWatcherBadge: document.getElementById('liveWatcherBadge'),
-  btnRunCheck: document.getElementById('btnRunCheck'),
-  btnHooks: document.getElementById('btnHooks'),
-  hookBtnText: document.getElementById('hookBtnText'),
-  gaugeScore: document.getElementById('gaugeScore'),
-  gaugeProgress: document.getElementById('gaugeProgress'),
-  gaugeVerdict: document.getElementById('gaugeVerdict'),
-  gateStatusBadge: document.getElementById('gateStatusBadge'),
-  metaFilesChecked: document.getElementById('metaFilesChecked'),
-  metaErrors: document.getElementById('metaErrors'),
-  metaWarnings: document.getElementById('metaWarnings'),
-  metaDuration: document.getElementById('metaDuration'),
-  summaryText: document.getElementById('summaryText'),
-  categoryGrid: document.getElementById('categoryGrid'),
-  findingsList: document.getElementById('findingsList'),
-  findingsCount: document.getElementById('findingsCount'),
-  stagedCount: document.getElementById('stagedCount'),
-  stagedFilesList: document.getElementById('stagedFilesList'),
-  diffActiveFileName: document.getElementById('diffActiveFileName'),
-  diffCodeBlock: document.getElementById('diffCodeBlock'),
-  btnUnstageActive: document.getElementById('btnUnstageActive'),
-  btnAutoFixAll: document.getElementById('btnAutoFixAll'),
-  historyTableBody: document.getElementById('historyTableBody'),
-  rulesForm: document.getElementById('rulesForm'),
-  toast: document.getElementById('toast'),
-  // Blast Radius & Pre-Mortem elements
-  blastRiskBadge: document.getElementById('blastRiskBadge'),
-  blastMeterFill: document.getElementById('blastMeterFill'),
-  blastScoreText: document.getElementById('blastScoreText'),
+  // Hero
+  heroLanding:         document.getElementById('heroLanding'),
+  btnHeroScan:         document.getElementById('btnHeroScan'),
+  btnHeroScanLabel:    document.getElementById('btnHeroScanLabel'),
+  heroCustomInputWrap: document.getElementById('heroCustomInputWrap'),
+  heroChipCustom:      document.getElementById('heroChipCustom'),
+  targetPathInput:     document.getElementById('targetPathInput'),
+
+  // Nav (revealed after scan)
+  navActions:          document.getElementById('navActions'),
+  branchName:          document.getElementById('branchName'),
+  stagedCount:         document.getElementById('stagedCount'),
+  liveWatcherBadge:    document.getElementById('liveWatcherBadge'),
+  btnRunCheck:         document.getElementById('btnRunCheck'),
+  btnHooks:            document.getElementById('btnHooks'),
+  hookBtnText:         document.getElementById('hookBtnText'),
+  btnRunBenchmarkTop:  document.getElementById('btnRunBenchmarkTop'),
+  btnSettingsToggle:   document.getElementById('btnSettingsToggle'),
+  settingsDropdown:    document.getElementById('settingsDropdown'),
+  btnOpenRulesTab:     document.getElementById('btnOpenRulesTab'),
+
+  // Report area
+  reportArea:          document.getElementById('reportArea'),
+  reportSummaryBar:    document.getElementById('reportSummaryBar'),
+  pathTargetLabel:     document.getElementById('pathTargetLabel'),
+  btnBackToHero:       document.getElementById('btnBackToHero'),
+
+  // Callout
+  gateCalloutBanner:   document.getElementById('gateCalloutBanner'),
+  gateCalloutTitle:    document.getElementById('gateCalloutTitle'),
+  gateCalloutText:     document.getElementById('gateCalloutText'),
+  btnViewFixes:        document.getElementById('btnViewFixes'),
+
+  // Radar fixes button
+  btnViewFixesRadar:     document.getElementById('btnViewFixesRadar'),
+  btnViewFixesRadarText: document.getElementById('btnViewFixesRadarText'),
+
+  // Gauge & meta
+  gaugeScore:          document.getElementById('gaugeScore'),
+  gaugeProgress:       document.getElementById('gaugeProgress'),
+  gaugeVerdict:        document.getElementById('gaugeVerdict'),
+  gateStatusBadge:     document.getElementById('gateStatusBadge'),
+  metaFilesChecked:    document.getElementById('metaFilesChecked'),
+  metaErrors:          document.getElementById('metaErrors'),
+  metaWarnings:        document.getElementById('metaWarnings'),
+  metaDuration:        document.getElementById('metaDuration'),
+  summaryText:         document.getElementById('summaryText'),
+
+  // Category + findings
+  categoryGrid:        document.getElementById('categoryGrid'),
+  findingsList:        document.getElementById('findingsList'),
+  findingsCount:       document.getElementById('findingsCount'),
+  btnAutoFixAll:       document.getElementById('btnAutoFixAll'),
+
+  // Blast / premortem
+  blastRiskBadge:      document.getElementById('blastRiskBadge'),
+  blastMeterFill:      document.getElementById('blastMeterFill'),
+  blastScoreText:      document.getElementById('blastScoreText'),
   blastDependentsText: document.getElementById('blastDependentsText'),
-  blastModulesList: document.getElementById('blastModulesList'),
-  aiSourceLabel: document.getElementById('aiSourceLabel'),
-  premortemActionBadge: document.getElementById('premortemActionBadge'),
-  premortemSummaryText: document.getElementById('premortemSummaryText'),
-  opsWarningsBox: document.getElementById('opsWarningsBox'),
-  opsWarningsList: document.getElementById('opsWarningsList'),
-  // Benchmark elements
+  blastModulesList:    document.getElementById('blastModulesList'),
+  aiSourceLabel:       document.getElementById('aiSourceLabel'),
+  premortemActionBadge:document.getElementById('premortemActionBadge'),
+  premortemSummaryText:document.getElementById('premortemSummaryText'),
+  opsWarningsBox:      document.getElementById('opsWarningsBox'),
+  opsWarningsList:     document.getElementById('opsWarningsList'),
+
+  // Tabs / diff
+  diffFileSelect:      document.getElementById('diffFileSelect'),
+  diffLineCount:       document.getElementById('diffLineCount'),
+  diffContent:         document.getElementById('diffContent'),
+
+  // Benchmark
   btnTriggerBenchmark: document.getElementById('btnTriggerBenchmark'),
-  btnRunBenchmarkTop: document.getElementById('btnRunBenchmarkTop'),
-  benchCiStat: document.getElementById('benchCiStat'),
-  benchShipSafeStat: document.getElementById('benchShipSafeStat'),
-  benchmarkTableBody: document.getElementById('benchmarkTableBody')
+  benchCiStat:         document.getElementById('benchCiStat'),
+  benchShipSafeStat:   document.getElementById('benchShipSafeStat'),
+  benchmarkTableBody:  document.getElementById('benchmarkTableBody'),
+
+  // History / Rules
+  historyTableBody:    document.getElementById('historyTableBody'),
+  rulesForm:           document.getElementById('rulesForm'),
+
+  // Toast
+  toast:               document.getElementById('toast'),
 };
 
-// Show Toast
+// ── Toast ───────────────────────────────────────────────────────────────
 function showToast(msg, type = 'info') {
+  if (!els.toast) return;
   els.toast.textContent = msg;
   els.toast.style.display = 'block';
-  els.toast.style.borderColor = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#38bdf8';
-  setTimeout(() => {
-    els.toast.style.display = 'none';
-  }, 3500);
+  els.toast.style.borderColor   = type === 'error'   ? 'var(--accent-red)'   :
+                                   type === 'success' ? 'var(--accent-green)' : 'var(--accent-orange)';
+  els.toast.style.boxShadow     = `0 4px 20px ${type === 'error' ? 'var(--accent-red-glow)' : type === 'success' ? 'var(--accent-green-glow)' : 'var(--accent-orange-glow)'}`;
+  setTimeout(() => { els.toast.style.display = 'none'; }, 3500);
 }
 
-// Fetch Status
+// ── View transitions ────────────────────────────────────────────────────
+function showReport() {
+  if (state.reportVisible) return;
+  state.reportVisible = true;
+
+  // Fade hero out then hide it
+  els.heroLanding.classList.add('hero-fading');
+  setTimeout(() => {
+    els.heroLanding.style.display = 'none';
+    els.heroLanding.classList.remove('hero-fading');
+  }, 300);
+
+  // Show report + nav actions
+  els.reportArea.style.display = '';
+  if (els.btnRunCheck) els.btnRunCheck.style.display = 'inline-flex';
+}
+
+function backToHero() {
+  state.reportVisible = false;
+  state.checkResult   = null;
+
+  els.reportArea.style.display  = 'none';
+  if (els.btnRunCheck) els.btnRunCheck.style.display = 'none';
+  els.heroLanding.style.display = '';
+}
+
+// ── Status load ─────────────────────────────────────────────────────────
 async function loadStatus() {
   try {
-    const res = await fetch('/api/status');
+    const res  = await fetch('/api/status');
     const data = await res.json();
     state.status = data;
 
-    els.branchName.textContent = data.branch;
-    els.stagedCount.textContent = data.stagedFiles.length;
+    if (els.branchName)  els.branchName.textContent  = data.branch || 'main';
+    if (els.stagedCount) els.stagedCount.textContent  = (data.stagedFiles || []).length;
 
-    // Hooks button state
-    if (data.hooks && data.hooks.installed) {
-      els.hookBtnText.textContent = 'Git Hooks Active ✔';
-      els.btnHooks.classList.add('btn-success');
-      els.btnHooks.classList.remove('btn-secondary');
-    } else {
-      els.hookBtnText.textContent = 'Install Git Hooks';
-      els.btnHooks.classList.remove('btn-success');
-      els.btnHooks.classList.add('btn-secondary');
+    if (els.btnHooks && els.hookBtnText) {
+      const installed = data.hooks && data.hooks.installed;
+      els.hookBtnText.textContent = installed ? 'Git Hooks Active' : 'Install Git Hooks';
+      els.btnHooks.classList.toggle('btn-success', installed);
     }
 
-    renderStagedFiles(data.stagedFiles);
+    renderStagedFilesSelector(data.stagedFiles || []);
   } catch (err) {
     console.warn('Backend offline or running on static GitHub Pages. Serving demo showcase data.');
     els.branchName.textContent = 'main (live demo)';
@@ -102,399 +168,536 @@ async function loadStatus() {
   }
 }
 
-// Render Staged Files in Diff Tab
-function renderStagedFiles(files) {
-  els.stagedFilesList.innerHTML = '';
-  if (!files || files.length === 0) {
-    els.stagedFilesList.innerHTML = `<li class="file-list-item" style="color:var(--text-dim);">No files currently staged</li>`;
-    els.diffCodeBlock.innerHTML = `<code>Stage files using "git add &lt;file&gt;" in your terminal to inspect diffs and run pre-flight gates.</code>`;
-    return;
-  }
-
-  files.forEach((f, idx) => {
-    const li = document.createElement('li');
-    li.className = `file-list-item ${state.activeDiffFile === f.path ? 'active' : ''}`;
-    li.innerHTML = `
-      <span>${f.path}</span>
-      <span class="badge-tag" style="background:#1e293b; color:#94a3b8;">${f.status}</span>
-    `;
-    li.onclick = () => loadDiff(f.path);
-    els.stagedFilesList.appendChild(li);
-
-    // Auto-select first file if none selected
-    if (idx === 0 && !state.activeDiffFile) {
-      loadDiff(f.path);
-    }
+// ── Staged diff ─────────────────────────────────────────────────────────
+function renderStagedFilesSelector(files) {
+  if (!els.diffFileSelect) return;
+  els.diffFileSelect.innerHTML = '<option value="">Select a staged file...</option>';
+  files.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f.path;
+    opt.textContent = `${f.path} (${f.status})`;
+    els.diffFileSelect.appendChild(opt);
   });
+  if (files.length > 0 && !state.activeDiffFile) {
+    els.diffFileSelect.value = files[0].path;
+    loadDiff(files[0].path);
+  }
 }
 
-// Load Diff for File
-async function loadDiff(filePath) {
+if (els.diffFileSelect) {
+  els.diffFileSelect.onchange = e => { if (e.target.value) loadDiff(e.target.value); };
+}
+
+async function loadDiff(filePath, targetLine = null) {
   state.activeDiffFile = filePath;
-  els.diffActiveFileName.textContent = filePath;
-  els.btnUnstageActive.style.display = 'inline-block';
-  els.btnUnstageActive.onclick = () => executeUnstage(filePath);
-
-  // Update active file class
-  document.querySelectorAll('.file-list-item').forEach(el => {
-    if (el.textContent.includes(filePath)) el.classList.add('active');
-    else el.classList.remove('active');
-  });
-
-  try {
-    const res = await fetch(`/api/diff?file=${encodeURIComponent(filePath)}`);
-    const data = await res.json();
-    renderDiff(data.diff || '(No diff or untracked binary file)');
-  } catch (err) {
-    els.diffCodeBlock.innerHTML = `<code>Failed to load diff: ${err.message}</code>`;
-  }
-}
-
-function renderDiff(rawDiff) {
-  const lines = rawDiff.split('\n');
-  const formatted = lines.map(line => {
-    const escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    if (line.startsWith('+') && !line.startsWith('+++')) {
-      return `<div class="diff-add">${escaped}</div>`;
-    } else if (line.startsWith('-') && !line.startsWith('---')) {
-      return `<div class="diff-del">${escaped}</div>`;
-    } else if (line.startsWith('@@') || line.startsWith('diff --git')) {
-      return `<div class="diff-meta">${escaped}</div>`;
+  if (els.diffFileSelect && filePath) {
+    let exists = false;
+    for (const opt of els.diffFileSelect.options) {
+      if (opt.value === filePath) { exists = true; break; }
     }
-    return `<div>${escaped}</div>`;
-  }).join('');
-
-  els.diffCodeBlock.innerHTML = formatted;
+    if (!exists) {
+      const opt = document.createElement('option');
+      opt.value = filePath;
+      opt.textContent = `${filePath} (Inspected)`;
+      els.diffFileSelect.appendChild(opt);
+    }
+    els.diffFileSelect.value = filePath;
+  }
+  try {
+    const res  = await fetch(`/api/diff?file=${encodeURIComponent(filePath)}`);
+    const data = await res.json();
+    renderDiff(data.diff || '(File content empty or untracked binary file)', targetLine);
+  } catch (err) {
+    if (els.diffContent) els.diffContent.innerHTML = `<div class="empty-state"><code>Failed to load diff: ${err.message}</code></div>`;
+  }
 }
 
-// Run Pre-Flight Health Check
-async function runCheck() {
-  els.btnRunCheck.disabled = true;
-  els.btnRunCheck.innerHTML = `<span class="btn-icon">⏳</span> Checking...`;
+function renderDiff(rawDiff, targetLine = null) {
+  if (!els.diffContent) return;
+  const lines = rawDiff.split('\n');
+  if (els.diffLineCount) els.diffLineCount.textContent = `${lines.length} lines`;
+
+  let currentLineNum = 1;
+  els.diffContent.innerHTML = lines.map(line => {
+    const e = escapeHtml(line);
+    if (line.startsWith('+') && !line.startsWith('+++')) return `<div class="diff-line diff-add">${e}</div>`;
+    if (line.startsWith('-') && !line.startsWith('---')) return `<div class="diff-line diff-del">${e}</div>`;
+    if (line.startsWith('@@') || line.startsWith('diff --git') || line.startsWith('---') || line.startsWith('+++')) {
+      return `<div class="diff-line diff-meta">${e}</div>`;
+    }
+    const isTarget = targetLine && currentLineNum === Number(targetLine);
+    const lineDisplay = currentLineNum++;
+    const numPrefix = `<span class="diff-line-num">${lineDisplay}</span>`;
+    if (isTarget) {
+      return `<div class="diff-line diff-highlight-line">${numPrefix} ${e} <span class="diff-hazard-badge">⚠️ HAZARD DETECTED HERE (Line ${lineDisplay})</span></div>`;
+    }
+    return `<div class="diff-line">${numPrefix} ${e}</div>`;
+  }).join('');
+}
+
+// ── CORE SCAN ───────────────────────────────────────────────────────────
+async function runCheck(customPath = null) {
+  const chosenPath = customPath !== null ? customPath : (state.currentTargetPath || '.');
+  state.currentTargetPath = chosenPath;
+
+  // Update path label in report bar
+  if (els.pathTargetLabel) els.pathTargetLabel.textContent = `Target: ${chosenPath}`;
+
+  // Button loading states
+  setScanLoading(true);
 
   try {
-    const res = await fetch('/api/check?all=false', { method: 'POST' });
-    const result = await res.json();
-    state.checkResult = result;
-    renderCheckResult(result);
-    loadStatus();
-    loadHistory();
+    const url = `/api/check?path=${encodeURIComponent(chosenPath)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    state.checkResult = data;
+
+    // Reveal the report on first run
+    showReport();
+
+    renderCheckResult(data);
+
+    const t = data.status === 'PASS'    ? 'success' :
+              data.status === 'BLOCKED' ? 'error'   : 'info';
+    showToast(
+      data.status === 'PASS'    ? `All clear — '${chosenPath}' is 100% clean and ready to ship!` :
+      data.status === 'BLOCKED' ? `Blocked — ${data.errorsCount} critical hazard(s) in '${chosenPath}'!` :
+                                  `Advisory — ${data.warningsCount} warning(s) in '${chosenPath}'.`,
+      t
+    );
   } catch (err) {
-    const demoResult = {
-      status: 'PASS',
-      score: 100,
-      errorsCount: 0,
-      warningsCount: 0,
-      filesChecked: 2,
-      durationMs: 38,
-      summary: 'Quality gate PASSED (100% Ready). All inspected files clean.',
-      categories: {
-        Security: { errors: 0, warnings: 0, clean: true },
-        Hygiene: { errors: 0, warnings: 0, clean: true },
-        'Git Hygiene': { errors: 0, warnings: 0, clean: true },
-        'Syntax Integrity': { errors: 0, warnings: 0, clean: true },
-        Dependencies: { errors: 0, warnings: 0, clean: true }
-      },
-      findings: [],
-      blast: {
-        score: 5,
-        riskLevel: 'LOW',
-        changedCount: 2,
-        downstreamCount: 0,
-        explanation: 'Contained blast radius (5%). Changes are localized with zero downstream cascades.'
-      },
-      preMortem: {
-        summary: 'All pre-flight health checks passed. Blast radius is safe (5%) for deployment.',
-        failureScenarios: ['Low probability of runtime crash. Blast radius is contained.'],
-        recommendedAction: 'PASS: Safe to ship.',
-        source: 'deterministic-fallback'
-      }
-    };
-    state.checkResult = demoResult;
-    renderCheckResult(demoResult);
-    showToast('Demo Mode: Evaluated 100/100 clean health check!', 'success');
-  } finally {
-    els.btnRunCheck.disabled = false;
-    els.btnRunCheck.innerHTML = `<span class="btn-icon">▶</span> Run Pre-Flight Check`;
-  }
-}
-
-// Render Results on UI
-function renderCheckResult(res) {
-  // 1. Gauge Score
-  els.gaugeScore.textContent = res.score;
-  const circumference = 2 * Math.PI * 68; // 427.25
-  const offset = circumference - (res.score / 100) * circumference;
-  els.gaugeProgress.style.strokeDashoffset = offset;
-
-  if (res.score >= 85) {
-    els.gaugeProgress.style.stroke = 'var(--accent-green)';
-    els.gaugeVerdict.textContent = 'READY TO SHIP';
-    els.gaugeVerdict.style.color = 'var(--accent-green)';
-  } else if (res.score >= 60) {
-    els.gaugeProgress.style.stroke = 'var(--accent-yellow)';
-    els.gaugeVerdict.textContent = 'NEEDS REVIEW';
-    els.gaugeVerdict.style.color = 'var(--accent-yellow)';
-  } else {
-    els.gaugeProgress.style.stroke = 'var(--accent-red)';
-    els.gaugeVerdict.textContent = 'CRITICAL BLOCKS';
-    els.gaugeVerdict.style.color = 'var(--accent-red)';
-  }
-
-  // Gate Status Badge
-  els.gateStatusBadge.className = `status-badge ${
-    res.status === 'PASS' ? 'status-pass' : res.status === 'WARN' ? 'status-warn' : 'status-blocked'
-  }`;
-  els.gateStatusBadge.textContent = res.status === 'PASS' ? 'GATE: PASSED' : res.status === 'WARN' ? 'GATE: REVIEW' : 'GATE: BLOCKED';
-
-  // Meta items
-  els.metaFilesChecked.textContent = res.filesChecked;
-  els.metaErrors.textContent = res.errorsCount;
-  els.metaWarnings.textContent = res.warningsCount;
-  els.metaDuration.textContent = `${res.durationMs}ms`;
-  els.summaryText.textContent = res.summary;
-  els.findingsCount.textContent = res.findings.length;
-
-  // 2. Render Categories
-  renderCategories(res.categories);
-
-  // 3. Render Findings
-  renderFindings(res.findings);
-
-  // 4. Render Blast Radius & AI Pre-Mortem
-  if (res.blast || res.preMortem) {
-    renderBlastAndPreMortem(res.blast, res.preMortem);
-  }
-}
-
-// Render Blast Radius & AI Pre-Mortem
-function renderBlastAndPreMortem(blast, preMortem) {
-  if (!els.blastScoreText) return;
-
-  if (blast) {
-    els.blastScoreText.innerHTML = `<strong>${blast.score}%</strong> Blast Radius`;
-    els.blastMeterFill.style.width = `${Math.min(100, Math.max(5, blast.score))}%`;
-
-    els.blastRiskBadge.textContent = `${blast.riskLevel} IMPACT`;
-    els.blastRiskBadge.className = `status-badge ${
-      blast.riskLevel === 'LOW' ? 'status-pass' : blast.riskLevel === 'MEDIUM' ? 'status-warn' : 'status-blocked'
-    }`;
-
-    els.blastDependentsText.textContent = `${blast.downstreamCount} downstream dependent module(s)`;
-
-    els.blastModulesList.innerHTML = '';
-    if (blast.affectedModules && blast.affectedModules.length > 0) {
-      blast.affectedModules.forEach(mod => {
-        const span = document.createElement('span');
-        span.className = 'blast-mod-pill';
-        span.textContent = mod;
-        els.blastModulesList.appendChild(span);
-      });
+    if (window.location.hostname.includes('github.io')) {
+      const demoResult = {
+        status: 'PASS',
+        score: 100,
+        errorsCount: 0,
+        warningsCount: 0,
+        filesChecked: 2,
+        durationMs: 38,
+        summary: 'Quality gate PASSED (100% Ready). All inspected files clean.',
+        categories: {
+          Security: { errors: 0, warnings: 0, clean: true },
+          Hygiene: { errors: 0, warnings: 0, clean: true },
+          'Git Hygiene': { errors: 0, warnings: 0, clean: true },
+          'Syntax Integrity': { errors: 0, warnings: 0, clean: true },
+          Dependencies: { errors: 0, warnings: 0, clean: true }
+        },
+        findings: [],
+        blast: {
+          score: 5,
+          riskLevel: 'LOW',
+          changedCount: 2,
+          downstreamCount: 0,
+          explanation: 'Contained blast radius (5%). Changes are localized with zero downstream cascades.'
+        },
+        preMortem: {
+          summary: 'All pre-flight health checks passed. Blast radius is safe (5%) for deployment.',
+          failureScenarios: ['Low probability of runtime crash. Blast radius is contained.'],
+          recommendedAction: 'PASS: Safe to ship.',
+          source: 'deterministic-fallback'
+        }
+      };
+      state.checkResult = demoResult;
+      renderCheckResult(demoResult);
+      showToast('Demo Mode: Evaluated 100/100 clean health check!', 'success');
     } else {
-      els.blastModulesList.innerHTML = `<span class="text-dim" style="font-size:0.75rem;">No downstream dependents affected</span>`;
+      showToast(`Scan failed: ${err.message}`, 'error');
+    }
+  } finally {
+    setScanLoading(false);
+  }
+}
+
+function setScanLoading(on) {
+  if (els.btnHeroScan) {
+    els.btnHeroScan.disabled = on;
+    els.btnHeroScanLabel.textContent = on ? 'Scanning...' : 'Run Pre-Flight Scan';
+  }
+  if (els.btnRunCheck) {
+    els.btnRunCheck.disabled = on;
+    els.btnRunCheck.querySelector('span').textContent = on ? 'Scanning…' : 'Re-Scan';
+  }
+}
+
+// ── Render check result ─────────────────────────────────────────────────
+function renderCheckResult(res) {
+  // Summary bar
+  renderSummaryBar(res);
+
+  // Gauge
+  const circumference = 2 * Math.PI * 68;
+  const offset = circumference - (res.score / 100) * circumference;
+  if (els.gaugeProgress) {
+    els.gaugeProgress.style.strokeDashoffset = offset;
+    els.gaugeProgress.style.stroke = res.score >= 85 ? 'var(--accent-green)' :
+                                     res.score >= 60 ? 'var(--accent-orange)' : 'var(--accent-red)';
+  }
+  if (els.gaugeScore)  els.gaugeScore.textContent = res.score;
+  if (els.gaugeVerdict) {
+    const [txt, col] = res.score >= 85 ? ['READY TO SHIP',    'var(--accent-green)']  :
+                       res.score >= 60 ? ['NEEDS REVIEW',     'var(--accent-orange)'] :
+                                         ['BLOCKED (HAZARDS)','var(--accent-red)'];
+    els.gaugeVerdict.textContent = txt;
+    els.gaugeVerdict.style.color = col;
+  }
+
+  // Gate badge
+  if (els.gateStatusBadge) {
+    els.gateStatusBadge.textContent = res.status;
+    els.gateStatusBadge.className = `status-badge ${
+      res.status === 'PASS' ? 'status-pass' : res.status === 'WARN' ? 'status-warn' : 'status-blocked'
+    }`;
+  }
+
+  // Meta 2×2
+  if (els.metaFilesChecked) els.metaFilesChecked.textContent = res.filesChecked || 0;
+  if (els.metaErrors)       els.metaErrors.textContent       = res.errorsCount  || 0;
+  if (els.metaWarnings)     els.metaWarnings.textContent     = res.warningsCount || 0;
+  if (els.metaDuration)     els.metaDuration.textContent     = `${res.durationMs || 0}ms`;
+  if (els.summaryText)      els.summaryText.textContent      = res.summary || '';
+
+  // Callout banner (kept for backwards compatibility if element exists)
+  if (els.gateCalloutBanner) {
+    const hasErr  = res.errorsCount  > 0;
+    const hasWarn = res.warningsCount > 0;
+    if (hasErr) {
+      els.gateCalloutBanner.style.display = 'flex';
+      els.gateCalloutBanner.className = 'gate-callout-banner callout-blocked';
+      if (els.gateCalloutTitle) els.gateCalloutTitle.textContent = 'Quality Gate BLOCKED';
+      if (els.gateCalloutText)  els.gateCalloutText.textContent  = `${res.errorsCount} critical hazard(s) blocking ship — review remediations below.`;
+    } else if (hasWarn) {
+      els.gateCalloutBanner.style.display = 'flex';
+      els.gateCalloutBanner.className = 'gate-callout-banner callout-warn';
+      if (els.gateCalloutTitle) els.gateCalloutTitle.textContent = 'Quality Gate ADVISORY';
+      if (els.gateCalloutText)  els.gateCalloutText.textContent  = `${res.warningsCount} advisory warning(s) — verify before pushing.`;
+    } else {
+      els.gateCalloutBanner.style.display = 'none';
+    }
+  }
+
+  // View Fixes button directly near the Radar Gauge
+  if (els.btnViewFixesRadar) {
+    const hasErr  = res.errorsCount  > 0;
+    const hasWarn = res.warningsCount > 0;
+    if (hasErr || hasWarn) {
+      els.btnViewFixesRadar.style.display = 'inline-flex';
+      const count = hasErr ? res.errorsCount : res.warningsCount;
+      const countLabel = hasErr 
+        ? `${count} Critical ${count === 1 ? 'Hazard' : 'Hazards'}`
+        : `${count} Advisory ${count === 1 ? 'Warning' : 'Warnings'}`;
+      if (els.btnViewFixesRadarText) {
+        els.btnViewFixesRadarText.innerHTML = `View Remediations &amp; Fixes (${countLabel}) &rarr;`;
+      }
+    } else {
+      els.btnViewFixesRadar.style.display = 'none';
+    }
+  }
+
+  // Categories & findings
+  renderCategories(res.categories || {});
+  renderFindings(res.findings || []);
+
+  // Blast + pre-mortem
+  renderBlastAndPreMortem(res.blast, res.preMortem);
+}
+
+// ── Summary bar ─────────────────────────────────────────────────────────
+function renderSummaryBar(res) {
+  if (!els.reportSummaryBar) return;
+
+  const scoreCol = res.score >= 85 ? 'var(--accent-green)' :
+                   res.score >= 60 ? 'var(--accent-orange)' : 'var(--accent-red)';
+  const verdictTxt = res.score >= 85 ? 'Ready to Ship' :
+                     res.score >= 60 ? 'Needs Review'  : 'Blocked — Hazards Found';
+
+  els.reportSummaryBar.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:0.3rem;">
+      <span class="report-score-big" style="color:${scoreCol}">${res.score}</span>
+      <span class="report-score-slash">/ 100</span>
+    </div>
+    <span class="report-verdict" style="color:${scoreCol}">${verdictTxt}</span>
+    <div class="report-summary-divider"></div>
+    <div class="report-summary-meta">
+      <div class="report-meta-item">
+        <span class="report-meta-label">Files</span>
+        <span class="report-meta-value">${res.filesChecked || 0}</span>
+      </div>
+      <div class="report-meta-item">
+        <span class="report-meta-label">Errors</span>
+        <span class="report-meta-value text-danger">${res.errorsCount || 0}</span>
+      </div>
+      <div class="report-meta-item">
+        <span class="report-meta-label">Warnings</span>
+        <span class="report-meta-value text-warning">${res.warningsCount || 0}</span>
+      </div>
+      <div class="report-meta-item">
+        <span class="report-meta-label">Latency</span>
+        <span class="report-meta-value">${res.durationMs || 0}ms</span>
+      </div>
+    </div>
+    <div class="report-summary-divider"></div>
+    <span class="status-badge ${res.status === 'PASS' ? 'status-pass' : res.status === 'WARN' ? 'status-warn' : 'status-blocked'}">${res.status}</span>
+  `;
+}
+
+// ── Blast + premortem ────────────────────────────────────────────────────
+function renderBlastAndPreMortem(blast, preMortem) {
+  if (blast) {
+    if (els.blastMeterFill) {
+      els.blastMeterFill.style.width = `${Math.min(100, Math.max(5, blast.score))}%`;
+      els.blastMeterFill.style.background = blast.score >= 60
+        ? 'linear-gradient(90deg, var(--accent-orange), var(--accent-red))'
+        : blast.score >= 30
+        ? 'linear-gradient(90deg, var(--accent-amber), var(--accent-orange))'
+        : 'linear-gradient(90deg, var(--accent-green), var(--accent-violet))';
+    }
+    if (els.blastScoreText)      els.blastScoreText.innerHTML     = `<strong>${blast.score}%</strong> Blast Radius Score`;
+    if (els.blastRiskBadge) {
+      els.blastRiskBadge.textContent = `${blast.riskLevel} IMPACT`;
+      els.blastRiskBadge.className   = `status-badge ${blast.riskLevel === 'LOW' ? 'status-pass' : blast.riskLevel === 'MEDIUM' ? 'status-warn' : 'status-blocked'}`;
+    }
+    if (els.blastDependentsText) els.blastDependentsText.textContent = `${blast.downstreamCount || 0} downstream dependent module(s)`;
+    if (els.blastModulesList) {
+      els.blastModulesList.innerHTML = '';
+      if (blast.affectedModules && blast.affectedModules.length > 0) {
+        blast.affectedModules.forEach(mod => {
+          const s = document.createElement('span');
+          s.className = 'blast-mod-pill';
+          s.textContent = mod;
+          els.blastModulesList.appendChild(s);
+        });
+      } else {
+        els.blastModulesList.innerHTML = `<span class="text-dim" style="font-size:0.75rem;">No downstream dependents affected</span>`;
+      }
     }
   }
 
   if (preMortem) {
-    els.premortemSummaryText.textContent = `"${preMortem.summary}"`;
-    els.aiSourceLabel.textContent = `Generated via ${preMortem.source || 'Local Gemma 2'}`;
-
+    if (els.premortemSummaryText)  els.premortemSummaryText.textContent = `"${preMortem.summary}"`;
+    if (els.aiSourceLabel) {
+      const src = preMortem.source;
+      els.aiSourceLabel.textContent = src && !src.includes('Deterministic')
+        ? `Simulated production risk via ${src}`
+        : 'Simulated production failure scenarios & deployment safety analysis';
+    }
     const rec = preMortem.recommendedAction || 'PASS';
-    els.premortemActionBadge.textContent = rec.includes('BLOCK') ? 'BLOCKED' : rec.includes('WARN') ? 'WARN' : 'PASS';
-    els.premortemActionBadge.style.background = rec.includes('BLOCK') ? '#ef4444' : rec.includes('WARN') ? '#f59e0b' : '#10b981';
-
-    if (preMortem.releaseNotes && preMortem.releaseNotes.opsWarnings && preMortem.releaseNotes.opsWarnings.length > 0) {
-      els.opsWarningsBox.style.display = 'block';
-      els.opsWarningsList.innerHTML = preMortem.releaseNotes.opsWarnings.map(w => `<li>${w}</li>`).join('');
-    } else {
-      els.opsWarningsBox.style.display = 'none';
+    if (els.premortemActionBadge) {
+      els.premortemActionBadge.textContent = rec.includes('BLOCK') ? 'BLOCKED' : rec.includes('WARN') ? 'WARN' : 'PASS';
+      els.premortemActionBadge.className   = `status-badge ${rec.includes('BLOCK') ? 'status-blocked' : rec.includes('WARN') ? 'status-warn' : 'status-pass'}`;
+    }
+    if (els.opsWarningsBox && els.opsWarningsList) {
+      const w = preMortem.releaseNotes?.opsWarnings;
+      if (w && w.length > 0) {
+        els.opsWarningsBox.style.display = 'block';
+        els.opsWarningsList.innerHTML = w.map(x => `<li>&bull; ${escapeHtml(x)}</li>`).join('');
+      } else {
+        els.opsWarningsBox.style.display = 'none';
+      }
     }
   }
 }
 
-// Outage Benchmark Runner
-async function runBenchmarkUI() {
-  if (els.btnTriggerBenchmark) {
-    els.btnTriggerBenchmark.disabled = true;
-    els.btnTriggerBenchmark.innerHTML = `<span class="btn-icon">⏳</span> Running Benchmark...`;
-  }
-
-  try {
-    const res = await fetch('/api/benchmark');
-    const data = await res.json();
-    renderBenchmarkUI(data);
-    showToast('Benchmark completed: 10/10 Outage Scenarios Evaluated!', 'success');
-  } catch (err) {
-    const fallbackBenchmark = {
-      shipsafeCaught: 10,
-      standardCiCaught: 0,
-      total: 10,
-      results: [
-        { id: "01_table_lock", name: "NOT NULL column without DEFAULT", category: "Database Table Lock", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (schema/not-null-no-default)" },
-        { id: "02_stripe_env", name: "Stripe API key missing in .env.example", category: "Config / Env Drift", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (env/missing-in-example)" },
-        { id: "03_n_plus_one", name: "N+1 query inside order loop", category: "Performance Regression", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (perf/n-plus-one-loop)" },
-        { id: "04_sync_io", name: "Sync file read in server route", category: "Event Loop Block", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (perf/sync-io-in-server)" },
-        { id: "05_drop_col", name: "Active column drop in rolling deploy", category: "Database Compatibility", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (schema/drop-column-hazard)" },
-        { id: "06_fk_no_idx", name: "Foreign key without index", category: "Database Performance", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (schema/unindexed-foreign-key)" },
-        { id: "07_unbounded", name: "SELECT * without LIMIT", category: "Memory Exhaustion", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (perf/unbounded-query)" },
-        { id: "08_jwt_secret", name: "Hardcoded secret token in code", category: "Security Leak", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (security/hardcoded-secret)" },
-        { id: "09_oauth_env", name: "OAuth redirect env var drift", category: "Config / Env Drift", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (env/missing-in-example)" },
-        { id: "10_blast_auth", name: "Core Auth file high blast radius", category: "Blast Radius Risk", standardCi: "PASSED (Missed Bug)", shipsafe: "✅ CAUGHT (blast-radius (40%))" }
-      ]
-    };
-    renderBenchmarkUI(fallbackBenchmark);
-    showToast('Demo Mode: 10/10 Outage Scenarios Displayed!', 'success');
-  } finally {
-    if (els.btnTriggerBenchmark) {
-      els.btnTriggerBenchmark.disabled = false;
-      els.btnTriggerBenchmark.innerHTML = `<span class="btn-icon">▶</span> Run 10-Scenario Benchmark`;
-    }
-  }
-}
-
-function renderBenchmarkUI(data) {
-  if (!els.benchmarkTableBody) return;
-
-  if (els.benchCiStat) els.benchCiStat.textContent = `${data.standardCiCaught || 0} / ${data.total} Caught (0%)`;
-  if (els.benchShipSafeStat) els.benchShipSafeStat.textContent = `${data.shipsafeCaught} / ${data.total} Caught (100%)`;
-
-  els.benchmarkTableBody.innerHTML = '';
-  (data.results || []).forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><strong>${r.id.split('_')[0]}</strong></td>
-      <td><strong>${r.name}</strong></td>
-      <td><span class="badge-tag" style="background:#1e293b; color:#94a3b8;">${r.category}</span></td>
-      <td><span class="badge-tag text-danger" style="background:rgba(239, 68, 68, 0.15); color:#ef4444;">❌ ${r.standardCi}</span></td>
-      <td><span class="badge-tag text-success" style="background:rgba(16, 185, 129, 0.15); color:#10b981;">${r.shipsafe}</span></td>
-    `;
-    els.benchmarkTableBody.appendChild(tr);
-  });
-}
-
-// Render Category Health Cards
+// ── Category tiles ───────────────────────────────────────────────────────
 function renderCategories(categories) {
+  if (!els.categoryGrid) return;
   els.categoryGrid.innerHTML = '';
+
   const meta = {
-    Security: { icon: '🛡️', title: 'Secrets & Auth' },
-    Hygiene: { icon: '🧹', title: 'Code Hygiene' },
-    'Git Hygiene': { icon: '🌿', title: 'Git & Branch Guard' },
-    'Syntax Integrity': { icon: '🔍', title: 'Syntax & Files' },
-    Dependencies: { icon: '📦', title: 'Dependency Integrity' }
+    Security:          { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,             title: 'Secrets & Auth' },
+    Hygiene:           { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>`, title: 'Code Hygiene' },
+    'Git Hygiene':     { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>`,  title: 'Git & Branch Guard' },
+    'Syntax Integrity':{ svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="10 13 8 15 10 17"/><polyline points="14 13 16 15 14 17"/></svg>`, title: 'Syntax Integrity' },
+    Dependencies:      { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>`, title: 'Dependencies' },
+    'Database Migration Hazard': { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`, title: 'DB Schema' },
+    'Environment Drift':         { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></svg>`, title: 'Env Drift' },
+    'Performance Hazard':        { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`, title: 'Performance' },
+    'Memory & Query Safety':     { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>`, title: 'Query Safety' },
   };
 
   for (const [key, cat] of Object.entries(categories)) {
-    const info = meta[key] || { icon: '⚙️', title: key };
+    const info      = meta[key] || { svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>`, title: key };
+    const isErr     = cat.errors > 0;
+    const isWarn    = !isErr && cat.warnings > 0;
+    const statusCls = isErr ? 'status-err' : isWarn ? 'status-warn' : 'status-clean';
+    const statusTxt = isErr ? 'ERROR' : isWarn ? 'WARN' : 'CLEAN';
+    const subTxt    = isErr  ? `${cat.errors} critical error${cat.errors > 1 ? 's' : ''}` :
+                      isWarn ? `${cat.warnings} warning${cat.warnings > 1 ? 's' : ''}` : 'Passing clean';
+
     const card = document.createElement('div');
-    card.className = 'category-card';
-
-    const isClean = cat.clean && cat.errors === 0;
-    const dotColor = cat.errors > 0 ? 'var(--accent-red)' : cat.warnings > 0 ? 'var(--accent-yellow)' : 'var(--accent-green)';
-
+    card.className = `category-card${isErr ? ' has-error' : ''}`;
     card.innerHTML = `
       <div class="cat-top">
-        <span class="cat-icon">${info.icon}</span>
-        <span class="cat-status-dot" style="background:${dotColor}; box-shadow: 0 0 6px ${dotColor};"></span>
+        <div class="cat-icon-box">${info.svg}</div>
+        <span class="cat-status-pill ${statusCls}">
+          <span class="cat-dot"></span><span>${statusTxt}</span>
+        </span>
       </div>
-      <div>
-        <div class="cat-name">${info.title}</div>
-        <div class="cat-sub">${
-          cat.errors > 0 ? `${cat.errors} critical error(s)` : cat.warnings > 0 ? `${cat.warnings} warning(s)` : 'Passing clean'
-        }</div>
+      <div class="cat-body">
+        <div class="cat-name">${escapeHtml(info.title)}</div>
+        <div class="cat-sub">${escapeHtml(subTxt)}</div>
       </div>
+      ${isErr ? `<div class="cat-footer"><button class="btn-inspect-cat" data-category="${escapeHtml(key)}">Inspect &rarr;</button></div>` : ''}
     `;
+
+    if (isErr) {
+      card.querySelector('.btn-inspect-cat').onclick = () => {
+        switchTab('findings');
+        state.activeFilter = key;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if (state.checkResult) {
+          const catFindings = (state.checkResult.findings || []).filter(f => f.category === key);
+          renderFindings(catFindings.length > 0 ? catFindings : (state.checkResult.findings || []));
+          showToast(`Filtered findings: ${info.title} (${catFindings.length} issue(s))`, 'info');
+        }
+        document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    }
+
     els.categoryGrid.appendChild(card);
   }
 }
 
-// Render Findings List with Filtering
+async function sendFixRequest(f) {
+  try {
+    const res = await fetch('/api/fix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fixerType: f.fixerType, filePath: f.filePath, extraData: f.extraData || {} })
+    });
+    const r = await res.json();
+    return r.success === true;
+  } catch {
+    return false;
+  }
+}
+
+// ── Findings / 4-Part Diagnosis ──────────────────────────────────────────
 function renderFindings(findings) {
+  if (!els.findingsList) return;
   els.findingsList.innerHTML = '';
+  if (els.findingsCount) els.findingsCount.textContent = findings.length;
 
   const filtered = findings.filter(f => {
-    if (state.activeFilter === 'all') return true;
-    if (state.activeFilter === 'ERROR') return f.severity === 'ERROR';
-    if (state.activeFilter === 'WARN') return f.severity === 'WARN';
+    if (state.activeFilter === 'all')     return true;
+    if (state.activeFilter === 'ERROR')   return f.severity === 'ERROR' || f.severity === 'CRITICAL';
+    if (state.activeFilter === 'WARN')    return f.severity === 'WARN';
     if (state.activeFilter === 'autofix') return f.autoFixable;
+    if (f.category === state.activeFilter) return true;
     return true;
   });
 
-  const hasAutoFixables = findings.some(f => f.autoFixable);
-  els.btnAutoFixAll.style.display = hasAutoFixables ? 'inline-block' : 'none';
+  const autoFixableFindings = filtered.filter(f => f.autoFixable && f.fixerType);
+  if (els.btnAutoFixAll) {
+    if (autoFixableFindings.length > 0) {
+      els.btnAutoFixAll.style.display = 'inline-block';
+      els.btnAutoFixAll.textContent = `⚡ Auto-Fix All (${autoFixableFindings.length})`;
+      els.btnAutoFixAll.onclick = async () => {
+        els.btnAutoFixAll.disabled = true;
+        els.btnAutoFixAll.textContent = 'Applying Fixes...';
+        const fixResults = await Promise.all(autoFixableFindings.map(sendFixRequest));
+        const fixedCount = fixResults.filter(Boolean).length;
+        showToast(`Remediation complete: ${fixedCount} issue(s) resolved!`, 'success');
+        els.btnAutoFixAll.disabled = false;
+        await loadStatus();
+        runCheck(state.currentTargetPath);
+      };
+    } else {
+      els.btnAutoFixAll.style.display = 'none';
+    }
+  }
 
   if (filtered.length === 0) {
     els.findingsList.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">🎉</div>
-        <h3>No issues found!</h3>
-        <p style="color:var(--text-dim); font-size:0.85rem; margin-top:0.25rem;">
-          ${findings.length === 0 ? 'All health checks passed. Your staged changes are production-ready.' : 'No findings match this filter.'}
+      <div class="empty-state card">
+        <div class="empty-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h3>No issues detected!</h3>
+        <p style="color:var(--text-dim); font-size:0.82rem; margin-top:0.25rem;">
+          ${findings.length === 0 ? 'All pre-flight health checks passed. Code is clean and production-ready.' : 'No findings match the active filter.'}
         </p>
-      </div>
-    `;
+      </div>`;
     return;
   }
 
   filtered.forEach(f => {
+    const sev = f.severity || 'ERROR';
+    const solution = f.possibleSolution || f.recommendation || 'Apply recommended safe code pattern.';
     const card = document.createElement('div');
-    card.className = `finding-card severity-${f.severity}`;
-
+    card.className = `finding-card severity-${sev}`;
     card.innerHTML = `
       <div class="finding-header">
         <div class="finding-title-group">
-          <span class="status-badge ${f.severity === 'ERROR' ? 'status-blocked' : 'status-warn'}">${f.severity}</span>
-          <span class="finding-title">${f.title}</span>
-          <span class="badge-tag" style="background:#1e293b; color:#94a3b8;">${f.category}</span>
+          <span class="status-badge ${sev === 'CRITICAL' || sev === 'ERROR' ? 'status-blocked' : 'status-warn'}">${sev}</span>
+          <span class="finding-title">${escapeHtml(f.title || 'Code Health Hazard')}</span>
+          <span class="badge-tag">${escapeHtml(f.category || 'Quality Gate')}</span>
+          ${f.aiModel ? `<span class="badge-tag badge-ai" title="${escapeHtml(f.aiModel)}">✨ ${escapeHtml(f.aiModel)}</span>` : ''}
         </div>
         <div class="finding-actions">
-          ${f.autoFixable ? `<button class="btn btn-xs btn-success btn-fix" data-fixer="${f.fixerType}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
-          <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}">View Diff</button>
+          ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || ''}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
+          <button class="btn btn-xs btn-secondary btn-copy-fix">📋 Copy Fix</button>
+          <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}" data-line="${f.line || ''}">🔍 Inspect File</button>
         </div>
       </div>
-
       <div class="finding-body">
-        <div style="margin-bottom:0.4rem;">
-          <span class="finding-loc">${f.filePath}:${f.line}:${f.column}</span>
+        <div class="diagnosis-block highlight-box">
+          <div class="highlight-label">Highlighted Code Location &bull; ${escapeHtml(f.filePath)}:${f.line || 1}${f.column ? `:${f.column}` : ''}</div>
+          ${f.snippet ? `<pre class="highlight-code">${escapeHtml(f.snippet)}</pre>` : `<span class="text-dim">File-level finding: ${escapeHtml(f.filePath)}</span>`}
         </div>
-        ${f.snippet ? `<div class="finding-code-preview">${escapeHtml(f.snippet)}</div>` : ''}
-        <div class="finding-remediation"><strong>Fix:</strong> ${f.recommendation}</div>
+        <div class="diagnosis-block intent-box">
+          <div class="intent-label">Developer Intent Analysis</div>
+          <p>${escapeHtml(f.intendedBehavior || 'The developer was intending to implement or evolve application capabilities.')}</p>
+        </div>
+        <div class="diagnosis-block misbehavior-box">
+          <div class="misbehavior-label">Production Misbehavior &amp; Hazard</div>
+          <p>${escapeHtml(f.misbehavior || 'Under production traffic this triggers severe performance degradation, connection pool exhaustion, or service failure.')}</p>
+        </div>
+        <div class="diagnosis-block solution-box">
+          <div class="solution-label">Possible Solution &amp; Fix</div>
+          <p>${escapeHtml(f.possibleSolution || f.recommendation || 'Apply non-blocking or batched safe pattern.')}</p>
+          ${solution ? `<code class="solution-code">${escapeHtml(solution)}</code>` : ''}
+        </div>
       </div>
     `;
 
-    // Attach Event Handlers
+    card.querySelector('.btn-copy-fix').onclick = () => {
+      navigator.clipboard.writeText(solution);
+      showToast('Remediation fix copied to clipboard!', 'success');
+    };
     const fixBtn = card.querySelector('.btn-fix');
     if (fixBtn) {
-      fixBtn.onclick = () => runSingleFix(f.fixerType, f.filePath);
+      fixBtn.onclick = () => runSingleFix(f.fixerType, f.filePath, f.extraData || {});
     }
-
-    const inspectBtn = card.querySelector('.btn-inspect');
-    if (inspectBtn) {
-      inspectBtn.onclick = () => {
-        switchTab('diff');
-        loadDiff(f.filePath);
-      };
-    }
+    card.querySelector('.btn-inspect').onclick = () => {
+      switchTab('diff');
+      loadDiff(f.filePath, f.line || null);
+      document.getElementById('tab-diff')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showToast(`Inspecting ${f.filePath}${f.line ? ` at line ${f.line}` : ''}`, 'info');
+    };
 
     els.findingsList.appendChild(card);
   });
 }
 
 function escapeHtml(str) {
+  if (typeof str !== 'string') return '';
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// Single Fix Action
-async function runSingleFix(fixerType, filePath) {
+async function runSingleFix(fixerType, filePath, extraData = {}) {
   try {
-    const res = await fetch('/api/fix', {
+    const res    = await fetch('/api/fix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fixerType, filePath })
+      body: JSON.stringify({ fixerType, filePath, extraData })
     });
     const result = await res.json();
     if (result.success) {
-      showToast(result.message, 'success');
-      runCheck();
+      showToast(result.message || 'Auto-fix executed successfully!', 'success');
+      await loadStatus();
+      runCheck(state.currentTargetPath);
     } else {
       showToast(`Fix failed: ${result.message}`, 'error');
     }
@@ -503,192 +706,274 @@ async function runSingleFix(fixerType, filePath) {
   }
 }
 
-// Execute Unstage
-async function executeUnstage(filePath) {
-  await runSingleFix('unstage', filePath);
-}
-
-// Auto-Fix All Available
-els.btnAutoFixAll.onclick = async () => {
-  if (!state.checkResult) return;
-  const fixables = state.checkResult.findings.filter(f => f.autoFixable);
-  for (const item of fixables) {
-    await fetch('/api/fix', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fixerType: item.fixerType, filePath: item.filePath })
+// ── Benchmark ────────────────────────────────────────────────────────────
+async function runBenchmarkUI() {
+  if (els.btnTriggerBenchmark) {
+    els.btnTriggerBenchmark.disabled = true;
+    els.btnTriggerBenchmark.querySelector('span').textContent = 'Running…';
+  }
+  try {
+    const data = await (await fetch('/api/benchmark')).json();
+    if (els.benchCiStat)      els.benchCiStat.textContent      = `${data.standardCiCaught || 0} / ${data.total} Caught (0%)`;
+    if (els.benchShipSafeStat) els.benchShipSafeStat.textContent = `${data.shipsafeCaught} / ${data.total} Caught (100%)`;
+    els.benchmarkTableBody.innerHTML = '';
+    (data.results || []).forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${r.id.split('_')[0]}</strong></td>
+        <td><strong>${escapeHtml(r.name)}</strong></td>
+        <td><span class="badge-tag">${escapeHtml(r.category)}</span></td>
+        <td><span class="status-badge status-blocked">❌ ${escapeHtml(r.standardCi)}</span></td>
+        <td><span class="status-badge status-pass">✅ ${escapeHtml(r.shipsafe)}</span></td>
+      `;
+      els.benchmarkTableBody.appendChild(tr);
     });
-  }
-  showToast(`Auto-fixed ${fixables.length} item(s)!`, 'success');
-  runCheck();
-};
-
-// Toggle Hooks Installation
-els.btnHooks.onclick = async () => {
-  const isInstalled = state.status?.hooks?.installed;
-  const endpoint = isInstalled ? '/api/hooks/uninstall' : '/api/hooks/install';
-
-  try {
-    const res = await fetch(endpoint, { method: 'POST' });
-    const data = await res.json();
-    if (data.success) {
-      showToast(isInstalled ? 'Git hooks uninstalled.' : 'Git pre-commit & pre-push hooks installed!', 'success');
-      loadStatus();
+    showToast('Benchmark complete: 10/10 Outage Scenarios Evaluated!', 'success');
+  } catch (err) { showToast(`Benchmark error: ${err.message}`, 'error'); }
+  finally {
+    if (els.btnTriggerBenchmark) {
+      els.btnTriggerBenchmark.disabled = false;
+      els.btnTriggerBenchmark.querySelector('span').textContent = 'Run 10-Scenario Benchmark';
     }
-  } catch (err) {
-    showToast(`Hook setup failed: ${err.message}`, 'error');
   }
-};
+}
 
-// History Loader
+// ── History ──────────────────────────────────────────────────────────────
 async function loadHistory() {
+  if (!els.historyTableBody) return;
   try {
-    const res = await fetch('/api/history?limit=15');
-    const data = await res.json();
-    renderHistory(data.history || []);
-  } catch (err) {
-    console.error('Failed to load history:', err);
-  }
+    const data = await (await fetch('/api/history?limit=15')).json();
+    const runs = data.history || [];
+    els.historyTableBody.innerHTML = '';
+    if (runs.length === 0) {
+      els.historyTableBody.innerHTML = `<tr><td colspan="10" style="text-align:center;color:var(--text-dim);padding:1.5rem;">No runs recorded yet.</td></tr>`;
+      return;
+    }
+    runs.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>#${r.id}</td>
+        <td style="color:var(--text-dim);font-family:var(--font-mono);font-size:0.74rem;">${new Date(r.timestamp).toLocaleTimeString()}</td>
+        <td><span class="badge-tag">${escapeHtml(r.commit_hash || 'HEAD')}</span></td>
+        <td><span class="badge-tag">${escapeHtml(r.branch)}</span></td>
+        <td><span class="status-badge ${r.status === 'PASS' ? 'status-pass' : r.status === 'WARN' ? 'status-warn' : 'status-blocked'}">${r.status}</span></td>
+        <td><strong>${r.score}</strong></td>
+        <td class="text-danger">${r.errors_count}</td>
+        <td class="text-warning">${r.warnings_count}</td>
+        <td style="color:var(--text-dim);font-family:var(--font-mono);font-size:0.74rem;">${r.duration_ms}ms</td>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(r.summary)}</td>
+      `;
+      els.historyTableBody.appendChild(tr);
+    });
+  } catch (err) { console.error('History error:', err); }
 }
 
-function renderHistory(runs) {
-  els.historyTableBody.innerHTML = '';
-  if (runs.length === 0) {
-    els.historyTableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-dim); padding:1.5rem;">No checks recorded yet in SQLite database.</td></tr>`;
-    return;
-  }
-
-  runs.forEach(r => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>#${r.id}</td>
-      <td style="color:var(--text-dim);">${new Date(r.timestamp).toLocaleTimeString()}</td>
-      <td><span class="badge-tag" style="background:#1e293b;">${r.branch}</span></td>
-      <td><span class="status-badge ${r.status === 'PASS' ? 'status-pass' : r.status === 'WARN' ? 'status-warn' : 'status-blocked'}">${r.status}</span></td>
-      <td><strong>${r.score}</strong></td>
-      <td class="text-danger">${r.errors_count}</td>
-      <td class="text-warning">${r.warnings_count}</td>
-      <td style="color:var(--text-dim);">${r.duration_ms}ms</td>
-      <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${r.summary}</td>
-    `;
-    els.historyTableBody.appendChild(tr);
-  });
-}
-
-// Rules Config Studio
+// ── Rules ────────────────────────────────────────────────────────────────
 async function loadRulesConfig() {
+  if (!els.rulesForm) return;
   try {
-    const res = await fetch('/api/config');
-    const conf = await res.json();
+    const conf = await (await fetch('/api/config')).json();
     state.rulesConfig = conf;
     renderRules(conf);
-  } catch (err) {
-    console.error('Failed to load rules:', err);
-  }
+  } catch (err) { console.error('Rules error:', err); }
 }
 
 function renderRules(conf) {
+  if (!els.rulesForm || !conf.rules) return;
   els.rulesForm.innerHTML = '';
   const container = document.createElement('div');
   container.className = 'rules-grid';
 
+  const updateRuleConfig = async (ruleId, isEnabled) => {
+    conf.rules[ruleId].enabled = isEnabled;
+    await fetch('/api/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(conf) });
+    showToast(`Rule ${ruleId} ${isEnabled ? 'enabled' : 'disabled'}.`, 'info');
+    if (state.reportVisible) runCheck();
+  };
+
   for (const [ruleId, ruleDef] of Object.entries(conf.rules)) {
     const card = document.createElement('div');
-    card.className = 'rule-toggle-card';
+    card.style.cssText = 'background:var(--bg-card-sub);border:1px solid var(--border-subtle);padding:0.85rem 1rem;border-radius:8px;margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;';
     card.innerHTML = `
-      <div class="rule-info">
-        <strong>${ruleId}</strong>
-        <span>Severity: ${ruleDef.severity || 'DEFAULT'}</span>
-      </div>
       <div>
-        <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
-          <input type="checkbox" ${ruleDef.enabled !== false ? 'checked' : ''} data-rule="${ruleId}">
-          <span style="font-size:0.8rem; font-weight:600;">Enabled</span>
-        </label>
+        <strong style="display:block;color:#fff;font-size:0.85rem;">${escapeHtml(ruleId)}</strong>
+        <span style="font-size:0.75rem;color:var(--text-dim);">Severity: ${escapeHtml(ruleDef.severity || 'DEFAULT')}</span>
       </div>
+      <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+        <input type="checkbox" ${ruleDef.enabled !== false ? 'checked' : ''} data-rule="${escapeHtml(ruleId)}">
+        <span style="font-size:0.78rem;font-weight:600;color:var(--accent-orange);">Enabled</span>
+      </label>
     `;
-
-    const checkbox = card.querySelector('input');
-    checkbox.onchange = async () => {
-      conf.rules[ruleId].enabled = checkbox.checked;
-      await fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(conf)
-      });
-      showToast(`Rule ${ruleId} ${checkbox.checked ? 'enabled' : 'disabled'}.`, 'info');
-      runCheck();
-    };
-
+    const cb = card.querySelector('input');
+    cb.onchange = () => updateRuleConfig(ruleId, cb.checked);
     container.appendChild(card);
   }
-
   els.rulesForm.appendChild(container);
 }
 
-// Tab Switching
+// ── Tab switching ────────────────────────────────────────────────────────
 function switchTab(tabId) {
   state.activeTab = tabId;
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tabId);
-  });
-  document.querySelectorAll('.tab-content').forEach(section => {
-    section.classList.toggle('active', section.id === `tab-${tabId}`);
-  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  document.querySelectorAll('.tab-content').forEach(s => s.classList.toggle('active', s.id === `tab-${tabId}`));
+  if (tabId === 'history') loadHistory();
+  if (tabId === 'benchmark' && els.benchmarkTableBody && !els.benchmarkTableBody.children.length) runBenchmarkUI();
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.onclick = () => switchTab(btn.dataset.tab);
-});
+document.querySelectorAll('.tab-btn').forEach(btn => { btn.onclick = () => switchTab(btn.dataset.tab); });
 
-// Findings Filter Buttons
+// ── Filter buttons ────────────────────────────────────────────────────────
 document.querySelectorAll('.filter-btn').forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     state.activeFilter = btn.dataset.filter;
-    if (state.checkResult) {
-      renderFindings(state.checkResult.findings);
-    }
+    if (state.checkResult) renderFindings(state.checkResult.findings || []);
   };
 });
 
-// Setup Real-Time Server-Sent Events (SSE)
+// ── SSE ──────────────────────────────────────────────────────────────────
 function setupSSE() {
-  const evtSource = new EventSource('/api/events');
-
-  evtSource.addEventListener('git-change', (e) => {
-    els.liveWatcherBadge.style.borderColor = 'var(--accent-cyan)';
-    els.liveWatcherBadge.querySelector('.live-text').textContent = 'GIT UPDATE DETECTED';
-    setTimeout(() => {
-      els.liveWatcherBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-      els.liveWatcherBadge.querySelector('.live-text').textContent = 'WATCHING REPO';
-    }, 1500);
-
-    // Auto-trigger health check when git staging changes!
+  const es = new EventSource('/api/events');
+  es.addEventListener('git-change', () => {
+    if (els.liveWatcherBadge) {
+      const liveText = els.liveWatcherBadge.querySelector('.live-text');
+      if (liveText) {
+        liveText.textContent = 'GIT UPDATE DETECTED';
+        setTimeout(() => { liveText.textContent = 'WATCHING REPO'; }, 1500);
+      }
+    }
     loadStatus();
-    runCheck();
-  });
-
-  evtSource.addEventListener('error', () => {
-    // SSE will automatically reconnect
+    if (state.reportVisible) runCheck();
   });
 }
 
-// Initial Boot
+// ── Boot ─────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
-  els.btnRunCheck.onclick = runCheck;
-  if (els.btnTriggerBenchmark) {
-    els.btnTriggerBenchmark.onclick = runBenchmarkUI;
+  await loadStatus();
+  await loadRulesConfig();
+  setupSSE();
+
+  // ── Hero chip selection ──
+  document.querySelectorAll('.path-chip').forEach(chip => {
+    chip.onclick = () => {
+      document.querySelectorAll('.path-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+
+      if (chip.id === 'heroChipCustom') {
+        // Show the custom input
+        if (els.heroCustomInputWrap) els.heroCustomInputWrap.style.display = 'flex';
+        if (els.targetPathInput) els.targetPathInput.focus();
+        state.currentTargetPath = els.targetPathInput?.value?.trim() || '.';
+      } else {
+        if (els.heroCustomInputWrap) els.heroCustomInputWrap.style.display = 'none';
+        const p = chip.dataset.path;
+        if (els.targetPathInput) els.targetPathInput.value = p;
+        state.currentTargetPath = p;
+      }
+    };
+  });
+
+  // Custom input live update
+  if (els.targetPathInput) {
+    els.targetPathInput.oninput = () => {
+      state.currentTargetPath = els.targetPathInput.value.trim() || '.';
+    };
+    els.targetPathInput.onkeydown = e => {
+      if (e.key === 'Enter') runCheck(els.targetPathInput.value.trim() || '.');
+    };
   }
+
+  // ── Hero scan button ──
+  if (els.btnHeroScan) {
+    els.btnHeroScan.onclick = () => runCheck(state.currentTargetPath);
+  }
+
+  // ── Re-scan button (in nav, shown after report) ──
+  if (els.btnRunCheck) {
+    els.btnRunCheck.onclick = () => runCheck(state.currentTargetPath);
+  }
+
+  // ── Back to hero ──
+  if (els.btnBackToHero) {
+    els.btnBackToHero.onclick = backToHero;
+  }
+
+  // ── View Fixes banner button (if present) ──
+  if (els.btnViewFixes) {
+    els.btnViewFixes.onclick = () => {
+      switchTab('findings');
+      state.activeFilter = 'all';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+      if (state.checkResult) renderFindings(state.checkResult.findings || []);
+      document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+
+  // ── View Fixes Radar button (under gauge) ──
+  if (els.btnViewFixesRadar) {
+    els.btnViewFixesRadar.onclick = () => {
+      switchTab('findings');
+      state.activeFilter = 'all';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+      if (state.checkResult) renderFindings(state.checkResult.findings || []);
+      document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+
+  // ── Cog Settings Dropdown ──
+  if (els.btnSettingsToggle && els.settingsDropdown) {
+    els.btnSettingsToggle.onclick = (e) => {
+      e.stopPropagation();
+      const isVisible = els.settingsDropdown.style.display !== 'none';
+      els.settingsDropdown.style.display = isVisible ? 'none' : 'flex';
+      els.btnSettingsToggle.classList.toggle('active', !isVisible);
+    };
+
+    document.addEventListener('click', (e) => {
+      if (els.settingsDropdown && !els.settingsDropdown.contains(e.target) && e.target !== els.btnSettingsToggle) {
+        els.settingsDropdown.style.display = 'none';
+        els.btnSettingsToggle?.classList.remove('active');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && els.settingsDropdown) {
+        els.settingsDropdown.style.display = 'none';
+        els.btnSettingsToggle?.classList.remove('active');
+      }
+    });
+  }
+
+  if (els.btnOpenRulesTab) {
+    els.btnOpenRulesTab.onclick = () => {
+      if (els.settingsDropdown) els.settingsDropdown.style.display = 'none';
+      els.btnSettingsToggle?.classList.remove('active');
+      switchTab('rules');
+      document.getElementById('tab-rules')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+
+  // ── Benchmark ──
+  if (els.btnTriggerBenchmark) els.btnTriggerBenchmark.onclick = runBenchmarkUI;
   if (els.btnRunBenchmarkTop) {
     els.btnRunBenchmarkTop.onclick = () => {
+      if (els.settingsDropdown) els.settingsDropdown.style.display = 'none';
+      els.btnSettingsToggle?.classList.remove('active');
       switchTab('benchmark');
       runBenchmarkUI();
     };
   }
-  await loadStatus();
-  await runCheck();
-  await loadRulesConfig();
-  setupSSE();
+
+  // ── Git Hooks ──
+  if (els.btnHooks) {
+    els.btnHooks.onclick = async () => {
+      const ep = state.status?.hooks?.installed ? '/api/hooks/uninstall' : '/api/hooks/install';
+      try {
+        const data = await (await fetch(ep, { method: 'POST' })).json();
+        showToast(data.message, 'success');
+        loadStatus();
+      } catch (err) { showToast(`Hooks toggle failed: ${err.message}`, 'error'); }
+    };
+  }
 });

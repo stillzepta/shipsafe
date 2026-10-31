@@ -92,7 +92,7 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
           snippet: trimmed,
           recommendation:
             'Create an index on the foreign key column to prevent cascading sequential table scans during updates and deletes.',
-          autoFixable: true
+          autoFixable: false
         });
       }
 

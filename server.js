@@ -162,9 +162,14 @@ export function startServer(options = {}) {
 
       // 2. Trigger Health Check
       if (pathname === '/api/check' && (method === 'GET' || method === 'POST')) {
-        const checkAll = parsedUrl.searchParams.get('all') === 'true';
+        let body = {};
+        if (method === 'POST') {
+          try { body = await parseJsonBody(req); } catch {}
+        }
+        const checkAll = parsedUrl.searchParams.get('all') === 'true' || body.all === true;
+        const targetPath = parsedUrl.searchParams.get('path') || parsedUrl.searchParams.get('targetPath') || body.targetPath || body.path || null;
         const currentConf = loadConfig(cwd);
-        const result = await runHealthCheck(cwd, { config: currentConf, all: checkAll });
+        const result = await runHealthCheck(cwd, { config: currentConf, all: checkAll, targetPath });
 
         // Notify SSE clients of fresh check run
         for (const client of sseClients) {
