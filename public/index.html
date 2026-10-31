@@ -18,7 +18,7 @@
     <header class="top-nav">
       <div class="brand-lockup">
         <div class="brand-icon-box">
-          <svg viewBox="0 0 36 36" width="30" height="30" fill="none">
+          <svg viewBox="0 0 36 36" width="36" height="36" fill="none">
             <defs>
               <linearGradient id="sg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stop-color="#F97316"/>
@@ -233,20 +233,6 @@
         </div>
       </div>
 
-      <!-- ── Callout Banner (blocked / warn) ── -->
-      <div id="gateCalloutBanner" class="gate-callout-banner callout-blocked" style="display:none;">
-        <div class="callout-icon-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-        </div>
-        <div class="callout-body">
-          <strong id="gateCalloutTitle" class="callout-title">Quality Gate BLOCKED</strong>
-          <span id="gateCalloutText" class="callout-desc">Critical hazards detected. Do not push to production.</span>
-        </div>
-        <button id="btnViewFixes" class="btn btn-sm btn-callout">View Fixes &rarr;</button>
-      </div>
-
       <!-- ── 12-column overview grid ── -->
       <section class="hero-overview">
         <!-- 4-col: Code Health Radar -->
@@ -273,6 +259,17 @@
                 <span id="gaugeVerdict" class="score-label">PRE-FLIGHT</span>
               </div>
             </div>
+
+            <!-- View Fixes action button directly near the radar graph -->
+            <button id="btnViewFixesRadar" class="btn btn-radar-fixes" style="display:none;" title="View detected issues &amp; automated remediations">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <span id="btnViewFixesRadarText">View Fixes &rarr;</span>
+            </button>
+
             <div class="gauge-meta-grid">
               <div class="meta-stat-box">
                 <span class="meta-label">Inspected Files</span>
@@ -352,8 +349,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a8 8 0 0 0-8 8c0 3 2 5.5 4 7v3h8v-3c2-1.5 4-4 4-7a8 8 0 0 0-8-8z"/><line x1="10" y1="22" x2="14" y2="22"/></svg>
               </span>
               <div>
-                <h3>AI PRE-MORTEM SENTINEL</h3>
-                <span class="subtext" id="aiSourceLabel">Powered by Gemma 2 / Deterministic Fallback</span>
+                <h3>AI OUTAGE RISK PREDICTOR</h3>
+                <span class="subtext" id="aiSourceLabel">Simulated production failure scenarios &amp; deployment safety analysis</span>
               </div>
             </div>
             <span id="premortemActionBadge" class="status-badge status-pass">PASS</span>

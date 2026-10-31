@@ -469,14 +469,14 @@ body {
 .brand-lockup {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.95rem;
 }
 
 .brand-icon-box {
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 2px 8px var(--accent-orange-glow));
+  filter: drop-shadow(0 2px 10px var(--accent-orange-glow));
 }
 
 .brand-text-col {
@@ -487,32 +487,35 @@ body {
 .brand-headline {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.75rem;
 }
 
 .brand-title {
-  font-size: 1.25rem;
+  font-size: 1.7rem;
   font-weight: 800;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.03em;
   color: #ffffff;
+  line-height: 1.15;
 }
 
 .badge-edition {
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 700;
   font-family: var(--font-mono);
   background: linear-gradient(135deg, rgba(249, 115, 22, 0.25), rgba(139, 92, 246, 0.25));
   color: #ff9d42;
   border: 1px solid rgba(249, 115, 22, 0.4);
-  padding: 2px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 5px;
+  letter-spacing: 0.06em;
 }
 
 .brand-tagline {
-  font-size: 0.75rem;
-  color: var(--text-dim);
+  font-size: 0.84rem;
+  color: var(--text-muted);
   font-weight: 500;
+  margin-top: 2px;
+  letter-spacing: -0.01em;
 }
 
 /* Consolidated Status Chip Bar */
@@ -1204,6 +1207,44 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
   margin-top: 4px;
+}
+
+/* View Fixes Button under the Radar Gauge */
+.btn-radar-fixes {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(249, 115, 22, 0.22) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.2);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.btn-radar-fixes:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.38) 0%, rgba(249, 115, 22, 0.38) 100%);
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+  color: #ffffff;
+}
+
+.btn-radar-fixes:active {
+  transform: translateY(0);
+}
+
+.btn-radar-fixes svg {
+  color: #ef4444;
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
 }
 
 /* 2x2 Data Grid */

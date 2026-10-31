@@ -51,6 +51,10 @@ const els = {
   gateCalloutText:     document.getElementById('gateCalloutText'),
   btnViewFixes:        document.getElementById('btnViewFixes'),
 
+  // Radar fixes button
+  btnViewFixesRadar:     document.getElementById('btnViewFixesRadar'),
+  btnViewFixesRadarText: document.getElementById('btnViewFixesRadarText'),
+
   // Gauge & meta
   gaugeScore:          document.getElementById('gaugeScore'),
   gaugeProgress:       document.getElementById('gaugeProgress'),
@@ -310,7 +314,7 @@ function renderCheckResult(res) {
   if (els.metaDuration)     els.metaDuration.textContent     = `${res.durationMs || 0}ms`;
   if (els.summaryText)      els.summaryText.textContent      = res.summary || '';
 
-  // Callout banner
+  // Callout banner (kept for backwards compatibility if element exists)
   if (els.gateCalloutBanner) {
     const hasErr  = res.errorsCount  > 0;
     const hasWarn = res.warningsCount > 0;
@@ -326,6 +330,24 @@ function renderCheckResult(res) {
       if (els.gateCalloutText)  els.gateCalloutText.textContent  = `${res.warningsCount} advisory warning(s) — verify before pushing.`;
     } else {
       els.gateCalloutBanner.style.display = 'none';
+    }
+  }
+
+  // View Fixes button directly near the Radar Gauge
+  if (els.btnViewFixesRadar) {
+    const hasErr  = res.errorsCount  > 0;
+    const hasWarn = res.warningsCount > 0;
+    if (hasErr || hasWarn) {
+      els.btnViewFixesRadar.style.display = 'inline-flex';
+      const count = hasErr ? res.errorsCount : res.warningsCount;
+      const countLabel = hasErr 
+        ? `${count} Critical ${count === 1 ? 'Hazard' : 'Hazards'}`
+        : `${count} Advisory ${count === 1 ? 'Warning' : 'Warnings'}`;
+      if (els.btnViewFixesRadarText) {
+        els.btnViewFixesRadarText.innerHTML = `View Remediations &amp; Fixes (${countLabel}) &rarr;`;
+      }
+    } else {
+      els.btnViewFixesRadar.style.display = 'none';
     }
   }
 
@@ -410,7 +432,12 @@ function renderBlastAndPreMortem(blast, preMortem) {
 
   if (preMortem) {
     if (els.premortemSummaryText)  els.premortemSummaryText.textContent = `"${preMortem.summary}"`;
-    if (els.aiSourceLabel)         els.aiSourceLabel.textContent         = `Powered by ${preMortem.source || 'Local Gemma 2 / Deterministic Fallback'}`;
+    if (els.aiSourceLabel) {
+      const src = preMortem.source;
+      els.aiSourceLabel.textContent = src && !src.includes('Deterministic')
+        ? `Simulated production risk via ${src}`
+        : 'Simulated production failure scenarios & deployment safety analysis';
+    }
     const rec = preMortem.recommendedAction || 'PASS';
     if (els.premortemActionBadge) {
       els.premortemActionBadge.textContent = rec.includes('BLOCK') ? 'BLOCKED' : rec.includes('WARN') ? 'WARN' : 'PASS';
@@ -829,9 +856,20 @@ window.addEventListener('DOMContentLoaded', async () => {
     els.btnBackToHero.onclick = backToHero;
   }
 
-  // ── View Fixes banner button ──
+  // ── View Fixes banner button (if present) ──
   if (els.btnViewFixes) {
     els.btnViewFixes.onclick = () => {
+      switchTab('findings');
+      state.activeFilter = 'all';
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+      if (state.checkResult) renderFindings(state.checkResult.findings || []);
+      document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+
+  // ── View Fixes Radar button (under gauge) ──
+  if (els.btnViewFixesRadar) {
+    els.btnViewFixesRadar.onclick = () => {
       switchTab('findings');
       state.activeFilter = 'all';
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
