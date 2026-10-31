@@ -35,6 +35,9 @@ const els = {
   btnHooks:            document.getElementById('btnHooks'),
   hookBtnText:         document.getElementById('hookBtnText'),
   btnRunBenchmarkTop:  document.getElementById('btnRunBenchmarkTop'),
+  btnSettingsToggle:   document.getElementById('btnSettingsToggle'),
+  settingsDropdown:    document.getElementById('settingsDropdown'),
+  btnOpenRulesTab:     document.getElementById('btnOpenRulesTab'),
 
   // Report area
   reportArea:          document.getElementById('reportArea'),
@@ -121,7 +124,7 @@ function showReport() {
 
   // Show report + nav actions
   els.reportArea.style.display = '';
-  els.navActions.style.display = '';
+  if (els.btnRunCheck) els.btnRunCheck.style.display = 'inline-flex';
 }
 
 function backToHero() {
@@ -129,7 +132,7 @@ function backToHero() {
   state.checkResult   = null;
 
   els.reportArea.style.display  = 'none';
-  els.navActions.style.display  = 'none';
+  if (els.btnRunCheck) els.btnRunCheck.style.display = 'none';
   els.heroLanding.style.display = '';
 }
 
@@ -837,10 +840,48 @@ window.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
+  // ── Cog Settings Dropdown ──
+  if (els.btnSettingsToggle && els.settingsDropdown) {
+    els.btnSettingsToggle.onclick = (e) => {
+      e.stopPropagation();
+      const isVisible = els.settingsDropdown.style.display !== 'none';
+      els.settingsDropdown.style.display = isVisible ? 'none' : 'flex';
+      els.btnSettingsToggle.classList.toggle('active', !isVisible);
+    };
+
+    document.addEventListener('click', (e) => {
+      if (els.settingsDropdown && !els.settingsDropdown.contains(e.target) && e.target !== els.btnSettingsToggle) {
+        els.settingsDropdown.style.display = 'none';
+        els.btnSettingsToggle?.classList.remove('active');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && els.settingsDropdown) {
+        els.settingsDropdown.style.display = 'none';
+        els.btnSettingsToggle?.classList.remove('active');
+      }
+    });
+  }
+
+  if (els.btnOpenRulesTab) {
+    els.btnOpenRulesTab.onclick = () => {
+      if (els.settingsDropdown) els.settingsDropdown.style.display = 'none';
+      els.btnSettingsToggle?.classList.remove('active');
+      switchTab('rules');
+      document.getElementById('tab-rules')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
+
   // ── Benchmark ──
   if (els.btnTriggerBenchmark) els.btnTriggerBenchmark.onclick = runBenchmarkUI;
   if (els.btnRunBenchmarkTop) {
-    els.btnRunBenchmarkTop.onclick = () => { switchTab('benchmark'); runBenchmarkUI(); };
+    els.btnRunBenchmarkTop.onclick = () => {
+      if (els.settingsDropdown) els.settingsDropdown.style.display = 'none';
+      els.btnSettingsToggle?.classList.remove('active');
+      switchTab('benchmark');
+      runBenchmarkUI();
+    };
   }
 
   // ── Git Hooks ──

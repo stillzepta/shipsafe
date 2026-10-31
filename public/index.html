@@ -45,33 +45,80 @@
         </div>
       </div>
 
-      <!-- Nav-right: only visible once report is shown -->
-      <div class="nav-right" id="navActions" style="display:none;">
-        <div class="status-chip live-chip" id="liveWatcherBadge">
-          <span class="live-pulse-dot"></span>
-          <span class="live-text">WATCHING REPO</span>
-        </div>
-        <div class="status-chip">
-          <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-          <span id="branchName" class="chip-val">main</span>
-        </div>
-        <div class="status-chip">
-          <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <strong id="stagedCount" class="chip-val">0</strong>
-          <span class="chip-label">staged</span>
-        </div>
-        <button id="btnHooks" class="status-chip chip-action">
-          <span class="chip-dot"></span>
-          <span id="hookBtnText">Git Hooks</span>
-        </button>
-        <button id="btnRunCheck" class="btn btn-primary btn-sm">
+      <!-- Clean Nav Right with Cog Settings Menu -->
+      <div class="nav-right" id="navActions">
+        <button id="btnRunCheck" class="btn btn-primary btn-sm btn-rescan-nav" style="display:none;" title="Re-scan current target">
           <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           <span>Re-Scan</span>
         </button>
-        <button id="btnRunBenchmarkTop" class="btn btn-secondary btn-sm">
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18h12"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-4 0"/><path d="M9 14h6"/><path d="M12 6V3"/><path d="M8 3h8"/></svg>
-          <span>Benchmark</span>
-        </button>
+
+        <div class="settings-menu-wrap">
+          <button id="btnSettingsToggle" class="btn-icon-cog" title="Settings &amp; Tools" aria-label="Settings and Tools">
+            <svg class="cog-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+
+          <!-- Glassmorphic Settings Dropdown -->
+          <div id="settingsDropdown" class="settings-dropdown" style="display:none;">
+            <div class="dropdown-header">
+              <span class="dropdown-title">Repository &amp; Gate Controls</span>
+            </div>
+
+            <!-- Git Environment -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Git Environment</div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Branch:</span>
+                <span class="dropdown-chip">
+                  <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                  <strong id="branchName" class="chip-val">main</strong>
+                </span>
+              </div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Staged Files:</span>
+                <span class="dropdown-chip">
+                  <svg class="chip-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  <strong id="stagedCount" class="chip-val">0</strong>&nbsp;staged
+                </span>
+              </div>
+              <div class="dropdown-row">
+                <span class="dropdown-row-label">Live Watcher:</span>
+                <div class="status-chip live-chip" id="liveWatcherBadge" style="margin:0; padding:0.2rem 0.55rem;">
+                  <span class="live-pulse-dot"></span>
+                  <span class="live-text" style="font-size:0.7rem;">WATCHING REPO</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Quality Gate Hooks -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Local Pre-Commit Gate</div>
+              <button id="btnHooks" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <span class="chip-dot"></span>
+                <span id="hookBtnText">Git Hooks Active</span>
+              </button>
+            </div>
+
+            <div class="dropdown-divider"></div>
+
+            <!-- Diagnostic Tools -->
+            <div class="dropdown-section">
+              <div class="dropdown-section-label">Diagnostic Tools</div>
+              <button id="btnRunBenchmarkTop" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h12"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-4 0"/><path d="M9 14h6"/><path d="M12 6V3"/><path d="M8 3h8"/></svg>
+                <span>Run 10-Scenario Benchmark</span>
+              </button>
+              <button id="btnOpenRulesTab" class="btn btn-secondary btn-sm btn-dropdown-action">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Quality Gate Rules</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </header>
 
