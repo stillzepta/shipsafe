@@ -1,6 +1,6 @@
 /**
  * ShipSafe AI: Local Qwen & Open-Weight Gemma Intelligence Driver
- * Connects directly to local Ollama on macOS (e.g. qwen3.5:4b, qwen3.8:27b, gemma3:4b)
+ * Connects directly to local Ollama on macOS (e.g. qwen2.5:7b, qwen3.5:4b, gemma-2-9b-it)
  * and Google AI Studio / Open-source Gemma 2 weights, deducing:
  * 1. The Dev's Vision (what the developer intended with these parameters)
  * 2. The Production Problem (where & why the code breaks at runtime)
@@ -75,7 +75,7 @@ export async function detectLocalModel(timeoutMs = 1200): Promise<string | null>
       return cachedLocalModel;
     }
 
-    // 2. High priority: any Qwen model (e.g. qwen3.8:27b, qwen2.5, etc.)
+    // 2. High priority: any Qwen model (e.g. qwen2.5:7b, qwen3.5:4b)
     const anyQwen = models.find(m => m.name?.toLowerCase().includes('qwen'));
     if (anyQwen) {
       cachedLocalModel = anyQwen.name;
