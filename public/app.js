@@ -560,10 +560,11 @@ function renderCategories(categories) {
 
 async function sendFixRequest(f) {
   try {
+    const extra = Object.assign({ snippet: f.snippet, cleanCode: f.newCode || f.possibleSolution }, f.extraData || {});
     const res = await fetch('/api/fix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fixerType: f.fixerType, filePath: f.filePath, extraData: f.extraData || {} })
+      body: JSON.stringify({ fixerType: f.fixerType || 'auto', filePath: f.filePath, extraData: extra })
     });
     const r = await res.json();
     return r.success === true;
@@ -587,7 +588,7 @@ function renderFindings(findings) {
     return true;
   });
 
-  const autoFixableFindings = filtered.filter(f => f.autoFixable && f.fixerType);
+  const autoFixableFindings = filtered.filter(f => f.autoFixable !== false && (f.autoFixable || f.fixerType));
   if (els.btnAutoFixAll) {
     if (autoFixableFindings.length > 0) {
       els.btnAutoFixAll.style.display = 'inline-block';
@@ -595,8 +596,11 @@ function renderFindings(findings) {
       els.btnAutoFixAll.onclick = async () => {
         els.btnAutoFixAll.disabled = true;
         els.btnAutoFixAll.textContent = 'Applying Fixes...';
-        const fixResults = await Promise.all(autoFixableFindings.map(sendFixRequest));
-        const fixedCount = fixResults.filter(Boolean).length;
+        let fixedCount = 0;
+        for (const item of autoFixableFindings) {
+          const ok = await sendFixRequest(item);
+          if (ok) fixedCount++;
+        }
         showToast(`Remediation complete: ${fixedCount} issue(s) resolved!`, 'success');
         els.btnAutoFixAll.disabled = false;
         await loadStatus();
@@ -638,7 +642,7 @@ function renderFindings(findings) {
           ${f.aiModel ? `<span class="badge-tag badge-ai" title="${escapeHtml(f.aiModel)}">✨ ${escapeHtml(f.aiModel)}</span>` : ''}
         </div>
         <div class="finding-actions">
-          ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || ''}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
+          ${f.autoFixable !== false ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || 'auto'}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
           <button class="btn btn-xs btn-secondary btn-copy-fix">📋 Copy Fix</button>
           <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}" data-line="${f.line || ''}">🔍 Inspect File</button>
         </div>
@@ -670,7 +674,10 @@ function renderFindings(findings) {
     };
     const fixBtn = card.querySelector('.btn-fix');
     if (fixBtn) {
-      fixBtn.onclick = () => runSingleFix(f.fixerType, f.filePath, f.extraData || {});
+      fixBtn.onclick = () => {
+        const extra = Object.assign({ snippet: f.snippet, cleanCode: f.newCode || f.possibleSolution }, f.extraData || {});
+        runSingleFix(f.fixerType || 'auto', f.filePath, extra);
+      };
     }
     card.querySelector('.btn-inspect').onclick = () => {
       switchTab('diff');

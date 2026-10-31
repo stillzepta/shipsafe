@@ -12,6 +12,7 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
     if (
       file.path.includes('.test.') ||
       file.path.includes('.spec.') ||
+      file.path === 'benchmarks/suite.ts' ||
       file.path.startsWith('src/core/') ||
       file.path.startsWith('lib/') ||
       file.path.startsWith('bin/') ||
@@ -33,9 +34,18 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
       const trimmed = line.trim();
       const lineNum = i + 1;
 
-      // 1. Detect loop starts
+      // Skip comment lines
+      if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.startsWith('#') || trimmed.startsWith('--')) {
+        continue;
+      }
+
+      // 1. Detect loop starts (sequential loops: for, while, forEach)
+      // Note: Promise.all(items.map(...)) is concurrent batching, not a sequential N+1 loop
       if (
-        /\bfor\s*\(|\bwhile\s*\(|\.forEach\s*\(|\.map\s*\(\s*(?:async\s*)?\(?/i.test(trimmed)
+        (/\bfor\s*\(|\bwhile\s*\(|\.forEach\s*\(/i.test(trimmed) ||
+        /\.map\s*\(\s*(?:async\s*)?\(?/i.test(trimmed)) &&
+        !line.includes('Promise.all') &&
+        !(i > 0 && lines[i - 1].includes('Promise.all'))
       ) {
         inLoop = true;
         loopStartLine = lineNum;
@@ -63,7 +73,9 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
             snippet: trimmed,
             recommendation:
               'Batch this query using WHERE IN (...) or DataLoader pattern outside the loop to avoid explosive latency under production load.',
-            autoFixable: false
+            autoFixable: true,
+            fixerType: 'perf-batch-loop',
+            extraData: { line: lineNum, snippet: trimmed }
           });
         }
 
@@ -88,7 +100,9 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
           snippet: trimmed,
           recommendation:
             'Use non-blocking asynchronous fs.promises or worker threads. Synchronous calls freeze the entire Node.js event loop for all concurrent users.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'perf-sync-io',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
 
@@ -107,7 +121,9 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
           snippet: trimmed,
           recommendation:
             'Always specify a LIMIT or pagination boundary to prevent table-scan memory exhaustion as data scales.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'perf-unbounded-query',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
     }

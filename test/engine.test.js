@@ -128,6 +128,58 @@ describe('ShipSafe Health Rules Engine', () => {
     fs.unlinkSync(testFile);
   });
 
+  test('Auto-Fixer repairs schema hazards (NOT NULL, drop column, unindexed FK)', () => {
+    const tmpDir = path.join(process.cwd(), '.shipsafe', 'tmp-test');
+    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+
+    // 1. NOT NULL without DEFAULT
+    const sqlFile = path.join(tmpDir, 'migration.sql');
+    fs.writeFileSync(sqlFile, 'ALTER TABLE users ADD COLUMN billing_tier VARCHAR(32) NOT NULL;\n', 'utf8');
+    const fixResult1 = executeFix(process.cwd(), 'schema-add-default', path.relative(process.cwd(), sqlFile));
+    assert.strictEqual(fixResult1.success, true);
+    const content1 = fs.readFileSync(sqlFile, 'utf8');
+    assert.strictEqual(content1.includes("DEFAULT 'standard' NOT NULL"), true);
+
+    // 2. Safe drop column
+    fs.writeFileSync(sqlFile, 'ALTER TABLE users DROP COLUMN phone_number;\n', 'utf8');
+    const fixResult2 = executeFix(process.cwd(), 'schema-safe-drop', path.relative(process.cwd(), sqlFile));
+    assert.strictEqual(fixResult2.success, true);
+    const content2 = fs.readFileSync(sqlFile, 'utf8');
+    assert.strictEqual(content2.includes('-- [ShipSafe Migration Safety]'), true);
+
+    // 3. Unindexed foreign key
+    fs.writeFileSync(sqlFile, 'ALTER TABLE orders ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id);\n', 'utf8');
+    const fixResult3 = executeFix(process.cwd(), 'schema-index-fk', path.relative(process.cwd(), sqlFile));
+    assert.strictEqual(fixResult3.success, true);
+    const content3 = fs.readFileSync(sqlFile, 'utf8');
+    assert.strictEqual(content3.includes('CREATE INDEX IF NOT EXISTS idx_orders_user_id ON orders(user_id)'), true);
+
+    fs.unlinkSync(sqlFile);
+  });
+
+  test('Auto-Fixer repairs performance hazards (sync I/O and unbounded queries)', () => {
+    const tmpDir = path.join(process.cwd(), '.shipsafe', 'tmp-test');
+    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+
+    // 1. Sync I/O
+    const jsFile = path.join(tmpDir, 'server.js');
+    fs.writeFileSync(jsFile, 'export function getReport() {\n  const d = fs.readFileSync("report.json");\n}\n', 'utf8');
+    const fixResult1 = executeFix(process.cwd(), 'perf-sync-io', path.relative(process.cwd(), jsFile));
+    assert.strictEqual(fixResult1.success, true);
+    const content1 = fs.readFileSync(jsFile, 'utf8');
+    assert.strictEqual(content1.includes('await fs.promises.readFile'), true);
+    assert.strictEqual(content1.includes('async function getReport'), true);
+
+    // 2. Unbounded query
+    fs.writeFileSync(jsFile, 'const query = "SELECT * FROM audit_logs";\n', 'utf8');
+    const fixResult2 = executeFix(process.cwd(), 'perf-unbounded-query', path.relative(process.cwd(), jsFile));
+    assert.strictEqual(fixResult2.success, true);
+    const content2 = fs.readFileSync(jsFile, 'utf8');
+    assert.strictEqual(content2.includes('LIMIT 100'), true);
+
+    fs.unlinkSync(jsFile);
+  });
+
   test('SQLite DB successfully records runs and aggregates metrics', () => {
     const db = getDatabase(process.cwd());
     assert.ok(db, 'SQLite database initialized');

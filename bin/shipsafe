@@ -119,7 +119,8 @@ async function handleFix() {
   console.log(`${C.bold}Found ${fixables.length} auto-fixable issue(s). Applying repairs...${C.reset}\n`);
 
   for (const item of fixables) {
-    const res = executeFix(cwd, item.fixerType, item.filePath, item.extraData);
+    const extra = Object.assign({ snippet: item.snippet, cleanCode: item.newCode || item.possibleSolution }, item.extraData || {});
+    const res = executeFix(cwd, item.fixerType, item.filePath, extra);
     if (res.success) {
       console.log(`  ${C.green}✔ Fixed:${C.reset} ${item.title} -> ${item.filePath}`);
     } else {

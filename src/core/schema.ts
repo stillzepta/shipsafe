@@ -10,9 +10,13 @@ export interface Finding {
   title: string;
   filePath: string;
   line: number;
+  column?: number;
   snippet?: string;
+  highlight?: string;
   recommendation: string;
   autoFixable?: boolean;
+  fixerType?: string;
+  extraData?: any;
 }
 
 export function scanSchemaHazards(files: { path: string; content: string }[]): Finding[] {
@@ -42,6 +46,11 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
       const trimmed = line.trim();
       const lineNum = i + 1;
 
+      // Skip comment lines in migrations
+      if (trimmed.startsWith('--') || trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
+        continue;
+      }
+
       // 1. Adding NOT NULL without DEFAULT (Table Lock Hazard)
       if (
         /alter\s+table\s+.*add\s+(?:column\s+)?.*not\s+null/i.test(trimmed) &&
@@ -57,7 +66,9 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
           snippet: trimmed,
           recommendation:
             'Add column as NULLABLE first, backfill rows in batches, set DEFAULT, and then add NOT NULL constraint to avoid exclusive table locks.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'schema-add-default',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
 
@@ -73,7 +84,9 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
           snippet: trimmed,
           recommendation:
             'Deprecate the column first (stop writing to it across all app versions), deploy the app code update, and only drop the column in a subsequent release.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'schema-safe-drop',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
 
@@ -92,7 +105,9 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
           snippet: trimmed,
           recommendation:
             'Create an index on the foreign key column to prevent cascading sequential table scans during updates and deletes.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'schema-index-fk',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
 
@@ -108,7 +123,9 @@ export function scanSchemaHazards(files: { path: string; content: string }[]): F
           snippet: trimmed,
           recommendation:
             'Use expand-contract pattern: Add the new column, dual-write to both, copy historical data, switch reads, and remove old column later.',
-          autoFixable: false
+          autoFixable: true,
+          fixerType: 'schema-expand-contract',
+          extraData: { line: lineNum, snippet: trimmed }
         });
       }
     }

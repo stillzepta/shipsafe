@@ -98,7 +98,7 @@ The architectural blueprint above details the end-to-end journey of code moving 
 3. **The Divert & Auto-Fix Quarantine (Top Right — Red & Orange Accents)**
    * When critical hazards are detected, ShipSafe **immediately blocks the Git operation with Exit Code 1**.
    * Hazardous files are quarantined from GitHub.
-   * Developers run `npm run fix` (or click **"⚡ Auto-Fix"** in the UI) to automatically unstage sensitive files, remove `debugger;` statements, and sync missing variables to `.env.example`.
+   * Developers run `npm run fix` (or click **"⚡ Auto-Fix"** / **"⚡ Auto-Fix All"** in the UI) to automatically repair schema locks with safe DEFAULT constraints, index foreign keys, comment out destructive drops, migrate blocking sync I/O to async `fs.promises`, bound runaway queries with LIMITs, unstage sensitive secrets, and sync missing variables to `.env.example`.
 
 4. **The Verified Release Stream (Bottom Right — Green & Blue Accents)**
    * Commits scoring 85–100 with zero critical errors receive **Exit Code 0** approval and the **Golden Ticket**.
@@ -242,7 +242,7 @@ Launch the local interactive UI by running `npm start` and navigating to **[`htt
 * **Dynamic Blast Radius Meter:** Live visual bar displaying the downstream impact percentage and listing affected endpoints.
 * **AI Pre-Mortem Sentinel:** Live streaming risk assessment powered by Gemma 2 / Heuristic fallback.
 * **10/10 Outage Benchmark Showcase:** Interactive tab allowing judges to execute the 10 real-world outage traps with 1-click verification.
-* **Unified Diff Inspector & 1-Click Auto-Fix:** Visual diff viewer with 1-click repairs for debuggers, tabs, and missing configs.
+* **Unified Diff Inspector & 1-Click Auto-Fix Engine:** Visual diff viewer with 1-click repairs for table lock migrations, sync I/O bottlenecks, N+1 query loops, unindexed foreign keys, debuggers, tabs, and missing configs.
 
 ---
 
