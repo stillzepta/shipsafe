@@ -81,8 +81,8 @@
 
 The architectural blueprint above details the end-to-end journey of code moving from a developer's workstation to production:
 
-1. **Local Staging Buffer (Left)**
-   * When a developer stages code (`git add .`), ShipSafe intercepts the local Git staging buffer before commit objects are written to the `.git` tree.
+1. **Local Staging Buffer & Web Project Upload (Left)**
+   * **Dual-Mode Inspection:** Intercepts the local Git staging buffer (`git add .`) before commits are written to disk, OR runs serverless on Vercel / Cloud where any external developer can drag-and-drop project files or paste code snippets to inspect their real architecture.
    * Potential disasters—such as missing `.env.production` keys, live Stripe secrets (`sk_live_...`), unindexed foreign keys, dangerous table-locking migrations, or stray `debugger;` breakpoints—are caught locally within **35 milliseconds**.
 
 2. **The Pre-Flight Gatehouse & Radar (Center)**

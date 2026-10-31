@@ -75,8 +75,8 @@
   <!-- ==================== STAGE 1: INCOMING CODE STREAM (LEFT) ==================== -->
   <g transform="translate(60, 235)">
     <!-- Stage Label -->
-    <rect x="25" y="-38" width="225" height="28" rx="5" class="bg-blue-tint"/>
-    <text x="37" y="-19" class="font-sans txt-tag fill-blue">1. LOCAL STAGING BUFFER</text>
+    <rect x="25" y="-38" width="245" height="28" rx="5" class="bg-blue-tint"/>
+    <text x="35" y="-19" class="font-sans txt-tag fill-blue">1. GIT STAGING / PROJECT UPLOAD</text>
     
     <!-- Conveyor Belt -->
     <path d="M 35,270 L 335,270" class="ink-bold"/>

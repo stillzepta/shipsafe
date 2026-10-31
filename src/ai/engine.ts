@@ -43,6 +43,10 @@ let cachedLocalModel: string | null = null;
 let lastModelCheckTime = 0;
 
 export async function detectLocalModel(timeoutMs = 1200): Promise<string | null> {
+  if (process.env.VERCEL && !process.env.OLLAMA_HOST) {
+    return null;
+  }
+
   const now = Date.now();
   if (cachedLocalModel && now - lastModelCheckTime < 60000) {
     return cachedLocalModel;

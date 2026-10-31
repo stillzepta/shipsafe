@@ -38,7 +38,11 @@ export function scanEnvDrift(
     'USER',
     'SHELL',
     'DEBUG',
-    'CI'
+    'CI',
+    'VERCEL',
+    'VERCEL_ENV',
+    'VERCEL_URL',
+    'AWS_LAMBDA_FUNCTION_NAME'
   ]);
 
   for (const file of files) {

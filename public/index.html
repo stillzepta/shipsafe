@@ -145,43 +145,107 @@
 
         <!-- ── SCAN CARD ── -->
         <div class="scan-card" id="scanCard">
-          <!-- Source selector -->
-          <div class="scan-source-label">Choose what to scan</div>
-          <div class="chips-scroll-wrap hero-chips">
-            <button class="path-chip active" data-path=".">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-              <span>Whole Workspace</span>
+          <!-- Scan Mode Switcher Tabs -->
+          <div class="scan-tabs">
+            <button type="button" class="scan-tab active" data-tab="upload" id="tabBtnUpload">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>📁 Test Your Project</span>
             </button>
-            <button class="path-chip" data-path="src/">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>Core Engine (src/)</span>
+            <button type="button" class="scan-tab" data-tab="playground" id="tabBtnPlayground">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <span>📝 Code Playground</span>
             </button>
-            <button class="path-chip" data-path="demo/sample_app.ts">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="14" x="8" y="6" rx="4"/><path d="m19 7-3 2"/><path d="m5 7 3 2"/><path d="m19 19-3-2"/><path d="m5 19 3-2"/><path d="M20 13h-4"/><path d="M4 13h4"/></svg>
-              <span>Demo Trap</span>
-            </button>
-            <button class="path-chip" data-path="benchmarks/fixtures/01_table_lock_migration/migration.sql">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-              <span>01 Table Lock</span>
-            </button>
-            <button class="path-chip" data-path="benchmarks/fixtures/03_n_plus_one_checkout_query/orders.ts">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              <span>03 N+1 Loop</span>
-            </button>
-            <button class="path-chip" data-path="benchmarks/fixtures/04_sync_io_in_route/server.ts">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-              <span>04 Sync I/O</span>
-            </button>
-            <button class="path-chip chip-custom" id="heroChipCustom" data-path="">
-              <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <span>Custom path…</span>
+            <button type="button" class="scan-tab" data-tab="presets" id="tabBtnPresets">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>⚡ Outage Presets / Local</span>
             </button>
           </div>
 
-          <!-- Custom path input (hidden until "Custom path" is selected) -->
-          <div class="hero-custom-input-wrap" id="heroCustomInputWrap" style="display:none;">
-            <svg class="input-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-            <input type="text" id="targetPathInput" class="path-input" placeholder="e.g.  src/core/blast.ts  or  benchmarks/fixtures/02_missing_stripe_secret_env/" value=".">
+          <!-- Tab 1: Upload Project Files / Folder -->
+          <div class="scan-panel active" id="panelUpload">
+            <div class="drop-zone" id="dropZone">
+              <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="drop-title">Drop your project files or click to upload</div>
+              <div class="drop-sub">Supports .sql, .ts, .js, .py, .java, .env, package.json files — 100% private, tested in memory</div>
+              <div class="drop-btn-row">
+                <label class="btn btn-sm btn-secondary drop-browse-btn">
+                  <span>Browse Files</span>
+                  <input type="file" id="fileInput" multiple style="display:none;">
+                </label>
+                <label class="btn btn-sm btn-secondary drop-browse-btn">
+                  <span>Browse Folder</span>
+                  <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none;">
+                </label>
+              </div>
+            </div>
+            <div id="uploadedFilesPreview" class="uploaded-files-preview" style="display:none;">
+              <div class="preview-header">
+                <span id="previewCount" class="preview-count">0 file(s) selected</span>
+                <button type="button" id="btnClearFiles" class="btn-clear-files">Clear</button>
+              </div>
+              <div id="previewPills" class="preview-pills"></div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Interactive Code Playground -->
+          <div class="scan-panel" id="panelPlayground" style="display:none;">
+            <div class="playground-top-bar">
+              <div class="playground-select-wrap">
+                <label class="playground-label">Template:</label>
+                <select id="playgroundTemplateSelect" class="playground-select">
+                  <option value="sql">01 Database Migration (NOT NULL Lock Hazard)</option>
+                  <option value="perf">02 Node.js Backend (N+1 Query Loop)</option>
+                  <option value="sync">03 Server Route (Synchronous File Read)</option>
+                  <option value="py">04 Python API (Mutable Default &amp; Indentation)</option>
+                  <option value="java">05 Java Service (Double-Bracket Heap Leak)</option>
+                  <option value="secret">06 Stripe Token &amp; Missing Env Drift</option>
+                  <option value="custom">Custom Code Snippet...</option>
+                </select>
+              </div>
+              <input type="text" id="playgroundFilename" class="playground-filename-input" value="db/migrations/20261031_orders.sql" placeholder="File path (e.g. src/auth.ts)">
+            </div>
+            <textarea id="playgroundCode" class="playground-textarea" rows="6" spellcheck="false">ALTER TABLE orders ADD COLUMN status VARCHAR(20) NOT NULL;</textarea>
+          </div>
+
+          <!-- Tab 3: Presets & Local Workspace -->
+          <div class="scan-panel" id="panelPresets" style="display:none;">
+            <div class="scan-source-label">Choose preset or local directory</div>
+            <div class="chips-scroll-wrap hero-chips">
+              <button class="path-chip" data-path=".">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                <span>Whole Workspace</span>
+              </button>
+              <button class="path-chip" data-path="src/">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Core Engine (src/)</span>
+              </button>
+              <button class="path-chip" data-path="demo/sample_app.ts">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="14" x="8" y="6" rx="4"/><path d="m19 7-3 2"/><path d="m5 7 3 2"/><path d="m19 19-3-2"/><path d="m5 19 3-2"/><path d="M20 13h-4"/><path d="M4 13h4"/></svg>
+                <span>Demo Trap</span>
+              </button>
+              <button class="path-chip active" data-path="benchmarks/fixtures/01_table_lock_migration/migration.sql">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                <span>01 Table Lock</span>
+              </button>
+              <button class="path-chip" data-path="benchmarks/fixtures/03_n_plus_one_checkout_query/orders.ts">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>03 N+1 Loop</span>
+              </button>
+              <button class="path-chip" data-path="benchmarks/fixtures/04_sync_io_in_route/server.ts">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>04 Sync I/O</span>
+              </button>
+              <button class="path-chip chip-custom" id="heroChipCustom" data-path="">
+                <svg class="chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>Custom path…</span>
+              </button>
+            </div>
+
+            <!-- Custom path input (hidden until "Custom path" is selected) -->
+            <div class="hero-custom-input-wrap" id="heroCustomInputWrap" style="display:none; margin-top:0.85rem;">
+              <svg class="input-search-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <input type="text" id="targetPathInput" class="path-input" placeholder="e.g.  src/core/blast.ts  or  benchmarks/fixtures/02_missing_stripe_secret_env/" value=".">
+            </div>
           </div>
 
           <!-- Big CTA -->
@@ -194,7 +258,7 @@
           <div class="scan-proof-row">
             <span class="proof-item proof-green">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              20 tests passing
+              22 tests passing
             </span>
             <span class="proof-dot"></span>
             <span class="proof-item">10/10 real outages caught</span>

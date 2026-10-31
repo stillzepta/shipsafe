@@ -7,58 +7,15 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runHealthCheck } from './lib/engine.js';
-import { loadConfig, saveConfig } from './lib/config.js';
-import { 
-  getCurrentBranch, 
-  getStagedFiles, 
-  getLatestCommit, 
-  getHookStatus, 
-  installGitHooks, 
-  uninstallGitHooks, 
-  getStagedDiff,
-  isGitRepo
-} from './lib/git.js';
-import { getRecentRuns, getRunById, getStats } from './lib/db.js';
-import { executeFix } from './lib/fixers.js';
-import { runBenchmark } from './benchmarks/suite.ts';
+import { loadConfig } from './lib/config.js';
+import { getCurrentBranch, getStagedFiles } from './lib/git.js';
+import { handleApiRequest } from './lib/api-handler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-async function sendJson(res, statusCode, data) {
-  res.writeHead(statusCode, {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type'
-  });
-  res.end(JSON.stringify(data));
-}
-
-async function parseJsonBody(req) {
-  return new Promise((resolve, reject) => {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk;
-      if (body.length > 5 * 1024 * 1024) {
-        reject(new Error('Payload too large'));
-      }
-    });
-    req.on('end', () => {
-      if (!body) return resolve({});
-      try {
-        resolve(JSON.parse(body));
-      } catch (err) {
-        reject(new Error('Invalid JSON format'));
-      }
-    });
-    req.on('error', reject);
-  });
-}
-
-async function serveStatic(req, res, filePath) {
+function serveStatic(req, res, filePath) {
   let targetPath = path.join(PUBLIC_DIR, filePath === '/' ? 'index.html' : filePath);
 
   // Prevent path traversal
@@ -124,165 +81,13 @@ export async function startServer(options = {}) {
   }, 1200);
 
   const server = http.createServer(async (req, res) => {
-    const parsedUrl = new URL(req.url, `http://${host}:${port}`);
-    const pathname = parsedUrl.pathname;
-    const method = req.method;
-
-    // CORS preflight
-    if (method === 'OPTIONS') {
-      res.writeHead(204, {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      });
-      return res.end();
-    }
-
-    try {
-      // --- API ROUTES ---
-
-      // 1. Current System & Git Status
-      if (pathname === '/api/status' && method === 'GET') {
-        const branch = getCurrentBranch(cwd);
-        const commit = getLatestCommit(cwd);
-        const staged = getStagedFiles(cwd);
-        const hooks = getHookStatus(cwd);
-        const stats = getStats(cwd);
-        const gitOk = isGitRepo(cwd);
-
-        return sendJson(res, 200, {
-          isGitRepo: gitOk,
-          branch,
-          commit,
-          stagedFiles: staged,
-          hooks,
-          stats
-        });
-      }
-
-      // 2. Trigger Health Check
-      if (pathname === '/api/check' && (method === 'GET' || method === 'POST')) {
-        let body = {};
-        if (method === 'POST') {
-          try { body = await parseJsonBody(req); } catch {}
-        }
-        const checkAll = parsedUrl.searchParams.get('all') === 'true' || body.all === true;
-        const targetPath = parsedUrl.searchParams.get('path') || parsedUrl.searchParams.get('targetPath') || body.targetPath || body.path || null;
-        const currentConf = loadConfig(cwd);
-        const result = await runHealthCheck(cwd, { config: currentConf, all: checkAll, targetPath });
-
-        // Notify SSE clients of fresh check run
-        for (const client of sseClients) {
-          client.write(`event: check-complete\ndata: ${JSON.stringify({ score: result.score, status: result.status })}\n\n`);
-        }
-
-        return sendJson(res, 200, result);
-      }
-
-      // 3. Staged Diff Viewer
-      if (pathname === '/api/diff' && method === 'GET') {
-        const filePath = parsedUrl.searchParams.get('file') || null;
-        const diff = getStagedDiff(cwd, filePath);
-        return sendJson(res, 200, { file: filePath, diff });
-      }
-
-      // 3B. Outage Benchmark Runner
-      if (pathname === '/api/benchmark' && (method === 'GET' || method === 'POST')) {
-        const benchResult = runBenchmark();
-        return sendJson(res, 200, benchResult);
-      }
-
-      // 3C. Benchmark Reset Endpoint (restores original outage traps for live demo)
-      if (pathname === '/api/benchmark/reset' && method === 'POST') {
-        const { CANONICAL_TRAPS } = await import('./benchmarks/suite.ts');
-        for (const [scenario, payloads] of Object.entries(CANONICAL_TRAPS)) {
-          const sDir = path.join(cwd, 'benchmarks', 'fixtures', scenario);
-          if (fs.existsSync(sDir)) {
-            for (const p of payloads) {
-              const fname = path.basename(p.path);
-              await fs.promises.writeFile(path.join(sDir, fname), p.content, 'utf8');
-            }
-          }
-        }
-        return sendJson(res, 200, { success: true, message: 'All 10 benchmark traps restored to pristine outage states!' });
-      }
-
-      // 4. Run Auto-Fixer
-      if (pathname === '/api/fix' && method === 'POST') {
-        const body = await parseJsonBody(req);
-        const { fixerType, filePath, extraData } = body;
-
-        if (!fixerType || !filePath) {
-          return sendJson(res, 400, { error: 'fixerType and filePath are required' });
-        }
-
-        const fixResult = executeFix(cwd, fixerType, filePath, extraData);
-        return sendJson(res, 200, fixResult);
-      }
-
-      // 5. Git Hooks Management
-      if (pathname === '/api/hooks/install' && method === 'POST') {
-        const installResult = installGitHooks(cwd);
-        return sendJson(res, 200, installResult);
-      }
-
-      if (pathname === '/api/hooks/uninstall' && method === 'POST') {
-        const uninstallResult = uninstallGitHooks(cwd);
-        return sendJson(res, 200, uninstallResult);
-      }
-
-      // 6. Audit Run History
-      if (pathname === '/api/history' && method === 'GET') {
-        const limit = parseInt(parsedUrl.searchParams.get('limit') || '20', 10);
-        const history = getRecentRuns(cwd, limit);
-        return sendJson(res, 200, { history });
-      }
-
-      // 7. Single Run Details
-      if (pathname.startsWith('/api/history/') && method === 'GET') {
-        const id = parseInt(pathname.split('/').pop(), 10);
-        const run = getRunById(cwd, id);
-        if (!run) return sendJson(res, 404, { error: 'Run not found' });
-        return sendJson(res, 200, run);
-      }
-
-      // 8. Configuration API
-      if (pathname === '/api/config' && method === 'GET') {
-        const currentConf = loadConfig(cwd);
-        return sendJson(res, 200, currentConf);
-      }
-
-      if (pathname === '/api/config' && method === 'POST') {
-        const body = await parseJsonBody(req);
-        const updated = saveConfig(cwd, body);
-        return sendJson(res, 200, updated);
-      }
-
-      // 9. Real-Time Server-Sent Events (SSE)
-      if (pathname === '/api/events' && method === 'GET') {
-        res.writeHead(200, {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-          'Access-Control-Allow-Origin': '*'
-        });
-
-        res.write(`event: connected\ndata: {"status":"connected","timestamp":${Date.now()}}\n\n`);
-        sseClients.add(res);
-
-        req.on('close', () => {
-          sseClients.delete(res);
-        });
-        return;
-      }
-
-      // --- STATIC FILES ROUTING ---
-      return serveStatic(req, res, pathname);
-
-    } catch (err) {
-      console.error('[ShipSafe Server Error]:', err);
-      return sendJson(res, 500, { error: err.message });
-    }
+    return handleApiRequest(req, res, {
+      cwd,
+      host,
+      port,
+      sseClients,
+      serveStatic
+    });
   });
 
   server.listen(port, host, () => {

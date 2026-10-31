@@ -14,6 +14,8 @@ const state = {
   rulesConfig:       null,
   currentTargetPath: '.',
   reportVisible:     false,
+  activeScanTab:     'upload',
+  uploadedFiles:     []
 };
 
 // ── DOM references ──────────────────────────────────────────────────────
@@ -238,8 +240,11 @@ function renderDiff(rawDiff, targetLine = null) {
 }
 
 // ── CORE SCAN ───────────────────────────────────────────────────────────
-async function runCheck(customPath = null) {
-  const chosenPath = customPath !== null ? customPath : (state.currentTargetPath || '.');
+async function runCheck(customPath = null, filesPayload = null) {
+  const isVirtual = Array.isArray(filesPayload) && filesPayload.length > 0;
+  const chosenPath = isVirtual
+    ? `Project (${filesPayload.length} file${filesPayload.length > 1 ? 's' : ''})`
+    : (customPath !== null ? customPath : (state.currentTargetPath || '.'));
   state.currentTargetPath = chosenPath;
 
   // Update path label in report bar
@@ -249,8 +254,21 @@ async function runCheck(customPath = null) {
   setScanLoading(true);
 
   try {
-    const url = `/api/check?path=${encodeURIComponent(chosenPath)}`;
-    const res  = await fetch(url);
+    let res;
+    if (isVirtual) {
+      res = await fetch('/api/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          files: filesPayload,
+          branch: 'project',
+          commitMessage: 'User Project Inspection'
+        })
+      });
+    } else {
+      const url = `/api/check?path=${encodeURIComponent(chosenPath)}`;
+      res = await fetch(url);
+    }
     const data = await res.json();
     state.checkResult = data;
 
@@ -1003,14 +1021,200 @@ window.addEventListener('DOMContentLoaded', async () => {
     };
   }
 
+  // ── Mode Switcher & Project Testing Tabs ──
+  const tabUpload = document.getElementById('tabBtnUpload');
+  const tabPlayground = document.getElementById('tabBtnPlayground');
+  const tabPresets = document.getElementById('tabBtnPresets');
+  const panelUpload = document.getElementById('panelUpload');
+  const panelPlayground = document.getElementById('panelPlayground');
+  const panelPresets = document.getElementById('panelPresets');
+  const btnHeroScanLabel = document.getElementById('btnHeroScanLabel');
+
+  function updateHeroScanLabel() {
+    if (!btnHeroScanLabel) return;
+    if (state.activeScanTab === 'upload') {
+      btnHeroScanLabel.textContent = state.uploadedFiles.length > 0
+        ? `Scan ${state.uploadedFiles.length} Project File${state.uploadedFiles.length > 1 ? 's' : ''}`
+        : 'Select Project Files to Scan';
+    } else if (state.activeScanTab === 'playground') {
+      btnHeroScanLabel.textContent = 'Scan Code Snippet';
+    } else {
+      btnHeroScanLabel.textContent = 'Run Pre-Flight Scan';
+    }
+  }
+
+  function switchScanMode(tab) {
+    state.activeScanTab = tab;
+    if (tabUpload) tabUpload.classList.toggle('active', tab === 'upload');
+    if (tabPlayground) tabPlayground.classList.toggle('active', tab === 'playground');
+    if (tabPresets) tabPresets.classList.toggle('active', tab === 'presets');
+
+    if (panelUpload) panelUpload.style.display = tab === 'upload' ? '' : 'none';
+    if (panelPlayground) panelPlayground.style.display = tab === 'playground' ? '' : 'none';
+    if (panelPresets) panelPresets.style.display = tab === 'presets' ? '' : 'none';
+
+    updateHeroScanLabel();
+  }
+
+  if (tabUpload) tabUpload.onclick = () => switchScanMode('upload');
+  if (tabPlayground) tabPlayground.onclick = () => switchScanMode('playground');
+  if (tabPresets) tabPresets.onclick = () => switchScanMode('presets');
+
+  // ── Drag & Drop / File Upload Handler ──
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const folderInput = document.getElementById('folderInput');
+  const previewBox = document.getElementById('uploadedFilesPreview');
+  const previewCount = document.getElementById('previewCount');
+  const previewPills = document.getElementById('previewPills');
+  const btnClearFiles = document.getElementById('btnClearFiles');
+
+  async function handleFilesSelected(fileList) {
+    if (!fileList || fileList.length === 0) return;
+    const filesArray = Array.from(fileList);
+    const supportedExts = ['.sql', '.ts', '.js', '.mjs', '.cjs', '.py', '.java', '.json', '.env', '.yml', '.yaml'];
+
+    const readPromises = filesArray
+      .filter(f => {
+        const name = f.name.toLowerCase();
+        return supportedExts.some(ext => name.endsWith(ext)) || name === '.env.example' || name === 'package.json';
+      })
+      .slice(0, 50)
+      .map(async f => {
+        try {
+          const content = await f.text();
+          const cleanPath = f.webkitRelativePath || f.name;
+          return { path: cleanPath, content };
+        } catch {
+          return null;
+        }
+      });
+
+    const parsed = (await Promise.all(readPromises)).filter(Boolean);
+    if (parsed.length === 0) {
+      showToast('No readable code files detected in selection.', 'warn');
+      return;
+    }
+
+    state.uploadedFiles = parsed;
+    if (previewCount) previewCount.textContent = `${parsed.length} project file(s) ready to inspect`;
+    if (previewPills) {
+      previewPills.innerHTML = parsed.map(f => `<span class="preview-pill">📄 ${escapeHtml(f.path)}</span>`).join('');
+    }
+    if (previewBox) previewBox.style.display = '';
+    updateHeroScanLabel();
+    showToast(`Loaded ${parsed.length} project file(s) for pre-flight testing!`, 'success');
+  }
+
+  if (fileInput) {
+    fileInput.onchange = e => handleFilesSelected(e.target.files);
+  }
+  if (folderInput) {
+    folderInput.onchange = e => handleFilesSelected(e.target.files);
+  }
+  if (btnClearFiles) {
+    btnClearFiles.onclick = () => {
+      state.uploadedFiles = [];
+      if (previewBox) previewBox.style.display = 'none';
+      if (fileInput) fileInput.value = '';
+      if (folderInput) folderInput.value = '';
+      updateHeroScanLabel();
+    };
+  }
+
+  if (dropZone) {
+    dropZone.ondragover = e => {
+      e.preventDefault();
+      dropZone.classList.add('drag-over');
+    };
+    dropZone.ondragleave = () => {
+      dropZone.classList.remove('drag-over');
+    };
+    dropZone.ondrop = e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      if (e.dataTransfer && e.dataTransfer.files) {
+        handleFilesSelected(e.dataTransfer.files);
+      }
+    };
+  }
+
+  // ── Code Playground Templates ──
+  const playgroundSelect = document.getElementById('playgroundTemplateSelect');
+  const playgroundFilename = document.getElementById('playgroundFilename');
+  const playgroundCode = document.getElementById('playgroundCode');
+
+  const PLAYGROUND_TEMPLATES = {
+    sql: {
+      file: 'db/migrations/20261031_orders.sql',
+      code: 'ALTER TABLE orders ADD COLUMN status VARCHAR(20) NOT NULL;'
+    },
+    perf: {
+      file: 'src/checkout.ts',
+      code: '// High concurrency N+1 loop hazard\nfor (const user of users) {\n  const preferences = await db.query.find({ where: { userId: user.id } });\n}'
+    },
+    sync: {
+      file: 'src/server.ts',
+      code: "import fs from 'node:fs';\n// Synchronous file read halts single-threaded Node.js event loop\nexport function handleRoute(req, res) {\n  const config = fs.readFileSync('/etc/app.json', 'utf8');\n  res.send(config);\n}"
+    },
+    py: {
+      file: 'api/handlers.py',
+      code: 'def fetch_analytics(filters=[]):\n\t# Indentation tab error & mutable default\n\tpass'
+    },
+    java: {
+      file: 'src/CacheService.java',
+      code: 'public class UserService {\n  List<String> roles = new ArrayList<String>() {{\n    add("ADMIN"); // Hidden this$0 reference causes JVM heap leak\n  }};\n}'
+    },
+    secret: {
+      file: 'src/billing.ts',
+      code: '// Production auth token sample\nconst token = process.env.AUTH_TOKEN;'
+    },
+    custom: {
+      file: 'src/service.ts',
+      code: '// Paste your code snippet here\n'
+    }
+  };
+
+  if (playgroundSelect && playgroundFilename && playgroundCode) {
+    playgroundSelect.onchange = e => {
+      const t = PLAYGROUND_TEMPLATES[e.target.value] || PLAYGROUND_TEMPLATES.custom;
+      playgroundFilename.value = t.file;
+      playgroundCode.value = t.code;
+    };
+  }
+
   // ── Hero scan button ──
   if (els.btnHeroScan) {
-    els.btnHeroScan.onclick = () => runCheck(state.currentTargetPath);
+    els.btnHeroScan.onclick = () => {
+      if (state.activeScanTab === 'upload') {
+        if (state.uploadedFiles.length > 0) {
+          runCheck(null, state.uploadedFiles);
+        } else {
+          fileInput?.click();
+        }
+      } else if (state.activeScanTab === 'playground') {
+        const filename = playgroundFilename?.value.trim() || 'snippet.ts';
+        const code = playgroundCode?.value || '';
+        if (!code.trim()) {
+          showToast('Please paste or write some code to scan.', 'info');
+          return;
+        }
+        runCheck(null, [{ path: filename, content: code }]);
+      } else {
+        runCheck(state.currentTargetPath);
+      }
+    };
   }
 
   // ── Re-scan button (in nav, shown after report) ──
   if (els.btnRunCheck) {
-    els.btnRunCheck.onclick = () => runCheck(state.currentTargetPath);
+    els.btnRunCheck.onclick = () => {
+      if (state.uploadedFiles.length > 0) {
+        runCheck(null, state.uploadedFiles);
+      } else {
+        runCheck(state.currentTargetPath);
+      }
+    };
   }
 
   // ── Back to hero ──
