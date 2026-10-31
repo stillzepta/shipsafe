@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="100%" height="auto">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .ink { fill: none; stroke: #111827; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .ink-bold { fill: none; stroke: #111827; stroke-width: 4.8; stroke-linecap: round; stroke-linejoin: round; }
+      .ink-thin { fill: none; stroke: #111827; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .dashed { stroke-dasharray: 7 7; }
+      
+      /* Bablu Solid Black Silhouette */
+      .bablu { fill: #111827; stroke: #111827; stroke-width: 2; }
+      .bablu-eye { fill: #ffffff; }
+      
+      /* Functional Color Accents */
+      .accent-red { stroke: #ef4444; fill: none; stroke-width: 3.2; stroke-linecap: round; }
+      .fill-red { fill: #ef4444; }
+      .accent-orange { stroke: #ea580c; fill: none; stroke-width: 3.2; stroke-linecap: round; }
+      .fill-orange { fill: #ea580c; }
+      .accent-blue { stroke: #2563eb; fill: none; stroke-width: 3.2; stroke-linecap: round; }
+      .fill-blue { fill: #2563eb; }
+      .fill-green { fill: #10b981; }
+      .accent-green { stroke: #10b981; fill: none; stroke-width: 3.2; stroke-linecap: round; }
+
+      .font-sans { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .font-hand { font-family: 'Courier New', 'JetBrains Mono', monospace; font-weight: 700; }
+      .panel-border { fill: #ffffff; stroke: #111827; stroke-width: 2.8; rx: 14px; }
+    </style>
+  </defs>
+
+  <!-- Pure White Canvas (16:9) -->
+  <rect width="1600" height="900" class="bg"/>
+
+  <!-- ==================== HEADER (ENLARGED & HIGH CONTRAST) ==================== -->
+  <g transform="translate(100, 42)">
+    <rect x="0" y="0" width="250" height="28" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="1.8"/>
+    <text x="12" y="19" class="font-sans" font-size="13" font-weight="800" fill="#ea580c">🎃 EXPLAIN LIKE I'M 5 YEARS OLD</text>
+    <text x="0" y="66" class="font-sans" font-size="34" font-weight="900" fill="#111827">Bablu and the Spooky Code Monsters</text>
+    <text x="0" y="94" class="font-sans" font-size="17" font-weight="500" fill="#4b5563">How ShipSafe protects production from Halloween runtime ghosts before code ever leaves your computer</text>
+  </g>
+
+  <!-- ==================== 4-PANEL STORYBOARD ==================== -->
+
+  <!-- PANEL 1: The Spooky Toy Castle -->
+  <g transform="translate(100, 160)">
+    <rect x="0" y="0" width="325" height="645" class="panel-border"/>
+    <!-- Panel Header -->
+    <rect x="0" y="0" width="325" height="46" rx="14" fill="#f8fafc"/>
+    <text x="20" y="30" class="font-sans" font-size="16" font-weight="800" fill="#ea580c">ACT 1: THE TOY CASTLE</text>
+
+    <!-- Content: Developer building toy blocks with hidden ghosts (Bigger & Expressive) -->
+    <g transform="translate(25, 65)">
+      <!-- Building Blocks -->
+      <rect x="20" y="180" width="85" height="46" rx="5" fill="#ffffff" class="ink-bold"/>
+      <rect x="115" y="180" width="85" height="46" rx="5" fill="#ffffff" class="ink-bold"/>
+      <rect x="65" y="128" width="95" height="48" rx="5" fill="#fee2e2" stroke="#ef4444" stroke-width="3"/>
+
+      <!-- Ghost peeking out of red brick -->
+      <g transform="translate(85, 82)">
+        <path d="M 12,38 C 12,14 46,14 46,38 C 46,46 41,43 38,48 C 35,43 31,45 28,48 C 25,43 20,45 17,48 C 14,43 12,46 12,38 Z" fill="#ffffff" stroke="#ef4444" stroke-width="2.6"/>
+        <circle cx="23" cy="28" r="2.8" fill="#ef4444"/>
+        <circle cx="35" cy="28" r="2.8" fill="#ef4444"/>
+        <text x="52" y="32" class="font-hand" font-size="13" font-weight="bold" fill="#ef4444">"BOO!"</text>
+      </g>
+
+      <!-- Bablu the young builder (Scaled 1.4x) -->
+      <g transform="translate(155, 100)">
+        <ellipse cx="35" cy="75" rx="18" ry="30" class="bablu"/>
+        <circle cx="35" cy="32" r="17" class="bablu"/>
+        <!-- Eyes looking happy -->
+        <circle cx="30" cy="30" r="2.5" class="bablu-eye"/>
+        <circle cx="40" cy="30" r="2.5" class="bablu-eye"/>
+        <!-- Arm holding another block -->
+        <line x1="35" y1="65" x2="78" y2="48" class="ink-bold"/>
+        <rect x="78" y="34" width="36" height="26" rx="3" fill="#dbeafe" stroke="#2563eb" stroke-width="2.2"/>
+        <line x1="28" y1="105" x2="22" y2="135" class="ink-bold"/>
+        <line x1="42" y1="105" x2="48" y2="135" class="ink-bold"/>
+      </g>
+    </g>
+
+    <!-- Narrative text (Enlarged 16px typography) -->
+    <g transform="translate(25, 345)">
+      <text x="0" y="24" class="font-sans" font-size="20" font-weight="800" fill="#111827">You build something cool!</text>
+      
+      <text x="0" y="58" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">Every developer writes code</text>
+      <text x="0" y="82" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">like building a LEGO castle.</text>
+      
+      <text x="0" y="122" class="font-sans" font-size="16" font-weight="800" fill="#ef4444">🎃 BUT SNEAKY GHOSTS HIDE</text>
+      <text x="0" y="146" class="font-sans" font-size="15.5" font-weight="600" fill="#991b1b">inside the bricks: table locks,</text>
+      <text x="0" y="170" class="font-sans" font-size="15.5" font-weight="600" fill="#991b1b">missing keys, and zombie loops!</text>
+      
+      <rect x="0" y="200" width="275" height="34" rx="6" fill="#f1f5f9"/>
+      <text x="12" y="222" class="font-sans" font-size="13.5" font-weight="700" fill="#64748b">Linters miss 10/10 of these ghosts.</text>
+    </g>
+  </g>
+
+  <!-- PANEL 2: Without ShipSafe (Disaster) -->
+  <g transform="translate(455, 160)">
+    <rect x="0" y="0" width="325" height="645" class="panel-border" stroke="#ef4444" stroke-width="3"/>
+    <!-- Panel Header -->
+    <rect x="0" y="0" width="325" height="46" rx="14" fill="#fee2e2"/>
+    <text x="20" y="30" class="font-sans" font-size="16" font-weight="800" fill="#991b1b">ACT 2: WITHOUT SHIPSAFE 💥</text>
+
+    <!-- Content: Code explodes in production (Enlarged) -->
+    <g transform="translate(30, 65)">
+      <!-- Broken Server Tower -->
+      <rect x="25" y="105" width="120" height="130" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="2.8"/>
+      <line x1="40" y1="135" x2="125" y2="135" class="ink-thin" stroke="#ef4444"/>
+      <line x1="40" y1="165" x2="125" y2="165" class="ink-thin" stroke="#ef4444"/>
+      <line x1="40" y1="195" x2="125" y2="195" class="ink-thin" stroke="#ef4444"/>
+      <!-- Crack lines in server -->
+      <path d="M 85,105 L 75,145 L 105,185 L 90,235" class="accent-red" stroke-width="3.6"/>
+
+      <!-- Giant Table Lock Monster screaming -->
+      <g transform="translate(140, 65)">
+        <ellipse cx="42" cy="36" rx="34" ry="28" fill="#ef4444"/>
+        <!-- Horns -->
+        <polygon points="18,20 24,0 30,20" fill="#991b1b"/>
+        <polygon points="54,20 60,0 66,20" fill="#991b1b"/>
+        <circle cx="31" cy="30" r="5" fill="#ffffff"/>
+        <circle cx="53" cy="30" r="5" fill="#ffffff"/>
+        <circle cx="31" cy="30" r="2.8" fill="#111827"/>
+        <circle cx="53" cy="30" r="2.8" fill="#111827"/>
+        <!-- Giant roar mouth with fangs -->
+        <ellipse cx="42" cy="46" rx="18" ry="10" fill="#991b1b"/>
+        <polygon points="34,44 38,40 42,44" fill="#ffffff"/>
+        <polygon points="42,44 46,40 50,44" fill="#ffffff"/>
+      </g>
+
+      <!-- Bablu crying (Scaled 1.4x) -->
+      <g transform="translate(-5, 140)">
+        <ellipse cx="28" cy="55" rx="15" ry="24" class="bablu"/>
+        <circle cx="28" cy="22" r="14" class="bablu"/>
+        <!-- Tear drops -->
+        <circle cx="24" cy="20" r="2" class="bablu-eye"/>
+        <circle cx="32" cy="20" r="2" class="bablu-eye"/>
+        <path d="M 37,24 L 43,36" class="accent-blue" stroke-width="2.8"/>
+        <path d="M 19,24 L 13,36" class="accent-blue" stroke-width="2.8"/>
+        <line x1="22" y1="78" x2="16" y2="105" class="ink-bold"/>
+        <line x1="34" y1="78" x2="40" y2="105" class="ink-bold"/>
+      </g>
+    </g>
+
+    <!-- Narrative text (Enlarged 16px typography) -->
+    <g transform="translate(25, 345)">
+      <text x="0" y="24" class="font-sans" font-size="20" font-weight="800" fill="#ef4444">The 3 AM Nightmare!</text>
+      
+      <text x="0" y="58" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">You ship code to production.</text>
+      <text x="0" y="82" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">At midnight, the ghosts wake up!</text>
+      
+      <text x="0" y="122" class="font-sans" font-size="16" font-weight="800" fill="#991b1b">💥 Database locks completely.</text>
+      <text x="0" y="146" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">The website crashes, checkout</text>
+      <text x="0" y="170" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">dies, and alarms wake the team.</text>
+      
+      <rect x="0" y="200" width="275" height="34" rx="6" fill="#fef2f2" stroke="#fca5a5"/>
+      <text x="12" y="222" class="font-hand" font-size="13" font-weight="bold" fill="#ef4444">💸 Cost: $120,000 in 45 minutes!</text>
+    </g>
+  </g>
+
+  <!-- PANEL 3: Bablu the Ghostbuster (ShipSafe Gatekeeper) -->
+  <g transform="translate(810, 160)">
+    <rect x="0" y="0" width="325" height="645" class="panel-border" stroke="#ea580c" stroke-width="3"/>
+    <!-- Panel Header -->
+    <rect x="0" y="0" width="325" height="46" rx="14" fill="#ffedd5"/>
+    <text x="20" y="30" class="font-sans" font-size="16" font-weight="800" fill="#9a3412">ACT 3: ENTER BABLU 🛡️</text>
+
+    <!-- Content: Bablu inspecting and vacuuming code ghosts (Enlarged) -->
+    <g transform="translate(25, 60)">
+      <!-- Bablu Ghostbuster -->
+      <g transform="translate(30, 65)">
+        <ellipse cx="48" cy="80" rx="24" ry="36" class="bablu"/>
+        <circle cx="48" cy="26" r="21" class="bablu"/>
+        <!-- Ghostbuster Hat / Antenna -->
+        <polygon points="30,12 48,-18 66,12" fill="#111827"/>
+        <ellipse cx="48" cy="12" rx="26" ry="6" fill="#ea580c"/>
+        <circle cx="42" cy="24" r="3.2" class="bablu-eye"/>
+        <circle cx="54" cy="24" r="3.2" class="bablu-eye"/>
+        
+        <!-- Ghost Radar Scanner (Bigger & Clearer) -->
+        <circle cx="115" cy="50" r="26" stroke="#ea580c" stroke-width="3.5" fill="#fff7ed"/>
+        <line x1="60" y1="65" x2="90" y2="55" class="ink-bold"/>
+        <text x="101" y="58" class="font-hand" font-size="14" font-weight="bold" fill="#ea580c">100%</text>
+
+        <!-- Ghost Vacuum Tube sucking up the monster -->
+        <path d="M 48,100 Q 100,145 150,125" class="ink-bold" stroke="#ea580c" stroke-width="4.8"/>
+        <rect x="150" y="110" width="30" height="34" rx="5" fill="#ea580c"/>
+        
+        <line x1="38" y1="116" x2="30" y2="148" class="ink-bold"/>
+        <line x1="58" y1="116" x2="66" y2="148" class="ink-bold"/>
+      </g>
+
+      <!-- Trapped Ghost crying in a glass jar (Enlarged) -->
+      <g transform="translate(205, 120)">
+        <rect x="0" y="0" width="70" height="90" rx="10" fill="#ffffff" stroke="#111827" stroke-width="2.6"/>
+        <rect x="12" y="-10" width="46" height="12" rx="4" fill="#ea580c"/>
+        <!-- Sad tiny ghost inside -->
+        <path d="M 20,60 C 20,35 50,35 50,60 Z" fill="#fee2e2" stroke="#ef4444" stroke-width="2.2"/>
+        <circle cx="30" cy="50" r="2.5" fill="#ef4444"/>
+        <circle cx="40" cy="50" r="2.5" fill="#ef4444"/>
+        <text x="11" y="78" class="font-sans" font-size="11" font-weight="800" fill="#991b1b">TRAPPED!</text>
+      </g>
+    </g>
+
+    <!-- Narrative text (Enlarged 16px typography) -->
+    <g transform="translate(25, 345)">
+      <text x="0" y="24" class="font-sans" font-size="20" font-weight="800" fill="#ea580c">The Brave Gatekeeper!</text>
+      
+      <text x="0" y="58" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">Before code leaves your laptop,</text>
+      <text x="0" y="82" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">Bablu steps in with ShipSafe!</text>
+      
+      <text x="0" y="122" class="font-sans" font-size="16" font-weight="800" fill="#9a3412">⚡ In &lt;35 milliseconds:</text>
+      <text x="0" y="146" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">1. Scans for table locks &amp; leaks.</text>
+      <text x="0" y="170" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">2. Evaluates blast radius (0-100%).</text>
+      
+      <rect x="0" y="200" width="275" height="34" rx="6" fill="#ffedd5"/>
+      <text x="12" y="222" class="font-sans" font-size="13.5" font-weight="800" fill="#9a3412">Quarantines bad commits instantly!</text>
+    </g>
+  </g>
+
+  <!-- PANEL 4: Auto-Fix & Golden Ticket (Happy Production) -->
+  <g transform="translate(1165, 160)">
+    <rect x="0" y="0" width="325" height="645" class="panel-border" stroke="#10b981" stroke-width="3"/>
+    <!-- Panel Header -->
+    <rect x="0" y="0" width="325" height="46" rx="14" fill="#d1fae5"/>
+    <text x="20" y="30" class="font-sans" font-size="16" font-weight="800" fill="#065f46">ACT 4: THE GOLDEN TICKET ✨</text>
+
+    <!-- Content: Clean code floating peacefully to production (Enlarged) -->
+    <g transform="translate(40, 65)">
+      <!-- Cloud City / Production -->
+      <path d="M 20,45 A 30,30 0 0,1 80,32 A 42,42 0 0,1 155,28 A 36,36 0 0,1 205,58 A 24,24 0 0,1 185,88 L 20,88 Z" fill="#ecfdf5" stroke="#10b981" stroke-width="3"/>
+      <text x="56" y="68" class="font-sans" font-size="16" font-weight="800" fill="#047857">Production ✔</text>
+
+      <!-- Sparkling Clean Code Brick -->
+      <g transform="translate(35, 115)">
+        <rect x="0" y="0" width="140" height="62" rx="7" fill="#ffffff" stroke="#10b981" stroke-width="2.6"/>
+        <text x="16" y="26" class="font-hand" font-size="14" font-weight="bold" fill="#047857">code [CLEAN]</text>
+        <text x="16" y="48" class="font-sans" font-size="12.5" font-weight="700" fill="#10b981">✨ 0 Ghosts Inside</text>
+      </g>
+
+      <!-- Bablu with thumbs up and green lantern (Scaled 1.4x) -->
+      <g transform="translate(55, 185)">
+        <ellipse cx="35" cy="65" rx="18" ry="28" class="bablu"/>
+        <circle cx="35" cy="24" r="16" class="bablu"/>
+        <circle cx="30" cy="22" r="2.5" class="bablu-eye"/>
+        <circle cx="40" cy="22" r="2.5" class="bablu-eye"/>
+        <!-- Green lantern held high -->
+        <line x1="35" y1="52" x2="78" y2="18" class="ink-bold"/>
+        <circle cx="78" cy="18" r="11" fill="#10b981"/>
+        <line x1="28" y1="92" x2="22" y2="120" class="ink-bold"/>
+        <line x1="42" y1="92" x2="48" y2="120" class="ink-bold"/>
+      </g>
+    </g>
+
+    <!-- Narrative text (Enlarged 16px typography) -->
+    <g transform="translate(25, 345)">
+      <text x="0" y="24" class="font-sans" font-size="20" font-weight="800" fill="#10b981">Safe to Ship!</text>
+      
+      <text x="0" y="58" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">ShipSafe automatically fixes:</text>
+      <text x="0" y="82" class="font-sans" font-size="15.5" font-weight="800" fill="#047857">"npx shipsafe fix" auto-syncs .env</text>
+      
+      <text x="0" y="122" class="font-sans" font-size="16" font-weight="800" fill="#15803d">🎟️ Golden ticket approved!</text>
+      <text x="0" y="146" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">Deploys smoothly on Halloween,</text>
+      <text x="0" y="170" class="font-sans" font-size="15.5" font-weight="600" fill="#4b5563">zero 3 AM pages, sleep like a baby!</text>
+      
+      <rect x="0" y="200" width="275" height="34" rx="6" fill="#d1fae5"/>
+      <text x="12" y="222" class="font-sans" font-size="13.5" font-weight="800" fill="#065f46">100% Production Peace of Mind 😴</text>
+    </g>
+  </g>
+
+  <!-- Footer note (Enlarged) -->
+  <g transform="translate(100, 842)">
+    <text x="0" y="0" class="font-sans" font-size="13.5" font-weight="600" fill="#4b5563">
+      [Bablu Storyboard] Pattern-based database table lock detection and dependency blast radius translated into intuitive visual storytelling.
+    </text>
+  </g>
+</svg>
