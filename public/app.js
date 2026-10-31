@@ -999,7 +999,7 @@ async function loadHistory() {
           warnings_count: 0,
           files_checked: 2,
           duration_ms: 29,
-          summary: 'Quality gate PASSED (100% Ready). Elevated README with 5 high-impact improvements & stage pitch script.'
+          summary: 'Quality gate PASSED (100% Ready). Elevated README with 5 high-impact improvements.'
         },
         {
           id: 73,
