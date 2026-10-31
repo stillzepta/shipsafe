@@ -269,7 +269,7 @@
   <!-- Footer note (Enlarged) -->
   <g transform="translate(100, 842)">
     <text x="0" y="0" class="font-sans" font-size="13.5" font-weight="600" fill="#4b5563">
-      [Bablu Storyboard] AST-level database table lock detection and dependency blast radius translated into intuitive visual storytelling.
+      [Bablu Storyboard] Pattern-based database table lock detection and dependency blast radius translated into intuitive visual storytelling.
     </text>
   </g>
 </svg>

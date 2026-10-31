@@ -50,14 +50,14 @@
     <rect x="0" y="0" width="240" height="27" rx="6" fill="#ffedd5" stroke="#ea580c" stroke-width="1.8"/>
     <text x="10" y="19" class="font-sans" font-size="13" font-weight="800" fill="#ea580c">🎃 ARCHITECTURE SPECIFICATION</text>
 
-    <text x="0" y="58" class="font-sans txt-title">ShipSafe // The Deep AST Sieve &amp; Dependency DAG Lab</text>
-    <text x="0" y="82" class="font-sans txt-sub">How Bablu performs AST code autopsies, maps blast radius ripple, and runs sovereign pre-mortems</text>
+    <text x="0" y="58" class="font-sans txt-title">ShipSafe // The Deep Pattern Sieve &amp; Dependency DAG Lab</text>
+    <text x="0" y="82" class="font-sans txt-sub">How Bablu performs pattern code autopsies, maps blast radius ripple, and runs sovereign pre-mortems</text>
     
     <!-- Legend -->
     <g transform="translate(1000, 2)">
       <rect x="0" y="0" width="480" height="48" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
       <circle cx="28" cy="24" r="7" fill="#7c3aed"/>
-      <text x="44" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">AST Tree Sieve</text>
+      <text x="44" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">Pattern Sieve</text>
       <circle cx="205" cy="24" r="7" fill="#2563eb"/>
       <text x="221" y="29" class="font-sans" font-size="13.5" font-weight="700" fill="#374151">Dependency DAG</text>
       <circle cx="370" cy="24" r="7" fill="#10b981"/>
@@ -70,11 +70,11 @@
 
   <!-- ==================== 3 ARCHITECTURAL PILLARS ==================== -->
 
-  <!-- PILLAR 1: AST CODE AUTOPSY TABLE (LEFT) -->
+  <!-- PILLAR 1: PATTERN CODE AUTOPSY TABLE (LEFT) -->
   <g transform="translate(70, 160)">
     <rect x="0" y="0" width="445" height="630" rx="14" fill="#ffffff" class="ink-bold"/>
     <rect x="0" y="0" width="445" height="44" rx="14" fill="#ede9fe"/>
-    <text x="20" y="28" class="font-sans txt-tag fill-purple">🔬 1. SYNTAX TREE AUTOPSY (AST SIEVE)</text>
+    <text x="20" y="28" class="font-sans txt-tag fill-purple">🔬 1. CODE AUTOPSY (PATTERN SIEVE)</text>
     <text x="345" y="28" class="font-hand" font-size="12" font-weight="bold" fill="#7c3aed">[&lt;15ms Scan]</text>
 
     <!-- Dissection Table Graphic -->
@@ -83,7 +83,7 @@
       <rect x="0" y="0" width="395" height="220" rx="10" fill="#faf5ff" stroke="#c084fc" stroke-width="2"/>
       <text x="15" y="25" class="font-hand" font-size="13" font-weight="bold" fill="#6b21a8">FILE: checkout.ts &amp; migration.sql</text>
 
-      <!-- AST Nodes Floating -->
+      <!-- Pattern Nodes Floating -->
       <!-- Node A: N+1 Loop Monster -->
       <g transform="translate(15, 42)">
         <rect x="0" y="0" width="365" height="48" rx="6" fill="#ffffff" stroke="#ef4444" stroke-width="2"/>
@@ -122,7 +122,7 @@
       <line x1="36" y1="95" x2="28" y2="135" class="ink-bold"/>
       <line x1="54" y1="95" x2="62" y2="135" class="ink-bold"/>
       
-      <text x="120" y="40" class="font-sans" font-size="14" font-weight="800" fill="#7c3aed">Bablu AST Surgeon</text>
+      <text x="120" y="40" class="font-sans" font-size="14" font-weight="800" fill="#7c3aed">Bablu Code Surgeon</text>
       <text x="120" y="58" class="font-hand" font-size="11.5" fill="#4b5563">"I cut open code to catch</text>
       <text x="120" y="74" class="font-hand" font-size="11.5" fill="#4b5563">ghosts linters cannot see!"</text>
     </g>
@@ -132,7 +132,7 @@
       <rect x="0" y="0" width="395" height="135" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.8"/>
       <text x="15" y="24" class="font-sans" font-size="14" font-weight="800" fill="#111827">Engineering Guarantees:</text>
       <text x="15" y="48" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Zero external dependencies (Native TS type-stripping)</text>
-      <text x="15" y="70" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Regex &amp; AST state machines verify expand-contract rules</text>
+      <text x="15" y="70" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Regex &amp; pattern state machines verify expand-contract rules</text>
       <text x="15" y="92" class="font-sans" font-size="12.5" font-weight="600" fill="#4b5563">• Intercepts git commit before objects are written to disk</text>
       <text x="15" y="116" class="font-hand" font-size="12" font-weight="bold" fill="#7c3aed">Execution Budget: &lt;15ms across 500 files</text>
     </g>
@@ -142,7 +142,7 @@
   <g transform="translate(545, 160)">
     <rect x="0" y="0" width="465" height="630" rx="14" fill="#ffffff" class="ink-bold"/>
     <rect x="0" y="0" width="465" height="44" rx="14" fill="#dbeafe"/>
-    <text x="20" y="28" class="font-sans txt-tag fill-blue">🕸️ 2. BLAST RADIUS TOPOLOGY (AST DAG)</text>
+    <text x="20" y="28" class="font-sans txt-tag fill-blue">🕸️ 2. BLAST RADIUS TOPOLOGY (DEPENDENCY DAG)</text>
     <text x="355" y="28" class="font-hand" font-size="12" font-weight="bold" fill="#2563eb">[0-100% Risk]</text>
 
     <!-- Spooky Spiderweb DAG Topology -->
@@ -281,7 +281,7 @@
       [STYLE: Ian Bablu 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Bablu IP © TRioN]
     </text>
     <text x="0" y="24" class="font-sans" font-size="13" font-weight="600" fill="#64748b">
-      Technical Architecture Specification: AST Sieve Parser → In-Memory Dependency DAG → Sovereign Dual-Inference Pre-Mortem.
+      Technical Architecture Specification: Pattern Sieve Engine → In-Memory Dependency DAG → Sovereign Dual-Inference Pre-Mortem.
     </text>
   </g>
 </svg>

@@ -149,14 +149,14 @@ export function runBenchmark() {
   }
 
   // Display Table
-  console.log('| ID | Scenario | Traditional CI (ESLint/Jest) | ShipSafe Gatekeeper |');
+  console.log('| ID | Scenario | Typical Lint / Unit Tests (Assumed) | ShipSafe Gatekeeper |');
   console.log('| :--- | :--- | :--- | :--- |');
   for (const r of results) {
     console.log(`| **${r.id.split('_')[0]}** | ${r.name} | \`${r.standardCi}\` | **${r.shipsafe}** |`);
   }
 
   console.log('\n\x1b[1mEVALUATION SUMMARY:\x1b[0m');
-  console.log(`• Traditional CI / Lint Detection Rate: \x1b[31m${standardCiCaught}/10 (0%)\x1b[0m`);
+  console.log(`• Typical Linters / Unit Tests:         \x1b[33mMissed by design (0/10)\x1b[0m`);
   console.log(`• ShipSafe Detection Rate:             \x1b[32m${shipsafeCaught}/10 (100%)\x1b[0m\n`);
 
   return { shipsafeCaught, standardCiCaught, total: testCases.length, results };

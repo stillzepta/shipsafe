@@ -743,7 +743,7 @@ async function runBenchmarkUI() {
   }
   try {
     const data = await (await fetch('/api/benchmark')).json();
-    if (els.benchCiStat)      els.benchCiStat.textContent      = `${data.standardCiCaught || 0} / ${data.total} Caught (0%)`;
+    if (els.benchCiStat)      els.benchCiStat.textContent      = `Missed (0/${data.total})`;
     if (els.benchShipSafeStat) els.benchShipSafeStat.textContent = `${data.shipsafeCaught} / ${data.total} Caught (100%)`;
     els.benchmarkTableBody.innerHTML = '';
     (data.results || []).forEach(r => {

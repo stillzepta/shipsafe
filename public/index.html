@@ -348,9 +348,9 @@
 
           <div class="bench-scoreboard">
             <div class="score-card score-traditional">
-              <div class="score-card-title">Traditional CI (Linters &amp; Unit Tests)</div>
-              <div class="score-huge text-danger">0 / 10</div>
-              <div class="score-sub">0% Real-World Outage Detection Rate</div>
+              <div class="score-card-title">Typical Linters &amp; Unit Tests (Assumed)</div>
+              <div class="score-huge text-danger">Missed</div>
+              <div class="score-sub">Outage hazards missed by design</div>
               <p class="score-desc">Linters approve syntax without checking DB locks, event loops, or env drift. All 10 fatal outages pass straight to production.</p>
             </div>
 
@@ -683,9 +683,9 @@
           </div>
           <div class="benchmark-summary-strip">
             <div class="bench-stat-card traditional-ci">
-              <span class="bench-label">Traditional CI (ESLint / Unit Tests)</span>
-              <strong class="bench-value text-danger" id="benchCiStat">0 / 10 Caught (0%)</strong>
-              <span class="bench-sub">10/10 catastrophic outages missed</span>
+              <span class="bench-label">Typical Linters &amp; Unit Tests (Assumed)</span>
+              <strong class="bench-value text-danger" id="benchCiStat">Missed Hazards</strong>
+              <span class="bench-sub">10/10 systemic outages uninspected</span>
             </div>
             <div class="bench-stat-card shipsafe-gate">
               <span class="bench-label">ShipSafe Pre-Flight Gatekeeper</span>
@@ -698,7 +698,7 @@
               <thead>
                 <tr>
                   <th>ID</th><th>Historical Outage Scenario</th><th>Category</th>
-                  <th>Traditional CI</th><th>ShipSafe Detection</th>
+                  <th>Typical Linters / Tests</th><th>ShipSafe Detection</th>
                 </tr>
               </thead>
               <tbody id="benchmarkTableBody"></tbody>

@@ -209,7 +209,7 @@
       <rect x="0" y="0" width="395" height="135" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
       <text x="15" y="25" class="font-sans" font-size="14" font-weight="800" fill="#111827">Run Verification Commands:</text>
       <rect x="15" y="38" width="365" height="34" rx="5" fill="#0f172a"/>
-      <text x="25" y="60" class="font-hand" font-size="12" fill="#38bdf8">npm test        # 18/18 tests pass (62ms)</text>
+      <text x="25" y="60" class="font-hand" font-size="12" fill="#38bdf8">npm test        # 24/24 tests pass (&lt;170ms)</text>
       
       <rect x="15" y="80" width="365" height="34" rx="5" fill="#0f172a"/>
       <text x="25" y="102" class="font-hand" font-size="12" fill="#38bdf8">npm run check   # Pre-flight gatekeeper (100/100)</text>

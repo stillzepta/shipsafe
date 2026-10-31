@@ -11,14 +11,14 @@ Modern CI/CD pipelines rely on linters (ESLint, Prettier) and unit tests (Jest, 
 In this benchmark, **ShipSafe** is evaluated against **10 historical outage scenarios** derived from real-world post-mortems (e.g. database table locks, environment variable drifts, N+1 query cascades, and synchronous I/O event loop freezes).
 
 ### Key Result:
-* **Traditional CI (ESLint / Unit Tests):** **0 / 10 (0% caught)** — all 10 breaking changes passed CI with green checkmarks.
+* **Typical Linters & Unit Tests:** Missed by design (standard linters inspect syntax/formatting; unit tests verify component logic, not schema locks or env drift).
 * **ShipSafe Pre-Flight Gatekeeper:** **10 / 10 (100% caught)** with specific root-cause remediation advisories.
 
 ---
 
 ## 🔬 Benchmark Comparison Matrix
 
-| # | Outage Scenario | Category | Real-World Impact | Traditional CI (ESLint/Jest) | ShipSafe Result | Time to Detect |
+| # | Outage Scenario | Category | Real-World Impact | Typical Lint / Unit Tests | ShipSafe Result | Time to Detect |
 | :-: | :--- | :--- | :--- | :-: | :-: | :-: |
 | **01** | `ALTER TABLE ... ADD NOT NULL` without `DEFAULT` | Database Migration | 42-min Postgres exclusive table lock | `PASSED` ❌ | **✅ CAUGHT** (`schema/not-null-no-default`) | 1.2ms |
 | **02** | `process.env.STRIPE_SECRET_KEY` missing from `.env.example` | Config / Env Drift | Silent checkout 500 error on deploy | `PASSED` ❌ | **✅ CAUGHT** (`env/missing-in-example`) | 0.8ms |

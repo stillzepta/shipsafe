@@ -12,7 +12,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
 [![Tests: 24/24 Passed](https://img.shields.io/badge/Tests-24%2F24_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
-[![Traditional CI Detection](https://img.shields.io/badge/Traditional_CI_Detection-0%2F10_(0%25)-red.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-why-open-innovation-matters-100-air-gapped-sovereignty)
 [![Dependencies: Zero](https://img.shields.io/badge/Dependencies-Zero_External-blueviolet.svg?style=flat-square)](#-zero-dependency-core)
 [![Runtime: Node.js 22+ (LTS)](https://img.shields.io/badge/Runtime-Node.js_22+_(LTS)-green.svg?style=flat-square)](https://nodejs.org/)
@@ -36,19 +35,20 @@
 
   💥 Blast Radius Risk: [█░░░░░░░░░░░░░░░░░░░] 5% (LOW)
   Impacts 0 downstream module(s) across 1 changed file(s).
-  
+
   🚨 Health Check Findings (1):
 
    CRITICAL  N+1 query or network request detected inside loop (perf/n-plus-one-loop)
     Location: demo/sample_app.ts:14
     Code:     const preferences = await db.query.find({ where: { userId: user.id } });
-    Fix:      Batch this query using WHERE IN (...) or DataLoader pattern outside the loop.
+    Fix:      Batch this query using WHERE IN (...) or DataLoader pattern outside the loop to avoid explosive latency under production load.
 
-  🧠 Pre-Mortem Intelligence (via local sovereign synthesizer):
+  🧠 Pre-Mortem Intelligence (via ShipSafe Sovereign Engine):
   "Pre-Mortem Alert: Identified 1 release risk(s) across 1 file(s) with 5% estimated blast radius."
-  Action Required: BLOCK MERGE: Critical hazards detected. Resolve N+1 queries before promotion.
 
-  ✔ Completed in 18ms across 1 file(s) • Gate Verdict: BLOCKED [Exit Code 1]
+  Action Required: BLOCK MERGE: Critical hazards detected. Resolve database table locks and N+1 queries before promotion.
+
+  Completed in 58ms across 1 file(s). (Exits with code 1 to halt git commits or PR merges)
 ```
 
 ---
@@ -138,27 +138,27 @@ Traditional CI answers only: *"Does the code compile and match style rules?"*
 
 ## 🔬 Empirical Benchmark: Traditional CI vs. ShipSafe
 
-We evaluated **ShipSafe** against **10 historical production outage traps** derived from published post-mortems (GitLab table lock, Shopify N+1 loop, Stripe configuration leak, and event loop thread starvation).
+We evaluated **ShipSafe** against **10 fixtures modeled on well-known failure patterns** (database table locks, N+1 query loops, config drift, and event loop thread starvation).
 
-### Scientific Outage Matrix
+### Outage Pattern Matrix
 
-| # | Outage Scenario | Category | Real-World Failure Mode | Traditional CI (ESLint/Jest) | ShipSafe Gatekeeper | Detection Latency |
+| # | Outage Scenario | Category | Real-World Failure Mode | Typical Lint / Unit Tests | ShipSafe Gatekeeper | Detection Latency |
 | :-: | :--- | :--- | :--- | :-: | :-: | :-: |
-| **01** | `ALTER TABLE ... ADD NOT NULL` without `DEFAULT` | Database Migration | 42-min Postgres exclusive table lock | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/not-null-no-default`) | 1.2ms |
-| **02** | `process.env.STRIPE_SECRET_KEY` missing from `.env.example` | Config / Env Drift | Silent 500 error on checkout deploy | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`env/missing-in-example`) | 0.8ms |
-| **03** | N+1 database queries inside `.forEach()` order loop | Performance Regression | 100% CPU spike under concurrency | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/n-plus-one-loop`) | 1.1ms |
-| **04** | `fs.readFileSync` inside high-throughput route | Event Loop Freeze | Blocked concurrent users, 3.2s p99 latency | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/sync-io-in-server`) | 0.6ms |
-| **05** | Direct `DROP COLUMN` during rolling deploy | Schema Compatibility | In-flight rolling pod crashes | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/drop-column-hazard`) | 0.9ms |
-| **06** | Unindexed Foreign Key constraint | Database Performance | Sequential scan table locks on deletes | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`schema/unindexed-foreign-key`) | 0.7ms |
-| **07** | `SELECT * FROM audit_logs` without `LIMIT` | Memory Exhaustion | Out-Of-Memory (OOM) pod kill | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`perf/unbounded-query`) | 0.5ms |
-| **08** | Hardcoded secret token in auth mock | Security Leak | Leaked production credentials | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`security/hardcoded-secret`) | 0.4ms |
-| **09** | Missing OAuth redirect URL in environment | Config Drift | User authentication failure loop | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`env/missing-in-example`) | 0.8ms |
-| **10** | Core Auth alteration with high blast radius | Blast Radius Cascade | Downstream breakage across 14 routes | `PASSED (Missed Bug)` ❌ | **✅ CAUGHT** (`blast-radius (40%)`) | 2.1ms |
+| **01** | `ALTER TABLE ... ADD NOT NULL` without `DEFAULT` | Database Migration | Postgres exclusive table lock | `Passed (Missed Hazard)` | **✅ CAUGHT** (`schema/not-null-no-default`) | 1.2ms |
+| **02** | `process.env.STRIPE_SECRET_KEY` missing from `.env.example` | Config / Env Drift | Silent 500 error on checkout deploy | `Passed (Missed Hazard)` | **✅ CAUGHT** (`env/missing-in-example`) | 0.8ms |
+| **03** | N+1 database queries inside `.forEach()` order loop | Performance Regression | CPU spike under concurrency | `Passed (Missed Hazard)` | **✅ CAUGHT** (`perf/n-plus-one-loop`) | 1.1ms |
+| **04** | `fs.readFileSync` inside high-throughput route | Event Loop Freeze | Blocked concurrent users, high p99 latency | `Passed (Missed Hazard)` | **✅ CAUGHT** (`perf/sync-io-in-server`) | 0.6ms |
+| **05** | Direct `DROP COLUMN` during rolling deploy | Schema Compatibility | In-flight rolling pod crashes | `Passed (Missed Hazard)` | **✅ CAUGHT** (`schema/drop-column-hazard`) | 0.9ms |
+| **06** | Unindexed Foreign Key constraint | Database Performance | Sequential scan table locks on deletes | `Passed (Missed Hazard)` | **✅ CAUGHT** (`schema/unindexed-foreign-key`) | 0.7ms |
+| **07** | `SELECT * FROM audit_logs` without `LIMIT` | Memory Exhaustion | Out-Of-Memory (OOM) crash | `Passed (Missed Hazard)` | **✅ CAUGHT** (`perf/unbounded-query`) | 0.5ms |
+| **08** | Hardcoded secret token in auth mock | Security Leak | Leaked production credentials | `Passed (Missed Hazard)` | **✅ CAUGHT** (`security/hardcoded-secret`) | 0.4ms |
+| **09** | Missing OAuth redirect URL in environment | Config Drift | User authentication failure loop | `Passed (Missed Hazard)` | **✅ CAUGHT** (`env/missing-in-example`) | 0.8ms |
+| **10** | Core Auth alteration with high blast radius | Blast Radius Cascade | Downstream breakage across 14 routes | `Passed (Missed Hazard)` | **✅ CAUGHT** (`blast-radius (40%)`) | 2.1ms |
 
 > **Evaluation Summary**:  
-> Traditional CI / Linter Detection Rate: **0 / 10 (0% caught)**  
-> ShipSafe Pre-Flight Gatekeeper: **10 / 10 (100% caught)** with automated remediation advisories.  
-> *Read the full scientific report in [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md).*
+> • Typical Linters / Unit Tests: Missed by design (linters verify syntax and style; unit tests verify functional logic, not table locks or env drift).  
+> • ShipSafe Pre-Flight Gatekeeper: Catches **10 / 10 (100%)** of these failure patterns with instant automated remediation suggestions.  
+> *Read the full breakdown in [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md).*
 
 ---
 
@@ -373,8 +373,7 @@ Built with pride for **Devf8rge Finals (Halloween Hack BLR)** by **Team TRioN**:
 * **Krishna Verma ([@stillzepta](https://github.com/stillzepta))** — Backend & AI Systems Engineering
 
 ### 🎤 Presentation & Pitch Resources
-* 🎙️ **Live 3-Minute Split Stage Pitch Script:** [`docs/PITCH_SCRIPT.md`](docs/PITCH_SCRIPT.md) *(Word-for-word timed 180-second stage delivery + Q&A defense)*
-* 📑 **Official Pitch Deck Slides:** `TRioN_Devf8rge.pptx` *(6-slide visual deck prepared for the Devf8rge Finals stage)*
+* 🎙️ **Live Stage Pitch Script:** [`docs/PITCH_SCRIPT.md`](docs/PITCH_SCRIPT.md) *(Word-for-word timed 120-second and 180-second stage delivery + Q&A defense)*
 * 🌐 **Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/)
 * 💻 **Local Interactive Radar:** [http://127.0.0.1:4100](http://127.0.0.1:4100)
 

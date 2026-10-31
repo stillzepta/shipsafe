@@ -2,8 +2,7 @@
 
 > **Event:** Devf8rge Finals (Halloween Hack BLR) — Newton School of Technology × MLH × Hacktoberfest  
 > **Team:** Team TRioN (Arnav Patel & Krishna Verma)  
-> **Duration:** Exactly 180 seconds (3 Minutes)  
-> **Accompanying Slides:** `TRioN_Devf8rge.pptx` (6 Slides)
+> **Duration:** 120 Seconds (2-Minute Pitch) / 180 Seconds (3-Minute Full Pitch)  
 
 ---
 
