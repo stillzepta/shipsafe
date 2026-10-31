@@ -76,8 +76,9 @@ It **never** answers the critical questions that cause P0 outages:
 
 * **100% Air-Gapped & Sovereign:** Source code diffs contain trade secrets, proprietary business logic, and security configurations. Sending code diffs to third-party cloud APIs violates enterprise security compliance (SOC 2, ISO 27001).
 * **Dual-Inference Engine ("Two Brains"):**
-  1. **Local Open-Weight Model:** Calls Google Gemma 2 (`gemma2:2b` / `gemma2:9b`) or Qwen 2.5 via local Ollama daemon for natural language pre-mortems.
-  2. **Deterministic Heuristic Fallback:** If Ollama is offline or uninstalled, ShipSafe executes rule-based deterministic synthesis in `< 5ms`. **The application never fails or crashes.**
+  1. **Local Open-Weight Models:** Calls Google Gemma 2 (`gemma-2-9b-it`) or Qwen (two models: Qwen 2.5 & Qwen 3.5) via local Ollama daemon for natural language pre-mortems and architectural deductions.
+  2. **Deterministic Heuristic Fallback:** If Ollama is offline or uninstalled, ShipSafe executes rule-based deterministic synthesis in `< 2ms`. **The application never fails or crashes.**
+* **Autonomous Engineering:** System sentinels, reverse dependency DAG, test suite, and pre-flight gatekeeper architected using **Google Antigravity with Gemini 3.8 Flash**.
 
 ---
 

@@ -37,7 +37,7 @@ node bin/shipsafe commit "feat: add stripe checkout webhook"
 
 ### 1.2 Interactive Local Dashboard
 ```bash
-# Launch interactive web portal on http://localhost:4040
+# Launch interactive web portal on http://127.0.0.1:4100
 node bin/shipsafe serve
 ```
 
@@ -55,7 +55,7 @@ node bin/shipsafe uninstall-hooks
 ## 2. 🧪 Test Suite & Empirical Benchmark
 
 ```bash
-# Run 17 automated unit tests
+# Run 24 automated unit tests
 npm test
 
 # Run the 10-scenario empirical outage benchmark
