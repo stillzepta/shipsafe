@@ -358,6 +358,19 @@ body::before {
   color: var(--accent-green);
 }
 
+.cookie-storage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(249, 115, 22, 0.15);
+  color: var(--accent-orange);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
 .btn-clear-files {
   background: transparent;
   border: none;
