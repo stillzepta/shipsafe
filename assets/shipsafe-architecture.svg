@@ -215,13 +215,13 @@
         <text x="350" y="29" class="font-hand" font-size="12.5" font-weight="bold" fill="#1e40af">blast.ts</text>
       </g>
 
-      <!-- Rule 5: Local Gemma 2 AI Pre-Mortem (Tuned title & badge) -->
+      <!-- Rule 5: Local Qwen 3.5 & Gemma 2 AI Pre-Mortem (Tuned title & badge) -->
       <g transform="translate(0, 224)">
         <rect x="0" y="0" width="435" height="50" rx="8" fill="#ffffff" stroke="#10b981" stroke-width="2.2"/>
         <rect x="10" y="8" width="34" height="34" rx="5" fill="#d1fae5"/>
         <text x="16" y="32" class="font-sans" font-size="18">🧠</text>
-        <text x="54" y="24" class="font-sans" font-size="14.5" font-weight="800" fill="#065f46">Local AI Pre-Mortem (Gemma 2)</text>
-        <text x="54" y="41" class="font-sans" font-size="12" font-weight="700" fill="#047857">100% Air-Gapped + Sovereign Fallback</text>
+        <text x="54" y="24" class="font-sans" font-size="14.5" font-weight="800" fill="#065f46">Local AI Deductions (Qwen 3.5 / Gemma)</text>
+        <text x="54" y="41" class="font-sans" font-size="12" font-weight="700" fill="#047857">Vision • Problem • New Code (MLX GPU)</text>
         <rect x="330" y="11" width="95" height="27" rx="5" fill="#d1fae5"/>
         <text x="340" y="29" class="font-hand" font-size="12.5" font-weight="bold" fill="#065f46">engine.ts</text>
       </g>
@@ -362,7 +362,7 @@
       [STYLE: Ian Bablu 16:9 Landscape | Pure White #FFFFFF | Hand-Drawn Ink Linework | Halloween Hack Edition | Bablu IP © TRioN]
     </text>
     <text x="0" y="24" class="font-sans" font-size="13" font-weight="600" fill="#64748b">
-      Architecture: Local Git Hook Buffer → AST Multi-Stage Hazard Sentry → Gemma 2 Pre-Mortem → Quarantine or Verified Release.
+      Architecture: Local Git Hook Buffer → AST Multi-Stage Hazard Sentry → Local Qwen/Gemma AI SRE → Quarantine or Verified Release.
     </text>
   </g>
 </svg>

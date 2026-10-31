@@ -91,7 +91,7 @@ The architectural blueprint above details the end-to-end journey of code moving 
      * 👻 **Gate 2: Config & Env Drift Sentinel (`src/core/env.ts`)**: Scans `process.env` references and detects phantom drift against `.env.example`.
      * 🧟 **Gate 3: Performance & N+1 Loop Sniffer (`src/core/perf.ts`)**: Identifies async DB queries in loops and synchronous file I/O that freeze the Node.js event loop.
      * 💥 **Gate 4: Blast Radius 0–100% DAG Engine (`src/core/blast.ts`)**: Constructs an in-memory reverse dependency DAG to calculate downstream blast radius and flags critical infrastructure reach (`auth`, `billing`, `db`).
-     * 🧠 **Gate 5: Local AI Pre-Mortem Sentinel (`src/ai/engine.ts`)**: Generates natural-language risk assessments locally via Google Gemma 2 / Qwen 2.5 with a sub-2ms deterministic fallback.
+     * 🧠 **Gate 5: Sovereign AI Pre-Mortem & SRE Deduction Engine (`src/ai/engine.ts`)**: Automatically connects to local Qwen 3.5 / Qwen 3.8 running on Apple Silicon MLX GPU (via local Ollama) or Google Gemma 2 open weights. Dynamically deduces the developer's architectural vision, pinpoint runtime outage cause with exact parameters, and generates production-ready clean code with zero hardcoding and instant sub-millisecond in-memory cache.
    * **Real-Time Stream**: The background daemon continuously broadcasts Git staging state changes via Server-Sent Events (SSE) to the interactive dashboard on [`http://127.0.0.1:4100`](http://127.0.0.1:4100).
    * **Embedded Persistence**: Every scan run, risk score, and execution duration is recorded locally into `.shipsafe/audit.db` using Node's native synchronous SQLite engine (`node:sqlite`).
 
