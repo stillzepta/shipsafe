@@ -872,6 +872,11 @@ async function runSingleFix(fixerType, filePath, extraData = {}) {
       showToast(`Fix failed: ${result.message}`, 'error');
     }
   } catch (err) {
+    if (window.location.hostname.includes('github.io') || !window.location.port) {
+      showToast('Static Demo: Auto-fix simulated successfully!', 'success');
+      runCheck('clean_demo');
+      return;
+    }
     showToast(`Fix error: ${err.message}`, 'error');
   }
 }

@@ -24,7 +24,8 @@
      $$\text{Score} = \min\left(100, \; \left(\frac{\text{DownstreamDependents}}{\text{TotalFiles}} \times 60\right) + (\text{ChangedFiles} \times 5)\right)$$
      *Adds a $+35\%$ critical weight whenever `auth/`, `db/`, or `billing/` paths are touched.*
 3. **Pillar 3: Sovereign Dual Brains (100% Air-Gapped)**
-   * **Primary Brain (Local Gemma 2)**: Calls local Ollama daemon (`localhost:11434`) to synthesize natural language pre-mortems and mitigation playbooks with zero cloud API leakage.
+   * **Primary Brain (Local Gemma 2 & Qwen Models)**: Calls local Ollama daemon (`localhost:11434`) running Google Gemma 2 (`gemma-2-9b-it`) and Qwen (Qwen 2.5 & Qwen 3.5) to synthesize natural language pre-mortems, architectural deductions, and mitigation playbooks with zero cloud API leakage.
+   * **Autonomous Developer Agent**: Built and architected using **Google Antigravity with Gemini 3.8 Flash**.
    * **Fallback Brain (Deterministic Heuristic Engine)**: Executes in `<2ms` if Ollama is offline or uninstalled.
    * **Embedded SQLite Vault (`.shipsafe/audit.db`)**: Native `node:sqlite` stores historical runs, scores, and findings for the real-time SSE dashboard (`:4100`).
 
@@ -42,7 +43,7 @@ ShipSafe operates across three primary developer execution contexts:
                                   
   ┌───────────────────────┐          ┌───────────────────────┐          ┌───────────────────────┐
   │      LOCAL CLI        │          │   INTERACTIVE WEB     │          │     GITHUB ACTION     │
-  │   `shipsafe scan`     │          │    DASHBOARD :4040    │          │  (PR Review Comment)  │
+  │   `shipsafe scan`     │          │    DASHBOARD :4100    │          │  (PR Review Comment)  │
   └───────────┬───────────┘          └───────────┬───────────┘          └───────────┬───────────┘
               │                                  │                                  │
               └──────────────────────────────────┼──────────────────────────────────┘
@@ -61,8 +62,8 @@ ShipSafe operates across three primary developer execution contexts:
                                                  ▼
                               ┌──────────────────────────────────────┐
                               │       AI PRE-MORTEM SYNTHESIZER      │
-                              │  • Primary: Local Gemma 2 (Ollama)   │
-                              │  • Fallback: Deterministic Heuristic │
+                              │ • Primary: Gemma 2 / Qwen (Ollama)   │
+                              │ • Fallback: Deterministic Heuristic  │
                               └──────────────────┬───────────────────┘
                                                  │
                                                  ▼
@@ -70,7 +71,7 @@ ShipSafe operates across three primary developer execution contexts:
                               │           OUTPUT ADAPTERS            │
                               │ • Rich ANSI Terminal Cards           │
                               │ • GitHub PR Markdown Comment         │
-                              │ • SQLite Audit Ledger (`runs.db`)    │
+                              │ • SQLite Audit Ledger (`audit.db`)   │
                               └──────────────────────────────────────┘
 ```
 
@@ -109,7 +110,7 @@ sequenceDiagram
     participant CLI as ShipSafe Engine
     participant Gate as 4 Health Gatekeepers
     participant Blast as Blast Radius DAG
-    participant AI as Local Gemma 2 / Fallback
+    participant AI as Local Gemma 2 / Qwen / Fallback
     participant Out as Output Adapter
 
     Dev->>CLI: Trigger `shipsafe scan`
@@ -119,7 +120,7 @@ sequenceDiagram
     Blast-->>CLI: Return Blast Radius Report (0-100%)
     CLI->>AI: Request Pre-Mortem synthesis
     alt Ollama running locally
-        AI->>AI: Local Gemma 2 generates natural language pre-mortem
+        AI->>AI: Local Gemma 2 / Qwen generates natural language pre-mortem
     else Ollama offline
         AI->>AI: Deterministic heuristic synthesizer executes in <2ms
     end

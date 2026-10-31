@@ -22,7 +22,7 @@
 [![Local UI: http://127.0.0.1:4100](https://img.shields.io/badge/Local_UI-127.0.0.1%3A4100-blue.svg?style=flat-square)](http://127.0.0.1:4100)
 
 > 🚀 **Quick Access & Live Links:**  
-> • 🌐 **One-Click Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/) *(Explore live gauge, radar & 10/10 outage benchmark without installing)*  
+> • 🌐 **One-Click Live Web Demo:** [https://stillzepta.github.io/shipsafe/](https://stillzepta.github.io/shipsafe/) *(Explore live gauge, in-browser project tester & 10/10 outage benchmark without installing)*  
 > • 💻 **Local Interactive Dashboard:** [http://127.0.0.1:4100](http://127.0.0.1:4100) *(Live Server-Sent Events watching your local Git repository)*  
 > • ⚡ **Instant Terminal Demo:** `node bin/shipsafe scan demo/sample_app.ts` *(Sub-20ms instant production trap detection)*
 
