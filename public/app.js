@@ -591,6 +591,7 @@ function renderFindings(findings) {
           <span class="status-badge ${sev === 'CRITICAL' || sev === 'ERROR' ? 'status-blocked' : 'status-warn'}">${sev}</span>
           <span class="finding-title">${escapeHtml(f.title || 'Code Health Hazard')}</span>
           <span class="badge-tag">${escapeHtml(f.category || 'Quality Gate')}</span>
+          ${f.aiModel ? `<span class="badge-tag badge-ai" title="${escapeHtml(f.aiModel)}">✨ ${escapeHtml(f.aiModel)}</span>` : ''}
         </div>
         <div class="finding-actions">
           ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || ''}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
@@ -613,7 +614,7 @@ function renderFindings(findings) {
         </div>
         <div class="diagnosis-block solution-box">
           <div class="solution-label">Possible Solution &amp; Fix</div>
-          <p>${escapeHtml(f.recommendation || 'Apply non-blocking or batched safe pattern.')}</p>
+          <p>${escapeHtml(f.possibleSolution || f.recommendation || 'Apply non-blocking or batched safe pattern.')}</p>
           ${solution ? `<code class="solution-code">${escapeHtml(solution)}</code>` : ''}
         </div>
       </div>

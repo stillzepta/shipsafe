@@ -2129,6 +2129,15 @@ tr:hover td {
   border-radius: 4px;
 }
 
+.badge-ai {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(249, 115, 22, 0.22));
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+}
+
 .text-danger { color: var(--accent-red) !important; }
 .text-warning { color: var(--accent-amber) !important; }
 .text-success { color: var(--accent-green) !important; }

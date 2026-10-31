@@ -156,4 +156,32 @@ describe('ShipSafe Health Rules Engine', () => {
     assert.strictEqual(stats.totalRuns > 0, true);
   });
 
+  test('Python checks catch TabError indentation and mutable defaults', () => {
+    const badPython = `
+def process_data(items=[]):
+\tprint("Tab indentation")
+`;
+    const findings = checkSyntax('service.py', badPython);
+    assert.strictEqual(findings.length >= 2, true, 'Should flag indentation and mutable default');
+    assert.strictEqual(findings.some(f => f.ruleId === 'syntax/python-indentation'), true);
+    assert.strictEqual(findings.some(f => f.ruleId === 'syntax/python-mutable-default'), true);
+  });
+
+  test('Java checks catch double-bracket initialization memory leak anti-pattern', () => {
+    const badJava = `
+package com.shipsafe;
+import java.util.*;
+
+public class OrderService {
+    private List<String> defaultRoles = new ArrayList<String>() {{
+        add("ROLE_USER");
+        add("ROLE_ADMIN");
+    }};
+}
+`;
+    const findings = checkSyntax('OrderService.java', badJava);
+    assert.strictEqual(findings.length >= 1, true, 'Should detect double bracket init');
+    assert.strictEqual(findings.some(f => f.ruleId === 'syntax/java-double-bracket-init'), true);
+  });
+
 });
