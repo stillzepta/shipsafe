@@ -49,7 +49,7 @@
 
 ---
 
-## 🎃 Explain Like I'm 5: Bablu and the Haunted Code Monsters
+## 🎃 Bablu and the Haunted Code Monsters
 
 > *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Bablu protects them.*
 
