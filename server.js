@@ -201,6 +201,17 @@ export function startServer(options = {}) {
           return sendJson(res, 400, { error: 'fixerType and filePath are required' });
         }
 
+        // Guard: never auto-fix benchmark fixtures or test files — they are intentional bad examples
+        const isProtectedPath = filePath.startsWith('benchmarks/fixtures') ||
+          filePath.startsWith('test/') ||
+          filePath.startsWith('tests/');
+        if (isProtectedPath) {
+          return sendJson(res, 200, {
+            success: false,
+            message: `Protected path — benchmark fixtures are intentional bad examples and cannot be auto-fixed.`
+          });
+        }
+
         const fixResult = executeFix(cwd, fixerType, filePath, extraData);
         return sendJson(res, 200, fixResult);
       }
