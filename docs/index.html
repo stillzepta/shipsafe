@@ -168,14 +168,14 @@
               <div class="drop-title">Drop your project files or click to upload</div>
               <div class="drop-sub">Supports .sql, .ts, .js, .py, .java, .env, package.json files — 100% private, saved to browser cookie &amp; tested in memory</div>
               <div class="drop-btn-row">
-                <label class="btn btn-sm btn-secondary drop-browse-btn">
+                <button type="button" class="btn btn-sm btn-secondary drop-browse-btn" id="btnBrowseFiles">
                   <span>Browse Files</span>
-                  <input type="file" id="fileInput" multiple style="display:none;">
-                </label>
-                <label class="btn btn-sm btn-secondary drop-browse-btn">
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary drop-browse-btn" id="btnBrowseFolder">
                   <span>Browse Folder</span>
-                  <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none;">
-                </label>
+                </button>
+                <input type="file" id="fileInput" multiple style="display:none;">
+                <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none;">
               </div>
             </div>
             <div id="uploadedFilesPreview" class="uploaded-files-preview" style="display:none;">
