@@ -54,21 +54,21 @@
 
 ---
 
-## 🎃 Explain Like I'm 5: Bablu and the Haunted Code Monsters
+## 🛡️ Conceptual Overview: Bablu and the 4-Stage Outage Lifecycle
 
-> *Even a 5-year-old child should understand why production servers crash on Halloween night—and how Bablu protects them.*
+> *A systems engineering breakdown of why silent runtime hazards bypass standard CI—and how Bablu and ShipSafe intercept them pre-flight.*
 
-![Bablu and the Spooky Code Monsters — Explain Like I'm 5](assets/explain-like-im-5.svg)
+![Bablu and the Pre-Flight Quality Gate](assets/explain-like-im-5.svg)
 
-### The 4-Act Storyboard
-1. **Act 1: The Toy Castle**  
-   Every software developer writes code like building a giant LEGO castle. It looks colorful and exciting, but sneaky invisible ghosts hide inside the toy blocks: spooky database table locks, missing secret API keys, and zombie infinite loops. Regular linters only look at the paint on the outside; they are completely blind to the monsters inside.
-2. **Act 2: The 3 AM Nightmare (Without ShipSafe)**  
-   The developer ships their castle to the cloud. At midnight on Halloween, the ghosts wake up! The database locks up tight, incoming customer traffic halts, shopping carts freeze, and the entire app crashes. Total damage: **$120,000 lost in 45 minutes** while the CEO cries.
-3. **Act 3: Enter Bablu the Ghostbuster (ShipSafe)**  
-   Before code ever leaves your laptop, **Bablu** steps in at the pre-flight gate. Equipped with a high-speed X-ray radar, Bablu inspects staged files in **under 20 milliseconds**, traps the spooky ghosts in a secure quarantine jar, and alerts the developer before anything is pushed.
-4. **Act 4: The Golden Ticket (Safe to Ship)**  
-   Bablu doesn't just block code—he fixes it! Running `shipsafe fix` automatically syncs missing environment variables and cleans out debuggers. Your code receives the **Golden Ticket**, deploys cleanly, and the entire engineering team sleeps peacefully through the night. 😴
+### The 4-Act Engineering Breakdown
+1. **Act 1: The Syntactic Illusion (The Seemingly Harmless Code)**  
+   Developers construct complex applications that appear clean and functional on the surface. Standard linters and TypeScript compilers verify formatting and types, but remain structurally blind to systemic runtime hazards hiding underneath: exclusive database table locks, missing production environment secrets, and blocking synchronous operations.
+2. **Act 2: The Production Outage Cascade (Without ShipSafe)**  
+   The pull request passes traditional CI suites with false green checkmarks. When deployed to production, unmitigated migrations acquire `ACCESS EXCLUSIVE` locks across high-throughput tables. Connection pools exhaust within 45 seconds, transaction queues freeze, and the service cascades into a **$120,000 outage** before on-call engineers can intervene.
+3. **Act 3: Pre-Flight Sentinel Interception (Enter Bablu & ShipSafe)**  
+   Before code ever leaves the local workstation, **Bablu** (ShipSafe's pre-flight sentinel) inspects the staged Git diff buffer in **under 35 milliseconds**. Equipped with pattern analyzers and dependency DAGs, Bablu immediately intercepts dangerous schema locks, configuration drift, and N+1 queries, halting risky commits with Exit Code 1.
+4. **Act 4: Automated Remediation & Verified Promotion (The Golden Ticket)**  
+   ShipSafe does not merely block deployments—it actively remediates them. Running `shipsafe fix` automatically provides safe DEFAULT constraints for table migrations, indexes foreign keys, synchronizes `.env.example`, and bounds runaway queries. Commits receive verified **Golden Ticket approval (Exit Code 0)**, guaranteeing zero-downtime releases.
 
 ---
 
