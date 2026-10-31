@@ -92,6 +92,7 @@ const els = {
 
   // Benchmark
   btnTriggerBenchmark: document.getElementById('btnTriggerBenchmark'),
+  btnResetBenchmark: document.getElementById('btnResetBenchmark'),
   benchCiStat:         document.getElementById('benchCiStat'),
   benchShipSafeStat:   document.getElementById('benchShipSafeStat'),
   benchmarkTableBody:  document.getElementById('benchmarkTableBody'),
@@ -588,15 +589,7 @@ function renderFindings(findings) {
     return true;
   });
 
-  // Only count auto-fixable findings that are NOT protected demo fixtures
-  const autoFixableFindings = filtered.filter(f =>
-    f.autoFixable &&
-    f.fixerType &&
-    f.filePath &&
-    !f.filePath.startsWith('benchmarks/fixtures') &&
-    !f.filePath.startsWith('test/') &&
-    !f.filePath.startsWith('tests/')
-  );
+  const autoFixableFindings = filtered.filter(f => f.autoFixable && f.fixerType);
   if (els.btnAutoFixAll) {
     if (autoFixableFindings.length > 0) {
       els.btnAutoFixAll.style.display = 'inline-block';
@@ -640,13 +633,6 @@ function renderFindings(findings) {
     const cleanCode = f.newCode || f.possibleSolution || f.recommendation || '';
     const solution = cleanCode || 'Apply recommended safe code pattern.';
 
-    // Benchmark fixtures are intentional bad examples — mark as read-only demo traps
-    const isDemoFixture = f.filePath && (
-      f.filePath.startsWith('benchmarks/fixtures') ||
-      f.filePath.startsWith('test/') ||
-      f.filePath.startsWith('tests/')
-    );
-
     const card = document.createElement('div');
     card.className = `finding-card severity-${sev}`;
     card.innerHTML = `
@@ -655,12 +641,10 @@ function renderFindings(findings) {
           <span class="status-badge ${sev === 'CRITICAL' || sev === 'ERROR' ? 'status-blocked' : 'status-warn'}">${sev}</span>
           <span class="finding-title">${escapeHtml(f.title || 'Code Health Hazard')}</span>
           <span class="badge-tag">${escapeHtml(f.category || 'Quality Gate')}</span>
-          ${isDemoFixture ? `<span class="badge-tag" style="background:var(--accent-violet);opacity:0.8;" title="Benchmark fixture — intentional bad example for demonstration">🧪 Demo Trap</span>` : ''}
           ${f.aiModel ? `<span class="badge-tag badge-ai" title="${escapeHtml(f.aiModel)}">✨ ${escapeHtml(f.aiModel)}</span>` : ''}
         </div>
         <div class="finding-actions">
-          ${!isDemoFixture && f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || 'auto'}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
-          ${isDemoFixture ? `<button class="btn btn-xs btn-secondary" disabled title="Demo fixture — read only" style="opacity:0.45;cursor:not-allowed;">🔒 Read-Only</button>` : ''}
+          ${f.autoFixable ? `<button class="btn btn-xs btn-primary btn-fix" data-fixer="${f.fixerType || 'auto'}" data-path="${f.filePath}">⚡ Auto-Fix</button>` : ''}
           <button class="btn btn-xs btn-secondary btn-copy-fix">📋 Copy Fix</button>
           <button class="btn btn-xs btn-secondary btn-inspect" data-path="${f.filePath}" data-line="${f.line || ''}">🔍 Inspect File</button>
         </div>
@@ -1091,6 +1075,22 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // ── Benchmark ──
   if (els.btnTriggerBenchmark) els.btnTriggerBenchmark.onclick = runBenchmarkUI;
+  if (els.btnResetBenchmark) {
+    els.btnResetBenchmark.onclick = async () => {
+      try {
+        els.btnResetBenchmark.disabled = true;
+        const res = await fetch('/api/benchmark/reset', { method: 'POST' });
+        const data = await res.json();
+        showToast(data.message || 'Demo traps reset successfully!', 'success');
+        await loadStatus();
+        runCheck(state.currentTargetPath);
+      } catch (err) {
+        showToast(`Reset error: ${err.message}`, 'error');
+      } finally {
+        els.btnResetBenchmark.disabled = false;
+      }
+    };
+  }
   if (els.btnRunBenchmarkTop) {
     els.btnRunBenchmarkTop.onclick = () => {
       if (els.settingsDropdown) els.settingsDropdown.style.display = 'none';

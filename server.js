@@ -27,7 +27,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
-function sendJson(res, statusCode, data) {
+async function sendJson(res, statusCode, data) {
   res.writeHead(statusCode, {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -37,7 +37,7 @@ function sendJson(res, statusCode, data) {
   res.end(JSON.stringify(data));
 }
 
-function parseJsonBody(req) {
+async function parseJsonBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
     req.on('data', chunk => {
@@ -58,7 +58,7 @@ function parseJsonBody(req) {
   });
 }
 
-function serveStatic(req, res, filePath) {
+async function serveStatic(req, res, filePath) {
   let targetPath = path.join(PUBLIC_DIR, filePath === '/' ? 'index.html' : filePath);
 
   // Prevent path traversal
@@ -94,7 +94,7 @@ function serveStatic(req, res, filePath) {
   });
 }
 
-export function startServer(options = {}) {
+export async function startServer(options = {}) {
   const cwd = options.cwd || process.cwd();
   const config = loadConfig(cwd);
   const port = options.port || config.port || 4100;
@@ -192,6 +192,21 @@ export function startServer(options = {}) {
         return sendJson(res, 200, benchResult);
       }
 
+      // 3C. Benchmark Reset Endpoint (restores original outage traps for live demo)
+      if (pathname === '/api/benchmark/reset' && method === 'POST') {
+        const { CANONICAL_TRAPS } = await import('./benchmarks/suite.ts');
+        for (const [scenario, payloads] of Object.entries(CANONICAL_TRAPS)) {
+          const sDir = path.join(cwd, 'benchmarks', 'fixtures', scenario);
+          if (fs.existsSync(sDir)) {
+            for (const p of payloads) {
+              const fname = path.basename(p.path);
+              await fs.promises.writeFile(path.join(sDir, fname), p.content, 'utf8');
+            }
+          }
+        }
+        return sendJson(res, 200, { success: true, message: 'All 10 benchmark traps restored to pristine outage states!' });
+      }
+
       // 4. Run Auto-Fixer
       if (pathname === '/api/fix' && method === 'POST') {
         const body = await parseJsonBody(req);
@@ -199,17 +214,6 @@ export function startServer(options = {}) {
 
         if (!fixerType || !filePath) {
           return sendJson(res, 400, { error: 'fixerType and filePath are required' });
-        }
-
-        // Guard: never auto-fix benchmark fixtures or test files — they are intentional bad examples
-        const isProtectedPath = filePath.startsWith('benchmarks/fixtures') ||
-          filePath.startsWith('test/') ||
-          filePath.startsWith('tests/');
-        if (isProtectedPath) {
-          return sendJson(res, 200, {
-            success: false,
-            message: `Protected path — benchmark fixtures are intentional bad examples and cannot be auto-fixed.`
-          });
         }
 
         const fixResult = executeFix(cwd, fixerType, filePath, extraData);

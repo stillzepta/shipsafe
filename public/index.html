@@ -606,10 +606,16 @@
               <h3>EMPIRICAL PRODUCTION OUTAGE BENCHMARK</h3>
               <p class="subtext">Evaluated against 10 real-world post-mortem traps</p>
             </div>
-            <button id="btnTriggerBenchmark" class="btn btn-primary">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span>Run 10-Scenario Benchmark</span>
-            </button>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <button id="btnResetBenchmark" class="btn btn-secondary" title="Restore all 10 demo traps to original state">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                <span>Reset Demo Traps</span>
+              </button>
+              <button id="btnTriggerBenchmark" class="btn btn-primary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span>Run 10-Scenario Benchmark</span>
+              </button>
+            </div>
           </div>
           <div class="benchmark-summary-strip">
             <div class="bench-stat-card traditional-ci">
