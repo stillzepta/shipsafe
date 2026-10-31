@@ -10,7 +10,7 @@
 
 [![ShipSafe CI](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
-[![Tests: 24/24 Passed](https://img.shields.io/badge/Tests-24%2F24_Passed-success.svg?style=flat-square)](tests/)
+[![Tests: 29/29 Passed](https://img.shields.io/badge/Tests-29%2F29_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-sovereign-ai-architecture--models-used)
 [![Dependencies: Zero](https://img.shields.io/badge/Dependencies-Zero_External-blueviolet.svg?style=flat-square)](#-zero-dependency-core)
@@ -314,7 +314,7 @@ When a developer opens a Pull Request on GitHub, ShipSafe's CI action analyzes t
 | **Google Gemma 2 / AI Track** | **25%** | Sovereign architecture: air-gapped local inference via Google Gemma 2 (`gemma-2-9b-it`) and Qwen (Qwen 2.5 & 3.5) via Ollama with 1.8ms deterministic fallback; architected with Antigravity (Gemini 3.8 Flash). Zero code leakage, $0.00 cloud costs. | [`src/ai/engine.ts`](src/ai/engine.ts)<br>[`README.md#brain`](#-sovereign-ai-architecture--models-used) |
 | **Real-World Impact & ROI** | **20%** | Solves the $120,000 Friday-night outage blind spot. Empirical proof: catches **10/10 (100%)** historical outage traps that pass ESLint, TypeScript, and Jest with green checkmarks. | [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md)<br>[`docs/PRD.md`](docs/PRD.md) |
 | **Design, Polish & Visual UX** | **15%** | Hand-drawn Ian Bablu visual engineering design system (16:9 SVGs), interactive Code Health Radar UI with live Server-Sent Events, 1-click Auto-Fix engine. | [`assets/`](assets/)<br>[`public/app.js`](public/app.js)<br>[`public/index.html`](public/index.html) |
-| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (24/24 tests in <170ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
+| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (29/29 tests in <200ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 
 ---
 
@@ -341,34 +341,39 @@ npm test
 
 ```text
 ▶ ShipSafe Health Rules Engine
-  ✔ Secret Scanner detects leaked credentials (2.2ms)
+  ✔ Secret Scanner detects leaked credentials (1.4ms)
   ✔ Secret Scanner ignores safe mock / placeholder tokens (0.1ms)
   ✔ Hygiene Scanner flags debugger and blocker comments (0.4ms)
   ✔ Syntax Scanner flags malformed JSON (0.2ms)
-  ✔ Git Guard flags .env files and protected branch violations (0.2ms)
-  ✔ Dependency Inspector catches unpinned wildcards and missing lockfiles (0.7ms)
-  ✔ Auto-Fixer strips debugger statements safely (0.9ms)
-  ✔ Auto-Fixer repairs schema hazards (NOT NULL, drop column, unindexed FK) (2.9ms)
-  ✔ Auto-Fixer repairs performance hazards (sync I/O and unbounded queries) (0.7ms)
-  ✔ SQLite DB successfully records runs and aggregates metrics (1.5ms)
-  ✔ Python checks catch TabError indentation and mutable defaults (34.1ms)
+  ✔ Git Guard flags .env files and protected branch violations (1.5ms)
+  ✔ Dependency Inspector catches unpinned wildcards and missing lockfiles (0.1ms)
+  ✔ Auto-Fixer strips debugger statements safely (1.1ms)
+  ✔ Auto-Fixer repairs schema hazards (NOT NULL, drop column, unindexed FK) (1.8ms)
+  ✔ Auto-Fixer repairs performance hazards (sync I/O and unbounded queries) (1.5ms)
+  ✔ SQLite DB successfully records runs and aggregates metrics (8.1ms)
+  ✔ Python checks catch TabError indentation and mutable defaults (51.0ms)
   ✔ Java checks catch double-bracket initialization memory leak anti-pattern (0.2ms)
-✔ ShipSafe Health Rules Engine (45.1ms)
-✔ Blast Radius Engine calculates high risk when critical paths are touched (0.5ms)
+✔ ShipSafe Health Rules Engine (68.1ms)
+✔ Blast Radius Engine calculates high risk when critical paths are touched (0.8ms)
 ✔ Blast Radius Engine assigns low score for isolated leaf files (0.1ms)
-✔ Env Sentinel flags new env vars missing from .env.example (0.5ms)
+✔ Client Scanner: flags exposed secrets, schema hazards and N+1 query loops (4.9ms)
+✔ Client Scanner: passes 100/100 on clean production-ready code (0.2ms)
+✔ Client Scanner: flags code hygiene and syntax traps (debugger, JSON, Python, Java) (0.2ms)
+✔ Client Scanner: auto-remediates fixable hazards in virtual files (0.1ms)
+✔ Cookie Serialization: encodes and decodes project files across cookies (0.2ms)
+✔ Env Sentinel flags new env vars missing from .env.example (1.1ms)
 ✔ Env Sentinel ignores standard whitelisted system vars (0.2ms)
-✔ Performance Sniffer flags database queries inside loops (N+1 hazard) (1.3ms)
-✔ Performance Sniffer flags synchronous blocking file operations (0.1ms)
-✔ ShipSafe Repository Structure adheres 100% to the Gold-Standard layout (0.6ms)
+✔ Performance Sniffer flags database queries inside loops (N+1 hazard) (2.5ms)
+✔ Performance Sniffer flags synchronous blocking file operations (0.2ms)
+✔ ShipSafe Repository Structure adheres 100% to the Gold-Standard layout (0.8ms)
 ✔ Schema Detector flags NOT NULL column without DEFAULT (0.5ms)
-✔ Schema Detector allows NOT NULL when DEFAULT is provided (0.2ms)
-✔ Schema Detector flags dangerous direct column drop (0.05ms)
-✔ Virtual Project Scan: evaluates in-memory uploaded project files (54ms)
-✔ Serverless API: handleApiRequest handles virtual project inspection (18ms)
-ℹ tests 24
+✔ Schema Detector allows NOT NULL when DEFAULT is provided (0.5ms)
+✔ Schema Detector flags dangerous direct column drop (0.1ms)
+✔ Virtual Project Scan: evaluates in-memory uploaded project files (54.8ms)
+✔ Serverless API: handleApiRequest handles virtual project inspection (20.8ms)
+ℹ tests 29
 ℹ suites 1
-ℹ pass 24
+ℹ pass 29
 ℹ fail 0
 ```
 
