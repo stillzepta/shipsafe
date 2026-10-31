@@ -10,7 +10,7 @@
 
 [![ShipSafe CI](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
-[![Tests: 22/22 Passed](https://img.shields.io/badge/Tests-22%2F22_Passed-success.svg?style=flat-square)](tests/)
+[![Tests: 24/24 Passed](https://img.shields.io/badge/Tests-24%2F24_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Traditional CI Detection](https://img.shields.io/badge/Traditional_CI_Detection-0%2F10_(0%25)-red.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-why-open-innovation-matters-100-air-gapped-sovereignty)
@@ -305,7 +305,7 @@ When a developer opens a Pull Request on GitHub, ShipSafe's CI action analyzes t
 | **Google Gemma 2 / AI Track** | **25%** | Two Brains sovereign architecture: air-gapped local inference via Google Gemma 2 (`gemma2:2b`/`gemma2:9b`) via Ollama with 1.8ms deterministic rule fallback. Zero code leakage, $0.00 cloud costs. | [`src/ai/engine.ts`](src/ai/engine.ts)<br>[`README.md#brain`](#-why-open-innovation-matters-100-air-gapped-sovereignty) |
 | **Real-World Impact & ROI** | **20%** | Solves the $120,000 Friday-night outage blind spot. Empirical proof: catches **10/10 (100%)** historical outage traps that pass ESLint, TypeScript, and Jest with green checkmarks. | [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md)<br>[`docs/PRD.md`](docs/PRD.md) |
 | **Design, Polish & Visual UX** | **15%** | Hand-drawn Ian Bablu visual engineering design system (16:9 SVGs), interactive Code Health Radar UI with live Server-Sent Events, 1-click Auto-Fix engine. | [`assets/`](assets/)<br>[`public/app.js`](public/app.js)<br>[`public/index.html`](public/index.html) |
-| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (22/22 tests in <100ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
+| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (24/24 tests in <170ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 
 ---
 
@@ -356,9 +356,11 @@ npm test
 ✔ Schema Detector flags NOT NULL column without DEFAULT (0.5ms)
 ✔ Schema Detector allows NOT NULL when DEFAULT is provided (0.2ms)
 ✔ Schema Detector flags dangerous direct column drop (0.05ms)
-ℹ tests 22
+✔ Virtual Project Scan: evaluates in-memory uploaded project files (54ms)
+✔ Serverless API: handleApiRequest handles virtual project inspection (18ms)
+ℹ tests 24
 ℹ suites 1
-ℹ pass 22
+ℹ pass 24
 ℹ fail 0
 ```
 
