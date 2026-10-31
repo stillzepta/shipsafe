@@ -83,7 +83,9 @@
 The architectural blueprint above details the end-to-end journey of code moving from a developer's workstation to production:
 
 1. **Local Staging Buffer & Web Project Upload (Left)**
-   * **Dual-Mode Inspection:** Intercepts the local Git staging buffer (`git add .`) before commits are written to disk, OR runs serverless on Vercel / Cloud where any external developer can drag-and-drop project files or paste code snippets to inspect their real architecture.
+   * **Dual-Mode Inspection:** Intercepts the local Git staging buffer (`git add .`) before commits are written to disk, OR runs entirely client-side on GitHub Pages and serverless on Vercel where developers drag-and-drop project files, upload directories, or paste code snippets.
+   * **Browser Cookie Vault & Persistence:** On GitHub Pages (`https://stillzepta.github.io/shipsafe/`), uploaded project files and code playground snippets are securely serialized and persisted into browser cookies (`shipsafe_files` with chunking) and local storage. Refreshing or returning to the page automatically restores the user's project files and inspection state.
+   * **In-Browser Vulnerability Gatekeeper:** Evaluates staged files and uploaded code in under **20 milliseconds** purely in the browser using the sovereign zero-dependency client scanner—detecting table locks, exposed API keys, N+1 query loops, sync I/O, debuggers, and configuration drift without requiring a backend server.
    * Potential disasters—such as missing `.env.production` keys, live Stripe secrets (`sk_live_...`), unindexed foreign keys, dangerous table-locking migrations, or stray `debugger;` breakpoints—are caught locally within **35 milliseconds**.
 
 2. **The Pre-Flight Gatehouse & Radar (Center)**
