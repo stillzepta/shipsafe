@@ -55,7 +55,7 @@ node bin/shipsafe uninstall-hooks
 ## 2. 🧪 Test Suite & Empirical Benchmark
 
 ```bash
-# Run 24 automated unit tests
+# Run 29 automated unit tests
 npm test
 
 # Run the 10-scenario empirical outage benchmark
