@@ -37,34 +37,34 @@ const testCases: BenchmarkCase[] = [
 
 export const CANONICAL_TRAPS: Record<string, { path: string; content: string }[]> = {
   '01_table_lock_migration': [
-    { path: '01_table_lock_migration/migration.sql', content: "ALTER TABLE users ADD COLUMN billing_tier VARCHAR(32) NOT NULL;" }
+    { path: '01_table_lock_migration/migration.sql', content: "-- Dangerous migration: Adding NOT NULL column without DEFAULT locks 10M rows in PostgreSQL/MySQL\nALTER TABLE users ADD COLUMN billing_tier VARCHAR(32) NOT NULL;\n" }
   ],
   '02_missing_stripe_secret_env': [
-    { path: '02_missing_stripe_secret_env/billing.ts', content: "export function charge() { const stripeKey = process.env.STRIPE_SECRET_KEY; return stripeKey; }" }
+    { path: '02_missing_stripe_secret_env/checkout.ts', content: '// Payment checkout controller\nexport async function createPaymentSession(amount: number) {\n  const apiKey = process.env.STRIPE_SECRET_KEY;\n  if (!apiKey) throw new Error("Stripe secret key not configured!");\n  return { id: "sess_123", amount };\n}\n' }
   ],
   '03_n_plus_one_checkout_query': [
-    { path: '03_n_plus_one_checkout_query/orders.ts', content: "export async function processOrderItems(items: { id: string }[]) {\n  const enriched = [];\n  for (const item of items) {\n    const product = await db.query.find({ where: { id: item.id } });\n    enriched.push(product);\n  }\n  return enriched;\n}" }
+    { path: '03_n_plus_one_checkout_query/orders.ts', content: '// Order completion handler with fatal N+1 database queries\nexport async function processOrderItems(items: { id: string }[]) {\n  const enriched = [];\n  for (const item of items) {\n    const product = await db.query.find({ where: { id: item.id } });\n    enriched.push(product);\n  }\n  return enriched;\n}\n' }
   ],
   '04_sync_io_in_route': [
-    { path: '04_sync_io_in_route/server.ts', content: "import fs from 'node:fs';\nexport function handleUserReportRequest(req: any, res: any) {\n  const data = fs.readFileSync('/var/data/heavy_report.json', 'utf-8');\n  res.json(JSON.parse(data));\n}" }
+    { path: '04_sync_io_in_route/server.ts', content: "// Request handler that blocks event loop\nimport fs from 'node:fs';\n\nexport function handleUserReportRequest(req: any, res: any) {\n  const data = fs.readFileSync('/var/data/heavy_report.json', 'utf-8');\n  res.json(JSON.parse(data));\n}\n" }
   ],
   '05_dropped_column_without_deprecate': [
-    { path: '05_dropped_column_without_deprecate/migration.sql', content: "ALTER TABLE accounts DROP COLUMN legacy_pin;" }
+    { path: '05_dropped_column_without_deprecate/migration.sql', content: "-- Breaking migration: Directly dropping active column during rolling deploy\nALTER TABLE accounts DROP COLUMN legacy_pin;\n" }
   ],
   '06_unindexed_foreign_key': [
-    { path: '06_unindexed_foreign_key/migration.sql', content: "ALTER TABLE orders ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);" }
+    { path: '06_unindexed_foreign_key/migration.sql', content: "-- Migration: Adding unindexed foreign key causing table scans\nALTER TABLE orders ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);\n" }
   ],
   '07_unbounded_select_query': [
-    { path: '07_unbounded_select_query/audit.ts', content: 'export async function getAuditHistory() {\n  const query = "SELECT * FROM audit_logs";\n  return await db.raw(query);\n}' }
+    { path: '07_unbounded_select_query/audit.ts', content: '// Unbounded query risk\nexport async function getAuditHistory() {\n  const query = "SELECT * FROM audit_logs";\n  return await db.raw(query);\n}\n' }
   ],
   '08_hardcoded_jwt_secret': [
-    { path: '08_hardcoded_jwt_secret/auth.ts', content: "export const GITHUB_TOKEN = 'gho_x98234jksdf89234jsdf98234';" }
+    { path: '08_hardcoded_jwt_secret/auth.ts', content: '// Security leak: hardcoded secret in auth verification\nexport function verifySessionToken(token: string) {\n  const secret = "gho_supersecrettoken1234567890abcdefgh";\n  return { valid: true, secret };\n}\n' }
   ],
   '09_missing_oauth_callback_env': [
-    { path: '09_missing_oauth_callback_env/oauth.ts', content: "export function getCallbackUrl() {\n  return process.env.OAUTH_CALLBACK_URL || 'http://localhost:3000/callback';\n}" }
+    { path: '09_missing_oauth_callback_env/oauth.ts', content: '// OAuth redirection helper\nexport function getOAuthRedirect() {\n  const url = process.env.OAUTH_REDIRECT_URL;\n  return url || "https://example.com/callback";\n}\n' }
   ],
   '10_critical_auth_blast_radius': [
-    { path: '10_critical_auth_blast_radius/auth_service.ts', content: "import { db } from '../db';\nexport function verifyUser() { return true; }" }
+    { path: '10_critical_auth_blast_radius/auth_service.ts', content: '// Core authentication gateway modifying token claims\nexport function decodeAuthHeader(authHeader: string) {\n  if (!authHeader.startsWith("Bearer ")) throw new Error("Invalid token format");\n  const token = authHeader.substring(7);\n  return { sub: "user_123", role: "admin", token };\n}\n' }
   ]
 };
 
