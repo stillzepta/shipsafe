@@ -35,6 +35,7 @@ const els = {
   btnHooks:            document.getElementById('btnHooks'),
   hookBtnText:         document.getElementById('hookBtnText'),
   btnRunBenchmarkTop:  document.getElementById('btnRunBenchmarkTop'),
+  btnRunBenchmarkHero: document.getElementById('btnRunBenchmarkHero'),
   btnSettingsToggle:   document.getElementById('btnSettingsToggle'),
   settingsDropdown:    document.getElementById('settingsDropdown'),
   btnOpenRulesTab:     document.getElementById('btnOpenRulesTab'),
@@ -582,7 +583,8 @@ function renderFindings(findings) {
 
   filtered.forEach(f => {
     const sev = f.severity || 'ERROR';
-    const solution = f.possibleSolution || f.recommendation || 'Apply recommended safe code pattern.';
+    const cleanCode = f.newCode || f.possibleSolution || f.recommendation || '';
+    const solution = cleanCode || 'Apply recommended safe code pattern.';
     const card = document.createElement('div');
     card.className = `finding-card severity-${sev}`;
     card.innerHTML = `
@@ -605,17 +607,17 @@ function renderFindings(findings) {
           ${f.snippet ? `<pre class="highlight-code">${escapeHtml(f.snippet)}</pre>` : `<span class="text-dim">File-level finding: ${escapeHtml(f.filePath)}</span>`}
         </div>
         <div class="diagnosis-block intent-box">
-          <div class="intent-label">Developer Intent Analysis</div>
-          <p>${escapeHtml(f.intendedBehavior || 'The developer was intending to implement or evolve application capabilities.')}</p>
+          <div class="intent-label">The Dev's Vision &amp; Architectural Intent</div>
+          <p>${escapeHtml(f.devVision || f.intendedBehavior || 'The developer was intending to implement or evolve application capabilities.')}</p>
         </div>
         <div class="diagnosis-block misbehavior-box">
-          <div class="misbehavior-label">Production Misbehavior &amp; Hazard</div>
-          <p>${escapeHtml(f.misbehavior || 'Under production traffic this triggers severe performance degradation, connection pool exhaustion, or service failure.')}</p>
+          <div class="misbehavior-label">The Production Problem &amp; Outage Risk</div>
+          <p>${escapeHtml(f.productionProblem || f.misbehavior || 'Under production traffic this triggers severe performance degradation, connection pool exhaustion, or service failure.')}</p>
         </div>
         <div class="diagnosis-block solution-box">
-          <div class="solution-label">Possible Solution &amp; Fix</div>
-          <p>${escapeHtml(f.possibleSolution || f.recommendation || 'Apply non-blocking or batched safe pattern.')}</p>
-          ${solution ? `<code class="solution-code">${escapeHtml(solution)}</code>` : ''}
+          <div class="solution-label">The New Approach &amp; Clean Code</div>
+          <p>${escapeHtml(f.newApproach || f.possibleSolution || f.recommendation || 'Apply non-blocking or batched safe pattern.')}</p>
+          ${cleanCode ? `<code class="solution-code">${escapeHtml(cleanCode)}</code>` : ''}
         </div>
       </div>
     `;
@@ -920,6 +922,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       els.btnSettingsToggle?.classList.remove('active');
       switchTab('benchmark');
       runBenchmarkUI();
+    };
+  }
+  if (els.btnRunBenchmarkHero) {
+    els.btnRunBenchmarkHero.onclick = () => {
+      if (els.heroLanding) els.heroLanding.style.display = 'none';
+      if (els.reportArea)  els.reportArea.style.display = 'block';
+      if (els.btnRunCheck) els.btnRunCheck.style.display = 'inline-flex';
+      switchTab('benchmark');
+      runBenchmarkUI();
+      document.querySelector('.tabs-header')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
   }
 

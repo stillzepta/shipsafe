@@ -149,9 +149,9 @@ body::before {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  max-width: 680px;
+  max-width: 1020px;
   width: 100%;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 /* Hero Logo Banner */
@@ -230,6 +230,7 @@ body::before {
 /* Scan Card */
 .scan-card {
   width: 100%;
+  max-width: 720px;
   background: var(--bg-card);
   border: 1px solid rgba(249, 115, 22, 0.2);
   border-radius: 16px;
@@ -350,6 +351,324 @@ body::before {
   height: 3px;
   border-radius: 50%;
   background: var(--text-dim);
+}
+
+/* ========================================================
+   HERO ARCHITECTURE SURFACES & BENCHMARK SHOWCASE
+   ======================================================== */
+
+.hero-arch-showcase,
+.hero-benchmark-showcase {
+  width: 100%;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.arch-showcase-header,
+.bench-showcase-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.arch-badge,
+.bench-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.bench-badge {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.35);
+  color: #fb923c;
+}
+
+.arch-showcase-header h2,
+.bench-showcase-header h2 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+.arch-showcase-header p,
+.bench-showcase-header p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  max-width: 680px;
+  line-height: 1.6;
+}
+
+/* Architecture Grid */
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .arch-grid { grid-template-columns: 1fr; }
+}
+
+.arch-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 12px;
+  padding: 1.4rem;
+  display: flex;
+  gap: 1.1rem;
+  align-items: flex-start;
+  transition: all var(--transition-fast);
+}
+
+.arch-card:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 4px 20px rgba(6, 182, 212, 0.12);
+  transform: translateY(-2px);
+}
+
+.arch-card-wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .arch-card-wide { grid-column: span 1; }
+}
+
+.arch-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arch-icon-box svg {
+  width: 22px;
+  height: 22px;
+}
+
+.arch-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.arch-content h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.arch-tech {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.arch-content p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.arch-param-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: #a78bfa;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  margin-top: 0.35rem;
+  display: inline-block;
+  width: fit-content;
+}
+
+/* Benchmark Scoreboard */
+.bench-scoreboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .bench-scoreboard { flex-direction: column; }
+}
+
+.score-card {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+}
+
+.score-traditional {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.05) 0%, var(--bg-card) 100%);
+}
+
+.score-shipsafe {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.06) 0%, var(--bg-card) 100%);
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.15);
+}
+
+.score-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.score-huge {
+  font-size: 3.2rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.score-sub {
+  font-size: 0.84rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-main);
+}
+
+.score-desc {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-top: 0.4rem;
+}
+
+.score-vs {
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--text-dim);
+  opacity: 0.6;
+}
+
+/* Traps Summary Table */
+.bench-traps-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+}
+
+.bench-traps-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.bench-traps-table th {
+  padding: 0.75rem 1rem;
+  background: var(--bg-card-sub);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.bench-traps-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-main);
+}
+
+.bench-traps-table tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-fail {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.badge-caught {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.bench-actions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-run-benchmark-hero {
+  padding: 0.85rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(139, 92, 246, 0.15));
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  color: #ff9d42;
+  box-shadow: 0 4px 18px rgba(249, 115, 22, 0.15);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+}
+
+.btn-run-benchmark-hero:hover {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.3), rgba(139, 92, 246, 0.3));
+  border-color: #f97316;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(249, 115, 22, 0.25);
 }
 
 /* ── REPORT AREA ── */

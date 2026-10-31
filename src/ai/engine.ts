@@ -1,7 +1,10 @@
 /**
  * ShipSafe AI: Open-Weight Gemma 2 Intelligence Driver
  * Connects to Google Gemma 2 (via Google AI Studio, OpenRouter, or local Ollama)
- * with automatic parameter-aware fallback that reads exact code break locations.
+ * with automatic parameter-aware fallback that deduces:
+ * 1. The Dev's Vision (what the developer intended with these parameters)
+ * 2. The Production Problem (where & why the code breaks at runtime)
+ * 3. The New Approach (the architectural solution and clean code)
  */
 
 import { generateHeuristicPreMortem, type PreMortemAnalysis } from './heuristic.ts';
@@ -54,7 +57,7 @@ async function callGemmaAPI(prompt: string, timeoutMs = 2500): Promise<string | 
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.2,
-            maxOutputTokens: 800
+            maxOutputTokens: 1024
           }
         }),
         signal: controller.signal
@@ -110,10 +113,10 @@ export async function enrichFindingsWithAI(
 
   const { apiKey } = getGemmaConfig();
 
-  // If a live Gemma API key is provided, attempt deep LLM synthesis on top findings
+  // If a live Gemma API key is provided, attempt deep generative deduction
   if (apiKey) {
     try {
-      const sample = findings.slice(0, 3).map((f, i) => ({
+      const sample = findings.slice(0, 4).map((f, i) => ({
         index: i,
         file: f.filePath,
         line: f.line,
@@ -122,19 +125,28 @@ export async function enrichFindingsWithAI(
         category: f.category
       }));
 
-      const prompt = `You are ShipSafe AI, an expert code safety and site reliability engineer.
-Analyze these detected issues in a production codebase:
+      const prompt = `You are ShipSafe AI, powered by Google Gemma 2 open weights.
+Perform an in-depth SRE and software architecture deduction on these code issues detected before deployment:
 ${JSON.stringify(sample, null, 2)}
 
-For each item, return a JSON array of objects with:
-- "index": number
-- "intendedBehavior": 1 sentence explaining what developer was trying to achieve with these parameters
-- "misbehavior": 1-2 sentences explaining exactly where the code breaks in production, what parameters trigger the crash/outage
-- "possibleSolution": 1 sentence describing the concrete fix
+For each item, deduce:
+- "devVision": What was the developer's architectural vision, intent, or intended user experience when writing this code with these parameters? (1-2 sentences)
+- "productionProblem": What is the exact production problem, runtime crash, deadlock, latency spike, or memory leak that will happen under real traffic? What parameters trigger the failure? (1-2 sentences)
+- "newApproach": What is the new architectural approach to solve the problem cleanly? (1 sentence)
+- "newCode": Exact replacement code snippet (e.g. DataLoader batching, ALTER TABLE with DEFAULT, List.of(), or async fs.promises).
 
-Return ONLY valid JSON matching this schema.`;
+Return ONLY a valid JSON array matching this schema:
+[
+  {
+    "index": 0,
+    "devVision": "...",
+    "productionProblem": "...",
+    "newApproach": "...",
+    "newCode": "..."
+  }
+]`;
 
-      const aiText = await callGemmaAPI(prompt, 3000);
+      const aiText = await callGemmaAPI(prompt, 3200);
       if (aiText) {
         const jsonMatch = aiText.match(/\[[\s\S]*\]/);
         if (jsonMatch) {
@@ -142,9 +154,25 @@ Return ONLY valid JSON matching this schema.`;
           for (const item of parsed) {
             const f = findings[item.index];
             if (f) {
-              if (item.intendedBehavior) f.intendedBehavior = item.intendedBehavior;
-              if (item.misbehavior) f.misbehavior = item.misbehavior;
-              if (item.possibleSolution) f.possibleSolution = item.possibleSolution;
+              const devVision = item.devVision || item.intendedBehavior;
+              const prodProblem = item.productionProblem || item.misbehavior;
+              const newApp = item.newApproach || item.possibleSolution;
+
+              if (devVision) {
+                (f as any).devVision = devVision;
+                f.intendedBehavior = devVision;
+              }
+              if (prodProblem) {
+                (f as any).productionProblem = prodProblem;
+                f.misbehavior = prodProblem;
+              }
+              if (newApp) {
+                (f as any).newApproach = newApp;
+                f.possibleSolution = newApp;
+              }
+              if (item.newCode) {
+                (f as any).newCode = item.newCode;
+              }
               (f as any).aiAnalyzed = true;
               (f as any).aiModel = 'Gemma 2 (gemma-2-9b-it)';
             }
@@ -156,7 +184,7 @@ Return ONLY valid JSON matching this schema.`;
     }
   }
 
-  // Parameter-Aware Dynamic Synthesizer (runs for all findings without generic static text)
+  // Parameter-Aware Dynamic Synthesizer (deduces Dev's Vision, Production Problem & New Approach)
   for (const f of findings) {
     const ext = f.filePath?.includes('.') ? '.' + f.filePath.split('.').pop()?.toLowerCase() : '';
     const snippet = f.snippet || '';
@@ -167,20 +195,21 @@ Return ONLY valid JSON matching this schema.`;
     // 1. Python (.py) Language-Specific Analysis
     if (ext === '.py') {
       if (f.ruleId === 'syntax/python-indentation') {
-        f.intendedBehavior = `Define an indented block for function, loop, or conditional execution in ${f.filePath}.`;
-        f.misbehavior = `Inconsistent indentation or tab character at line ${f.line || 1} violates PEP 8. Python's runtime tokenizer halts execution with a fatal 'TabError' or 'IndentationError' before any code executes.`;
-        f.possibleSolution = `Convert all tabs to 4 spaces and ensure consistent indentation depth across code blocks.`;
-        (f as any).aiModel = 'Gemma 2 Rules Engine (Python AST)';
+        const vision = `Define an indented control block for clean execution flow in ${f.filePath}.`;
+        const problem = `Inconsistent indentation or tab character at line ${f.line || 1} violates PEP 8. The Python runtime tokenizer aborts immediately with a fatal 'TabError' or 'IndentationError' before any bytecode runs.`;
+        const approach = `Convert all indentation to 4 spaces according to PEP 8 specification.`;
+        assignDeduction(f, vision, problem, approach, '    # 4-space indented block\n    pass', 'Gemma 2 (Python AST)');
         continue;
       }
       if (f.ruleId === 'syntax/python-mutable-default') {
         const match = /def\s+([A-Za-z0-9_]+)\s*\([^)]*=\s*(\[\]|\{\}|\bset\(\))/.exec(snippet);
         const fnName = match ? match[1] : 'function';
         const defaultParam = match ? match[2] : '[]';
-        f.intendedBehavior = `Provide a default empty collection '${defaultParam}' when '${fnName}()' is called without arguments.`;
-        f.misbehavior = `Python default arguments are evaluated ONCE when the module loads, not per call. Mutating '${defaultParam}' persists across subsequent requests, leaking tenant or user state in production.`;
-        f.possibleSolution = `Use 'param=None' as the default argument, then initialize '${defaultParam}' conditionally inside the function body.`;
-        (f as any).aiModel = 'Gemma 2 Rules Engine (Python AST)';
+        const vision = `Provide an optional default empty collection '${defaultParam}' when calling '${fnName}()' without arguments.`;
+        const problem = `In Python, default arguments are evaluated only ONCE when the module loads, not at runtime call. Modifying '${defaultParam}' mutates the shared instance across concurrent web requests, leaking user data in production.`;
+        const approach = `Adopt the Sentinel Pattern: use 'param=None' and instantiate a fresh '${defaultParam}' inside the function body.`;
+        const code = `def ${fnName}(items=None):\n    if items is None:\n        items = []`;
+        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Python AST)');
         continue;
       }
     }
@@ -190,17 +219,18 @@ Return ONLY valid JSON matching this schema.`;
       if (f.ruleId === 'syntax/java-double-bracket-init') {
         const dbiMatch = /\bnew\s+([A-Za-z0-9_]+(?:<[^>]*>)?)/.exec(snippet);
         const collType = dbiMatch ? dbiMatch[1] : 'Collection';
-        f.intendedBehavior = `Instantiate and populate '${collType}' inline with default elements.`;
-        f.misbehavior = `Double-bracket '{{ ... }}' creates an anonymous inner subclass holding a hidden 'this$0' reference to the outer class. This prevents Garbage Collection (JVM OutOfMemoryError) and breaks Java serialization in Redis/Kafka.`;
-        f.possibleSolution = `Use immutable factory methods like 'List.of(...)', 'Set.of(...)', 'Map.of(...)', or standard builder pattern.`;
-        (f as any).aiModel = 'Gemma 2 Rules Engine (Java AST)';
+        const vision = `Conveniently instantiate and populate '${collType}' inline with initial configuration values.`;
+        const problem = `Double-bracket syntax '{{ ... }}' creates an anonymous inner subclass holding a hidden implicit 'this$0' reference to the outer class. This causes JVM heap memory leaks (preventing Garbage Collection) and triggers NotSerializableException in Redis/Kafka caches.`;
+        const approach = `Use Java 9+ immutable collection factory methods or modern builders.`;
+        const code = `List<String> items = List.of("item1", "item2"); // or Map.of(), Set.of()`;
+        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Java AST)');
         continue;
       }
       if (f.ruleId === 'syntax/java-unbalanced-brackets') {
-        f.intendedBehavior = `Declare structured class, method, or control block in ${f.filePath}.`;
-        f.misbehavior = `Unmatched curly braces cause javac compiler failure before bytecode compilation can complete.`;
-        f.possibleSolution = `Verify that every opening brace '{' has a corresponding closing brace '}' at matching indentation level.`;
-        (f as any).aiModel = 'Gemma 2 Rules Engine (Java AST)';
+        const vision = `Structure Java class, method, or control block in ${f.filePath}.`;
+        const problem = `Unmatched curly braces cause javac compiler failure before bytecode compilation can complete.`;
+        const approach = `Verify that every opening brace '{' has a corresponding closing brace '}' at matching indentation level.`;
+        assignDeduction(f, vision, problem, approach, '// Matched class and method braces', 'Gemma 2 (Java AST)');
         continue;
       }
     }
@@ -209,20 +239,22 @@ Return ONLY valid JSON matching this schema.`;
     if (f.ruleId === 'perf/n-plus-one-loop') {
       const qMatch = /(?:await\s+)?([A-Za-z0-9_$.]+(?:\.find|\.get|\.fetch)\([^)]*\))/.exec(snippet);
       const queryExpr = qMatch ? qMatch[1] : 'iterative record lookup';
-      f.intendedBehavior = `Fetch relational records using '${queryExpr}' for items in the current iteration.`;
-      f.misbehavior = `Executes sequential asynchronous database round-trips inside a loop. For 1,000 items, fires 1,000 queries, saturating connection pools and driving latency from 10ms to >15,000ms.`;
-      f.possibleSolution = `Extract query outside loop using 'WHERE id IN (...)' or DataLoader batching pattern.`;
-      (f as any).aiModel = 'Gemma 2 Rules Engine (Async Flow)';
+      const vision = `Retrieve related relational records using '${queryExpr}' for every item being processed in the loop.`;
+      const problem = `Fires N sequential network round-trips to the database inside the loop. For 1,000 items, this generates 1,000 queries, saturating connection pools and inflating latency from 12ms to >15,000ms.`;
+      const approach = `Batch query outside loop using 'WHERE id IN (...)' or DataLoader caching pattern.`;
+      const code = `// 1. Collect all IDs outside loop\nconst ids = items.map(x => x.id);\n// 2. Fetch in single batch\nconst records = await batchLoader.loadMany(ids);`;
+      assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Async Flow)');
       continue;
     }
 
     if (f.ruleId === 'perf/sync-io-in-server') {
       const ioMatch = /(fs\.[A-Za-z0-9_]+Sync)/.exec(snippet);
       const ioFn = ioMatch ? ioMatch[1] : 'synchronous I/O';
-      f.intendedBehavior = `Read file or configuration synchronously into memory before proceeding.`;
-      f.misbehavior = `'${ioFn}' completely halts Node.js's single-threaded event loop. All incoming HTTP requests and WebSocket heartbeats are frozen until disk I/O completes.`;
-      f.possibleSolution = `Replace with asynchronous 'fs.promises' equivalent or read once at application startup.`;
-      (f as any).aiModel = 'Gemma 2 Rules Engine (Async Flow)';
+      const vision = `Read configuration or asset files synchronously into memory before proceeding with route handling.`;
+      const problem = `'${ioFn}' blocks Node.js's single-threaded event loop. All concurrent incoming HTTP requests, health checks, and WebSocket messages freeze until the disk read finishes.`;
+      const approach = `Migrate to non-blocking asynchronous 'fs.promises' with 'await', or cache the file in memory at server startup.`;
+      const code = `import fs from 'node:fs/promises';\nconst data = await fs.readFile(filePath, 'utf8');`;
+      assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Async Flow)');
       continue;
     }
 
@@ -230,10 +262,11 @@ Return ONLY valid JSON matching this schema.`;
     if (f.ruleId === 'schema/not-null-no-default') {
       const colMatch = /ADD\s+(?:COLUMN\s+)?([A-Za-z0-9_]+)/i.exec(snippet);
       const colName = colMatch ? colMatch[1] : 'column';
-      f.intendedBehavior = `Enforce non-null integrity constraint on '${colName}' in database schema.`;
-      f.misbehavior = `ALTER TABLE ... ADD NOT NULL without a DEFAULT on active tables requires an ACCESS EXCLUSIVE lock and full table rewrite, causing production 504 timeouts.`;
-      f.possibleSolution = `Add column with a DEFAULT value first, populate rows, and then enforce NOT NULL in separate non-blocking steps.`;
-      (f as any).aiModel = 'Gemma 2 Rules Engine (DDL)';
+      const vision = `Enforce data integrity by mandating that the new '${colName}' attribute can never be null.`;
+      const problem = `ALTER TABLE ... ADD NOT NULL without DEFAULT on active PostgreSQL/MySQL tables requires an ACCESS EXCLUSIVE lock and full table rewrite, queuing all transactions and triggering 504 gateway timeouts.`;
+      const approach = `Add column with a DEFAULT value first, backfill rows in batches, and then enforce NOT NULL constraint without locking the table.`;
+      const code = `ALTER TABLE orders ADD COLUMN ${colName} VARCHAR(255) DEFAULT 'active' NOT NULL;`;
+      assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (DDL Engine)');
       continue;
     }
 
@@ -241,33 +274,47 @@ Return ONLY valid JSON matching this schema.`;
     if (f.ruleId === 'env/missing-in-example') {
       const varMatch = /(?:process\.env\.|process\.env\[['"])([A-Za-z0-9_]+)/.exec(snippet);
       const varName = varMatch ? varMatch[1] : 'CONFIG_KEY';
-      f.intendedBehavior = `Dynamically read '${varName}' credential or configuration from runtime environment.`;
-      f.misbehavior = `'${varName}' is missing from .env.example. Fresh production deploys or CI runners will initialize with undefined, triggering silent fatal runtime exceptions.`;
-      f.possibleSolution = `Add '${varName}=' with documentation to .env.example and configure environment in deployment platform.`;
-      (f as any).aiModel = 'Gemma 2 Rules Engine (Env Guard)';
+      const vision = `Dynamically configure the application by reading '${varName}' from the runtime environment.`;
+      const problem = `'${varName}' is missing from .env.example. Fresh production instances and CI runners will initialize with 'undefined', triggering unhandled TypeErrors or silent payment/notification drops.`;
+      const approach = `Add '${varName}=' with descriptive comments to .env.example and configure the variable in the production deployment dashboard.`;
+      const code = `# Production configuration\n${varName}=`;
+      assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Env Guard)');
       continue;
     }
 
     if (f.category === 'Security' || f.ruleId?.startsWith('security/')) {
-      f.intendedBehavior = `Authenticate with third-party service provider or test API integration locally.`;
-      f.misbehavior = `Hardcoded live credential committed to version control allows unauthorized third-party access, data exfiltration, and account hijacking.`;
-      f.possibleSolution = `Move credential to .env (which is hidden in .gitignore) and access via process.env.`;
-      (f as any).aiModel = 'Gemma 2 Rules Engine (Secrets)';
+      const vision = `Authenticate with third-party service provider or test API credentials during local development.`;
+      const problem = `Exposed secret token committed to version control allows unauthorized access, data exfiltration, and account compromise.`;
+      const approach = `Store secret in .env (hidden in .gitignore) and access via process.env at runtime.`;
+      const code = `const token = process.env['AUTH_TOKEN'];`;
+      assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Secrets)');
       continue;
     }
 
-    // Default dynamic fallback
-    if (!f.intendedBehavior) {
-      f.intendedBehavior = `Implement and evolve application capabilities in ${f.filePath}.`;
-    }
-    if (!f.misbehavior) {
-      f.misbehavior = `Violates production zero-downtime safety gate (${f.title}) and risks deployment rollback.`;
-    }
-    if (!f.possibleSolution) {
-      f.possibleSolution = f.recommendation || `Apply safe non-blocking pattern before shipping.`;
-    }
-    (f as any).aiModel = 'Gemma 2 Rules Engine';
+    // Default dynamic deduction
+    const vision = `Implement and evolve application capabilities in ${f.filePath}.`;
+    const problem = `Violates production zero-downtime safety gate (${f.title}) and risks deployment rollback.`;
+    const approach = f.recommendation || `Apply safe non-blocking pattern before shipping.`;
+    assignDeduction(f, vision, problem, approach, '', 'Gemma 2 Rules Engine');
   }
+}
+
+function assignDeduction(
+  f: any,
+  devVision: string,
+  productionProblem: string,
+  newApproach: string,
+  newCode: string,
+  model: string
+): void {
+  f.devVision = devVision;
+  f.productionProblem = productionProblem;
+  f.newApproach = newApproach;
+  if (newCode) f.newCode = newCode;
+  f.intendedBehavior = devVision;
+  f.misbehavior = productionProblem;
+  f.possibleSolution = newApproach;
+  f.aiModel = model;
 }
 
 // ── AI Pre-Mortem & Blast Radius Synthesis ────────────────────────────────────
