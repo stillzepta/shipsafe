@@ -45,6 +45,9 @@ export function scanEnvDrift(
     if (
       file.path.startsWith('.env') ||
       file.path.includes('node_modules') ||
+      file.path.startsWith('lib/rules/') ||
+      file.path.startsWith('test/') ||
+      file.path.startsWith('src/core/') ||
       /\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)
     ) {
       continue;

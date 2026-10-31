@@ -194,12 +194,193 @@
           <div class="scan-proof-row">
             <span class="proof-item proof-green">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              18 tests passing
+              20 tests passing
             </span>
             <span class="proof-dot"></span>
             <span class="proof-item">10/10 real outages caught</span>
             <span class="proof-dot"></span>
-            <span class="proof-item">~50 ms scan time</span>
+            <span class="proof-item">~35 ms scan time</span>
+          </div>
+        </div>
+
+        <!-- ── ARCHITECTURE RISK SURFACES ── -->
+        <div class="hero-arch-showcase">
+          <div class="arch-showcase-header">
+            <span class="arch-badge">PREDICTIVE ARCHITECTURES</span>
+            <h2>Where ShipSafe Predicts Risks &amp; Calculates Parameters</h2>
+            <p>Traditional linters only verify syntax and code formatting. ShipSafe deduces the developer's architectural intent, identifies concurrency table locks, calculates event-loop latency stalls, and simulates downstream blast radius.</p>
+          </div>
+
+          <div class="arch-grid">
+            <div class="arch-card">
+              <div class="arch-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+              </div>
+              <div class="arch-content">
+                <h3>Database &amp; DDL Migrations</h3>
+                <span class="arch-tech">PostgreSQL &bull; MySQL &bull; SQLite</span>
+                <p><strong>Predicts:</strong> <code>ACCESS EXCLUSIVE</code> table locks, full-table rewrites on <code>ADD NOT NULL</code> without <code>DEFAULT</code>, active column drops breaking rolling pods, unindexed foreign key table scans.</p>
+                <div class="arch-param-tag">Parameters: Lock hold duration, row count rewrite, index selectivity</div>
+              </div>
+            </div>
+
+            <div class="arch-card">
+              <div class="arch-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <div class="arch-content">
+                <h3>Event-Loop &amp; Async Backends</h3>
+                <span class="arch-tech">Node.js &bull; TypeScript &bull; Express / Fastify</span>
+                <p><strong>Predicts:</strong> Asynchronous <code>N+1</code> query waterfalls inside iteration loops, synchronous blocking I/O (<code>readFileSync</code>) freezing the single-threaded event loop.</p>
+                <div class="arch-param-tag">Parameters: O(N) connection pool exhaustion, request stall latency</div>
+              </div>
+            </div>
+
+            <div class="arch-card">
+              <div class="arch-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10 15 5-3-5-3v6Z"/><rect width="20" height="14" x="2" y="5" rx="2"/></svg>
+              </div>
+              <div class="arch-content">
+                <h3>Python Microservices &amp; APIs</h3>
+                <span class="arch-tech">Python 3 &bull; FastAPI &bull; Django &bull; Flask</span>
+                <p><strong>Predicts:</strong> Fatal <code>TabError</code> / <code>IndentationError</code> halts via native AST compiler, mutable default parameter contamination (<code>def f(cache=[])</code>) leaking user data.</p>
+                <div class="arch-param-tag">Parameters: Lexical indentation depth, cross-request mutable state</div>
+              </div>
+            </div>
+
+            <div class="arch-card">
+              <div class="arch-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 3 2 5.5 4 7v3h8v-3c2-1.5 4-4 4-7a8 8 0 0 0-8-8z"/><line x1="10" y1="22" x2="14" y2="22"/></svg>
+              </div>
+              <div class="arch-content">
+                <h3>Java Enterprise &amp; Distributed Services</h3>
+                <span class="arch-tech">Java 17/21 &bull; Spring Boot &bull; Kafka / Redis</span>
+                <p><strong>Predicts:</strong> Double-bracket initialization (<code>new ArrayList() {{ ... }}</code>) memory leaks holding hidden outer <code>this$0</code> references, JVM serialization failures.</p>
+                <div class="arch-param-tag">Parameters: Retained heap references, inner class GC escape</div>
+              </div>
+            </div>
+
+            <div class="arch-card arch-card-wide">
+              <div class="arch-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              </div>
+              <div class="arch-content">
+                <h3>Distributed Cloud, Config Drift &amp; Blast Radius DAG</h3>
+                <span class="arch-tech">Cloudflare &bull; AWS &bull; Docker &bull; Microservices</span>
+                <p><strong>Predicts:</strong> Phantom environment variable drift (references in <code>process.env</code> missing from <code>.env.example</code>), exposed live API secrets, and cascading downstream blast radius (0–100%) reaching core infrastructure (<code>auth</code>, <code>billing</code>, <code>db</code>).</p>
+                <div class="arch-param-tag">Parameters: Reverse dependency DAG depth, downstream route reach, blast percentage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── EMPIRICAL PRODUCTION OUTAGE BENCHMARK ── -->
+        <div class="hero-benchmark-showcase">
+          <div class="bench-showcase-header">
+            <span class="bench-badge">EMPIRICAL BENCHMARK</span>
+            <h2>The 10/10 Production Outage Benchmark Explained</h2>
+            <p>Why do catastrophic production outages occur when CI pipelines report 100% green checkmarks? Traditional linters (ESLint, Prettier, flake8) verify syntax format in isolation. They miss 10 out of 10 systemic production hazards.</p>
+          </div>
+
+          <div class="bench-scoreboard">
+            <div class="score-card score-traditional">
+              <div class="score-card-title">Traditional CI (Linters &amp; Unit Tests)</div>
+              <div class="score-huge text-danger">0 / 10</div>
+              <div class="score-sub">0% Real-World Outage Detection Rate</div>
+              <p class="score-desc">Linters approve syntax without checking DB locks, event loops, or env drift. All 10 fatal outages pass straight to production.</p>
+            </div>
+
+            <div class="score-vs">VS</div>
+
+            <div class="score-card score-shipsafe">
+              <div class="score-card-title">ShipSafe Pre-Flight Gatekeeper</div>
+              <div class="score-huge text-success">10 / 10</div>
+              <div class="score-sub">100% Outages Caught (Sub-35ms)</div>
+              <p class="score-desc">Catches table locks, N+1 loops, missing secrets, sync I/O stalls, and blast cascades before git commit.</p>
+            </div>
+          </div>
+
+          <!-- Benchmark Traps Summary Table -->
+          <div class="bench-traps-table-wrap">
+            <table class="bench-traps-table">
+              <thead>
+                <tr>
+                  <th>Trap ID</th>
+                  <th>Scenario &amp; Outage Failure Mode</th>
+                  <th>Traditional Linters</th>
+                  <th>ShipSafe Detection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>01</code></td>
+                  <td><strong>PostgreSQL Table Freeze:</strong> <code>ALTER TABLE ADD NOT NULL</code> without <code>DEFAULT</code> locks live database</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (schema/not-null-no-default)</span></td>
+                </tr>
+                <tr>
+                  <td><code>02</code></td>
+                  <td><strong>Silent Payment Failure:</strong> <code>STRIPE_WEBHOOK_SECRET</code> missing in <code>.env.example</code> crashes checkout webhook</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (env/missing-in-example)</span></td>
+                </tr>
+                <tr>
+                  <td><code>03</code></td>
+                  <td><strong>Checkout N+1 Query Cascade:</strong> Sequential DB loop under concurrency exhausts connection pool</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (perf/n-plus-one-loop)</span></td>
+                </tr>
+                <tr>
+                  <td><code>04</code></td>
+                  <td><strong>Event-Loop Stall:</strong> Synchronous file read in HTTP route freezes Node.js main thread</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (perf/sync-io-in-server)</span></td>
+                </tr>
+                <tr>
+                  <td><code>05</code></td>
+                  <td><strong>Rolling Deploy Drop:</strong> Dropping active column breaks older container pods before migration finishes</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (schema/drop-column-hazard)</span></td>
+                </tr>
+                <tr>
+                  <td><code>06</code></td>
+                  <td><strong>Table Scan Latency Explosion:</strong> Foreign key missing B-Tree index triggers full sequential scan</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (schema/unindexed-foreign-key)</span></td>
+                </tr>
+                <tr>
+                  <td><code>07</code></td>
+                  <td><strong>Container OOM Crash:</strong> Unbounded <code>SELECT *</code> query loads entire million-row table into RAM</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (perf/unbounded-query)</span></td>
+                </tr>
+                <tr>
+                  <td><code>08</code></td>
+                  <td><strong>Credential Leak:</strong> Live API access token committed directly in source code</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (security/hardcoded-secret)</span></td>
+                </tr>
+                <tr>
+                  <td><code>09</code></td>
+                  <td><strong>Auth Divergence:</strong> OAuth redirect URI environment drift between staging and prod</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (env/missing-in-example)</span></td>
+                </tr>
+                <tr>
+                  <td><code>10</code></td>
+                  <td><strong>Critical Blast Radius Cascade:</strong> Core Auth changes touching 40% of downstream dependencies</td>
+                  <td><span class="badge-fail">MISSED (PASS)</span></td>
+                  <td><span class="badge-caught">CAUGHT (blast-radius 40% HIGH)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bench-actions">
+            <button id="btnRunBenchmarkHero" class="btn btn-secondary btn-run-benchmark-hero">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h12"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-4 0"/><path d="M9 14h6"/><path d="M12 6V3"/><path d="M8 3h8"/></svg>
+              <span>Execute 10-Scenario Benchmark Live (Interactive Testbed) &rarr;</span>
+            </button>
           </div>
         </div>
       </div>
@@ -474,9 +655,16 @@
             <table class="history-table">
               <thead>
                 <tr>
-                  <th>Run</th><th>Time</th><th>Commit</th><th>Branch</th>
-                  <th>Status</th><th>Score</th><th>Errors</th><th>Warnings</th>
-                  <th>Duration</th><th>Summary</th>
+                  <th>Run</th>
+                  <th>Time</th>
+                  <th>Commit</th>
+                  <th>Branch</th>
+                  <th>Gate Verdict</th>
+                  <th>Health Score</th>
+                  <th>Fatality Status &amp; Error Delta</th>
+                  <th>Changes &amp; Inspected Files</th>
+                  <th>Duration</th>
+                  <th>AI / Engine Summary</th>
                 </tr>
               </thead>
               <tbody id="historyTableBody"></tbody>

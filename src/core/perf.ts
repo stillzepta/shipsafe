@@ -14,6 +14,8 @@ export function scanPerformanceHazards(files: { path: string; content: string }[
       file.path.includes('.spec.') ||
       file.path.startsWith('src/core/') ||
       file.path.startsWith('lib/') ||
+      file.path.startsWith('bin/') ||
+      file.path.startsWith('src/cli/') ||
       /\.(svg|png|jpg|jpeg|gif|ico|webp|md)$/i.test(file.path)
     ) {
       continue;
