@@ -260,7 +260,7 @@
     <!-- Server Live Indicator (Inside Machine Footer, font=13.5px) -->
     <g transform="translate(40, 485)">
       <circle cx="12" cy="12" r="6" fill="#10b981"/>
-      <text x="26" y="17" class="font-sans" font-size="13.5" font-weight="700" fill="#111827">Local Server: <tspan fill="#2563eb" font-weight="bold">http://127.0.0.1:4100</tspan> (Live SSE Dashboard)</text>
+      <text x="26" y="17" class="font-sans" font-size="13.5" font-weight="700" fill="#111827">Dual Quality Gate: <tspan fill="#2563eb" font-weight="bold">http://127.0.0.1:4100</tspan> &amp; <tspan fill="#ea580c" font-weight="bold">GitHub Pages Cookie Vault</tspan></text>
     </g>
   </g>
 
