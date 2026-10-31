@@ -795,7 +795,7 @@ async function loadHistory() {
           warnings_count: 0,
           files_checked: 23,
           duration_ms: 250,
-          summary: 'Quality gate PASSED (100% Ready). All 23 files clean. Reconciled origin/main with Gemma AST rules.'
+          summary: 'Quality gate PASSED (100% Ready). All 23 files clean. Reconciled origin/main with Gemma pattern rules.'
         },
         {
           id: 75,

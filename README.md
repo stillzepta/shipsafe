@@ -10,7 +10,7 @@
 
 [![ShipSafe CI](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/stillzepta/shipsafe/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg?style=flat-square)](LICENSE)
-[![Tests: 20/20 Passed](https://img.shields.io/badge/Tests-20%2F20_Passed-success.svg?style=flat-square)](tests/)
+[![Tests: 22/22 Passed](https://img.shields.io/badge/Tests-22%2F22_Passed-success.svg?style=flat-square)](tests/)
 [![Benchmark: 10/10 Caught](https://img.shields.io/badge/Benchmark-10%2F10_Caught_(100%25)-brightgreen.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Traditional CI Detection](https://img.shields.io/badge/Traditional_CI_Detection-0%2F10_(0%25)-red.svg?style=flat-square)](benchmarks/BENCHMARK_RESULTS.md)
 [![Privacy: 100% Air-Gapped](https://img.shields.io/badge/Privacy-100%25_Air--Gapped_Sovereign-blue.svg?style=flat-square)](#-why-open-innovation-matters-100-air-gapped-sovereignty)
@@ -103,6 +103,9 @@ The architectural blueprint above details the end-to-end journey of code moving 
 4. **The Verified Release Stream (Bottom Right — Green & Blue Accents)**
    * Commits scoring 85–100 with zero critical errors receive **Exit Code 0** approval and the **Golden Ticket**.
    * The clean code safely proceeds to GitHub and production CI/CD pipelines, guaranteeing zero preventable deployment failures.
+
+> [!NOTE]
+> ShipSafe uses pattern-based (regex and line-level) analysis for millisecond response times; like any pattern scanner, it can produce false positives and misses on complex dynamic constructs.
 
 ---
 
@@ -298,11 +301,11 @@ When a developer opens a Pull Request on GitHub, ShipSafe's CI action analyzes t
 
 | Evaluation Criterion | Hackathon Weight | How ShipSafe Wins | Core Source Files & Evidence |
 | :--- | :---: | :--- | :--- |
-| **Technical Depth & Innovation** | **30%** | In-memory reverse dependency DAG for blast radius analysis, multi-stage AST pattern sniffer for table locks and event loop blocking, embedded `node:sqlite` audit log, zero external dependencies. | [`src/core/blast.ts`](src/core/blast.ts)<br>[`src/core/perf.ts`](src/core/perf.ts)<br>[`src/core/schema.ts`](src/core/schema.ts)<br>[`src/core/env.ts`](src/core/env.ts) |
+| **Technical Depth & Innovation** | **30%** | In-memory reverse dependency DAG for blast radius analysis, multi-stage pattern-based (regex and line-level) analysis for table locks and event loop blocking, embedded `node:sqlite` audit log, zero external dependencies. | [`src/core/blast.ts`](src/core/blast.ts)<br>[`src/core/perf.ts`](src/core/perf.ts)<br>[`src/core/schema.ts`](src/core/schema.ts)<br>[`src/core/env.ts`](src/core/env.ts) |
 | **Google Gemma 2 / AI Track** | **25%** | Two Brains sovereign architecture: air-gapped local inference via Google Gemma 2 (`gemma2:2b`/`gemma2:9b`) via Ollama with 1.8ms deterministic rule fallback. Zero code leakage, $0.00 cloud costs. | [`src/ai/engine.ts`](src/ai/engine.ts)<br>[`README.md#brain`](#-why-open-innovation-matters-100-air-gapped-sovereignty) |
 | **Real-World Impact & ROI** | **20%** | Solves the $120,000 Friday-night outage blind spot. Empirical proof: catches **10/10 (100%)** historical outage traps that pass ESLint, TypeScript, and Jest with green checkmarks. | [`benchmarks/BENCHMARK_RESULTS.md`](benchmarks/BENCHMARK_RESULTS.md)<br>[`docs/PRD.md`](docs/PRD.md) |
-| **Design, Polish & Visual UX** | **15%** | Hand-drawn Ian Bablu visual engineering design system (16:9 SVGs), interactive Code Health Radar UI with live Server-Sent Events, 1-click Auto-Fix engine. | [`assets/`](assets/)<br>[`app.js`](app.js)<br>[`index.html`](index.html) |
-| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (18/18 tests in 64ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
+| **Design, Polish & Visual UX** | **15%** | Hand-drawn Ian Bablu visual engineering design system (16:9 SVGs), interactive Code Health Radar UI with live Server-Sent Events, 1-click Auto-Fix engine. | [`assets/`](assets/)<br>[`public/app.js`](public/app.js)<br>[`public/index.html`](public/index.html) |
+| **Code Hygiene & Open Source Standards** | **10%** | 100% test pass (22/22 tests in <100ms), 100/100 ShipSafe health score, MIT License, gold-standard documentation suite, turnkey GitHub Actions CI workflow. | [`tests/`](tests/)<br>[`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 
 ---
 
@@ -312,7 +315,7 @@ ShipSafe provides a comprehensive, gold-standard technical documentation suite i
 
 | Document & Direct Link | Visual Spec Blueprint | Core Focus & Metaphor | Target Audience |
 | :--- | :---: | :--- | :--- |
-| 🏗️ **[System Architecture](docs/ARCHITECTURE.md)**<br>`docs/ARCHITECTURE.md` | [![Architecture](assets/architecture-spec.svg)](docs/ARCHITECTURE.md) | **The 3-Pillared Gatekeeper Engine**:<br>AST Sieve Autopsy, Dependency DAG Spiderweb (0–100%), and Sovereign Dual Brains (Gemma 2 + Heuristic). | Principal Architects, Staff SREs, Systems Engineers |
+| 🏗️ **[System Architecture](docs/ARCHITECTURE.md)**<br>`docs/ARCHITECTURE.md` | [![Architecture](assets/architecture-spec.svg)](docs/ARCHITECTURE.md) | **The 3-Pillared Gatekeeper Engine**:<br>Pattern-Based Code Autopsy, Dependency DAG Spiderweb (0–100%), and Sovereign Dual Brains (Gemma 2 + Heuristic). | Principal Architects, Staff SREs, Systems Engineers |
 | 📄 **[Product Requirements Document](docs/PRD.md)**<br>`docs/PRD.md` | [![PRD](assets/prd-spec.svg)](docs/PRD.md) | **The Outage Graveyard vs. The 4 Guardians**:<br>First-principles problem definition, $120k outage post-mortems, and Persona ROI calculus. | Engineering VPs, Product Managers, Enterprise Buyers |
 | ⚡ **[Operational Runbook](docs/ESSENTIAL.md)**<br>`docs/ESSENTIAL.md` | [![Essential Runbook](assets/essential-spec.svg)](docs/ESSENTIAL.md) | **The Operator's Magic Terminal & Runbook**:<br>Port topology (4100/11434), the 4 CLI spells (`scan`, `fix`, `commit`, `serve`), and troubleshooting. | DevOps Responders, On-Call Engineers, Developers |
 | 📊 **[Empirical Outage Benchmark](benchmarks/BENCHMARK_RESULTS.md)**<br>`benchmarks/BENCHMARK_RESULTS.md` | [Outage Scorecard](benchmarks/BENCHMARK_RESULTS.md) | **10/10 Caught vs. 0/10 Traditional CI**:<br>Scientific evaluation against 10 published enterprise outages (GitLab, Stripe, Shopify). | Technical Judges, Quality Assurance Leads |
@@ -330,23 +333,33 @@ npm test
 
 ```text
 ▶ ShipSafe Health Rules Engine
-  ✔ Secret Scanner detects leaked credentials (0.9ms)
+  ✔ Secret Scanner detects leaked credentials (2.2ms)
+  ✔ Secret Scanner ignores safe mock / placeholder tokens (0.1ms)
   ✔ Hygiene Scanner flags debugger and blocker comments (0.4ms)
-  ✔ Syntax Scanner flags malformed JSON (0.1ms)
+  ✔ Syntax Scanner flags malformed JSON (0.2ms)
   ✔ Git Guard flags .env files and protected branch violations (0.2ms)
-  ✔ Dependency Inspector catches unpinned wildcards (0.1ms)
-  ✔ Auto-Fixer strips debugger statements safely (0.5ms)
-  ✔ SQLite DB successfully records runs and aggregates metrics (1.4ms)
+  ✔ Dependency Inspector catches unpinned wildcards and missing lockfiles (0.7ms)
+  ✔ Auto-Fixer strips debugger statements safely (0.9ms)
+  ✔ Auto-Fixer repairs schema hazards (NOT NULL, drop column, unindexed FK) (2.9ms)
+  ✔ Auto-Fixer repairs performance hazards (sync I/O and unbounded queries) (0.7ms)
+  ✔ SQLite DB successfully records runs and aggregates metrics (1.5ms)
+  ✔ Python checks catch TabError indentation and mutable defaults (34.1ms)
+  ✔ Java checks catch double-bracket initialization memory leak anti-pattern (0.2ms)
+✔ ShipSafe Health Rules Engine (45.1ms)
 ✔ Blast Radius Engine calculates high risk when critical paths are touched (0.5ms)
-✔ Env Sentinel flags new env vars missing from .env.example (0.4ms)
-✔ Performance Sniffer flags database queries inside loops (N+1 hazard) (1.2ms)
-✔ ShipSafe Repository Structure adheres 100% to the Gold-Standard layout (0.4ms)
-✔ Schema Detector flags NOT NULL column without DEFAULT (0.4ms)
-✔ Schema Detector flags dangerous direct column drop (0.1ms)
-ℹ tests 18
-ℹ pass 18
+✔ Blast Radius Engine assigns low score for isolated leaf files (0.1ms)
+✔ Env Sentinel flags new env vars missing from .env.example (0.5ms)
+✔ Env Sentinel ignores standard whitelisted system vars (0.2ms)
+✔ Performance Sniffer flags database queries inside loops (N+1 hazard) (1.3ms)
+✔ Performance Sniffer flags synchronous blocking file operations (0.1ms)
+✔ ShipSafe Repository Structure adheres 100% to the Gold-Standard layout (0.6ms)
+✔ Schema Detector flags NOT NULL column without DEFAULT (0.5ms)
+✔ Schema Detector allows NOT NULL when DEFAULT is provided (0.2ms)
+✔ Schema Detector flags dangerous direct column drop (0.05ms)
+ℹ tests 22
+ℹ suites 1
+ℹ pass 22
 ℹ fail 0
-ℹ duration_ms 68ms
 ```
 
 ---

@@ -65,8 +65,8 @@ It **never** answers the critical questions that cause P0 outages:
 
 | Gatekeeper | Threat Mitigated | Severity | Detection Mechanism | Remediation |
 | :--- | :--- | :--- | :--- | :--- |
-| **1. Schema Hazard Sentinel** | Exclusive table locks, column drop race conditions, unindexed foreign keys | `CRITICAL` | AST & regex scan of SQL and migration files | Suggests expand-contract patterns and non-blocking constraints |
-| **2. Config Drift Sentinel** | Missing environment variables in deployment configs | `ERROR` | Cross-references `process.env.*` AST with `.env.example` | Auto-syncs `.env.example` with 1 command |
+| **1. Schema Hazard Sentinel** | Exclusive table locks, column drop race conditions, unindexed foreign keys | `CRITICAL` | Pattern-based regex and line-level scan of SQL and migration files | Suggests expand-contract patterns and non-blocking constraints |
+| **2. Config Drift Sentinel** | Missing environment variables in deployment configs | `ERROR` | Cross-references `process.env.*` references with `.env.example` | Auto-syncs `.env.example` with 1 command |
 | **3. Performance Hazard Sniffer** | N+1 database queries in loops, event loop blocking I/O (`readFileSync`) | `CRITICAL` | Loop state machine tracking query calls inside iterations | Suggests batching via `WHERE IN` or DataLoader |
 | **4. Blast Radius Engine** | Unintended cascading breakage across downstream modules | `VARIABLE (0-100%)` | In-memory Dependency DAG (Directed Acyclic Graph) | Visual blast gauge and list of affected endpoints |
 

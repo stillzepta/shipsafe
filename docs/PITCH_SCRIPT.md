@@ -87,6 +87,6 @@
 * **Q: "How does the blast radius calculation work?"**
   * *Krishna:* "We build an in-memory reverse dependency adjacency list $O(V+E)$. If you touch leaf files, the score is ~5%. If you touch core authentication or billing paths, we apply a +35% critical multiplier and trace all downstream API routes."
 * **Q: "Does this slow down developer git workflow?"**
-  * *Arnav:* "Not at all! Native type-stripping and regex/AST state machines execute in under 35 milliseconds. It is completely unnoticeable during `git commit`."
+  * *Arnav:* "Not at all! Native type-stripping and pattern-based regex state machines execute in under 35 milliseconds. It is completely unnoticeable during `git commit`."
 * **Q: "What if the developer doesn't have an LLM or GPU installed?"**
   * *Krishna:* "ShipSafe's 'Two Brains' architecture guarantees that if Ollama or Gemma 2 is offline, our deterministic heuristic fallback takes over in under 2 milliseconds. It never crashes."

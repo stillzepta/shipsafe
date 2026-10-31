@@ -5,20 +5,20 @@
 
 ---
 
-## 🎨 Visual Architecture Specification: The AST Sieve & DAG Lab
+## 🎨 Visual Architecture Specification: Pattern Sieve & DAG Lab
 
-![ShipSafe Deep Architecture Specification — AST Sieve & DAG Lab](../assets/architecture-spec.svg)
+![ShipSafe Deep Architecture Specification](../assets/architecture-spec.svg)
 
 > 📌 **Mandatory Architectural Maintenance Rule**: Whenever code is pushed, modified, or architectural features are updated in this repository, this hand-drawn Ian Bablu architectural illustration (`assets/architecture-spec.svg`) and the breakdown below are maintained in 100% active synchronicity.
 
 ### Deep Architectural Breakdown: 3 Sovereign Pillars
-1. **Pillar 1: Syntax Tree Autopsy (AST Sieve)**
-   * **Mechanism**: Operates in `<15ms` across hundreds of files with zero external runtime dependencies using native TypeScript type-stripping.
-   * **Node Inspections**:
-     * `ForOfStatement ➔ CallExpression`: Dissects async query calls nested within loop iterations (N+1 hazard).
+1. **Pillar 1: Pattern-Based Code Autopsy (Pattern Sieve)**
+   * **Mechanism**: Operates in `<15ms` across hundreds of files with zero external runtime dependencies using native TypeScript type-stripping and fast line/regex state machines.
+   * **Pattern Inspections**:
+     * `Query in Loops`: Dissects async query calls nested within loop iterations (N+1 hazard).
      * `MemberExpression: process.env.*`: Cross-checks referenced keys against `.env.example` to halt config drift.
-     * `SQL AlterTableStmt`: Flags dangerous `ADD COLUMN NOT NULL` without `DEFAULT` to prevent Postgres table locks.
-2. **Pillar 2: Blast Radius Topology (AST DAG)**
+     * `SQL AlterTable`: Flags dangerous `ADD COLUMN NOT NULL` without `DEFAULT` to prevent Postgres table locks.
+2. **Pillar 2: Blast Radius Topology (Dependency DAG)**
    * **Mechanism**: Traverses in-memory reverse import adjacency list ($O(V + E)$) in `<5ms`.
    * **Mathematical Scoring Formula**:
      $$\text{Score} = \min\left(100, \; \left(\frac{\text{DownstreamDependents}}{\text{TotalFiles}} \times 60\right) + (\text{ChangedFiles} \times 5)\right)$$
@@ -76,7 +76,7 @@ ShipSafe operates across three primary developer execution contexts:
 
 ---
 
-## 2. Blast Radius Graph Engine (AST DAG)
+## 2. Blast Radius Graph Engine (Dependency DAG)
 
 The Blast Radius Engine builds an in-memory directed dependency graph across all tracked repository files:
 

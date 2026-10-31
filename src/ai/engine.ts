@@ -280,7 +280,7 @@ Return ONLY a valid JSON array of objects with keys: index, devVision, productio
             }
           }
         } catch {
-          // If JSON parse fails, fall through to cloud Gemma or AST synthesizer
+          // If JSON parse fails, fall through to cloud Gemma or pattern synthesizer
         }
       }
     }
@@ -339,24 +339,24 @@ Return ONLY a valid JSON array matching this schema:
         }
       }
     } catch {
-      // Fall through to AST parameter analysis
+      // Fall through to pattern parameter analysis
     }
   }
 
-  // 4. Parameter-Aware Dynamic AST Synthesizer (Sovereign offline fallback)
+  // 4. Parameter-Aware Pattern Synthesizer (Sovereign offline fallback)
   for (const f of findings) {
     if ((f as any).aiAnalyzed) continue;
 
     const ext = f.filePath?.includes('.') ? '.' + f.filePath.split('.').pop()?.toLowerCase() : '';
     const snippet = f.snippet || '';
 
-    // Python (.py) AST Analysis
+    // Python (.py) Pattern Analysis
     if (ext === '.py') {
       if (f.ruleId === 'syntax/python-indentation') {
         const vision = `Define an indented control block for clean execution flow in ${f.filePath}.`;
         const problem = `Inconsistent indentation or tab character at line ${f.line || 1} violates PEP 8. The Python runtime tokenizer aborts immediately with a fatal 'TabError' or 'IndentationError' before any bytecode runs.`;
         const approach = `Convert all indentation to 4 spaces according to PEP 8 specification.`;
-        assignDeduction(f, vision, problem, approach, '    # 4-space indented block\n    pass', 'Gemma 2 (Python AST)');
+        assignDeduction(f, vision, problem, approach, '    # 4-space indented block\n    pass', 'Gemma 2 (Python Pattern)');
         continue;
       }
       if (f.ruleId === 'syntax/python-mutable-default') {
@@ -367,12 +367,12 @@ Return ONLY a valid JSON array matching this schema:
         const problem = `In Python, default arguments are evaluated only ONCE when the module loads, not at runtime call. Modifying '${defaultParam}' mutates the shared instance across concurrent web requests, leaking user data in production.`;
         const approach = `Adopt the Sentinel Pattern: use 'param=None' and instantiate a fresh '${defaultParam}' inside the function body.`;
         const code = `def ${fnName}(items=None):\n    if items is None:\n        items = []`;
-        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Python AST)');
+        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Python Pattern)');
         continue;
       }
     }
 
-    // Java (.java) AST Analysis
+    // Java (.java) Pattern Analysis
     if (ext === '.java') {
       if (f.ruleId === 'syntax/java-double-bracket-init') {
         const dbiMatch = /\bnew\s+([A-Za-z0-9_]+(?:<[^>]*>)?)/.exec(snippet);
@@ -381,14 +381,14 @@ Return ONLY a valid JSON array matching this schema:
         const problem = `Double-bracket syntax '{{ ... }}' creates an anonymous inner subclass holding a hidden implicit 'this$0' reference to the outer class. This causes JVM heap memory leaks (preventing Garbage Collection) and triggers NotSerializableException in Redis/Kafka caches.`;
         const approach = `Use Java 9+ immutable collection factory methods or modern builders.`;
         const code = `List<String> items = List.of("item1", "item2"); // or Map.of(), Set.of()`;
-        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Java AST)');
+        assignDeduction(f, vision, problem, approach, code, 'Gemma 2 (Java Pattern)');
         continue;
       }
       if (f.ruleId === 'syntax/java-unbalanced-brackets') {
         const vision = `Structure Java class, method, or control block in ${f.filePath}.`;
         const problem = `Unmatched curly braces cause javac compiler failure before bytecode compilation can complete.`;
         const approach = `Verify that every opening brace '{' has a corresponding closing brace '}' at matching indentation level.`;
-        assignDeduction(f, vision, problem, approach, '// Matched class and method braces', 'Gemma 2 (Java AST)');
+        assignDeduction(f, vision, problem, approach, '// Matched class and method braces', 'Gemma 2 (Java Pattern)');
         continue;
       }
     }
